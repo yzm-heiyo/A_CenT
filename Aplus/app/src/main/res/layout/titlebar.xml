@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/titlebar_background"
+    android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:background="@color/colortheme"
+    android:orientation="vertical">
+
+    <!--android:layout_height="?attr/actionBarSize"-->
+
+
+    <LinearLayout
+
+        android:id="@+id/title_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:id="@+id/titlebar_backplace"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/titlebar_backicon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/btn_back_white" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/titlebar_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textColor="@color/colorBackground"
+                android:textStyle="bold"
+                android:textSize="@dimen/themeSizeplus" />
+
+            <!--android:ellipsize="marquee"-->
+            <!--android:focusable="true"-->
+            <!--android:singleLine="true"-->
+            <!--android:marqueeRepeatLimit="marquee_forever"-->
+            <!--android:focusableInTouchMode="true"-->
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/titlebar_right_layout"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"></LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="#a3a3a3" />
+
+
+</LinearLayout>

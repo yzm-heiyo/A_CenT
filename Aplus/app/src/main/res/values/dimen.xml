@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <dimen name="themeSize">14dp</dimen>
+    <dimen name="themeSizeplus">18dp</dimen>
+    <dimen name="themeSizesmall">13dp</dimen>
+
+
+</resources>

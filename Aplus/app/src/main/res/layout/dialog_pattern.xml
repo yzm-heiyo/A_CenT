@@ -1,0 +1,807 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+    <!--=====================預設排序============================= -->
+
+    <ScrollView
+
+        android:id="@+id/dialog_sort_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="35dp"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:text="@string/dialog_sort" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_weight="1"
+                    android:text="@string/dialog_price" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_weight="1"
+                    android:text="@string/dialog_rent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_weight="1"
+                    android:text="@string/dialog_saleableArea" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_weight="1"
+                    android:text="@string/dialog_coveredArea" />
+            </LinearLayout>
+
+            <RadioGroup
+                android:id="@+id/sort_left_group"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="73dp"
+                android:layout_marginTop="25dp"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:button="@null"
+                    android:clickable="false" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_price_up"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_up"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_rent_up"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_up"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_use_up"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_up"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_real_up"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_up"
+                    android:button="@null" />
+            </RadioGroup>
+
+            <RadioGroup
+                android:id="@+id/sort_right_group"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="22dp"
+                android:layout_marginTop="25dp"
+                android:layout_toLeftOf="@id/sort_left_group"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/sort_rb_default"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/selector_sort_down"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_price_down"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_down"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_rent_down"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_down"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_use_down"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_down"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_real_down"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_down"
+                    android:button="@null" />
+            </RadioGroup>
+
+
+        </RelativeLayout>
+    </ScrollView>
+
+    <!--=====================狀態============================= -->
+    <RelativeLayout
+        android:id="@+id/dialog_status_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/dialog_status_confirm"
+            android:layout_alignParentTop="true">
+
+            <com.centanet.hk.aplus.Widgets.MyCheckBoxLayout
+                android:id="@+id/dialog_status_confirm_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <CheckBox
+                    android:id="@+id/dialog_status_all"
+                    style="@style/dialog_status_item_style"
+                    android:text="@string/dialog_status_ALL" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="25dp"
+                    android:background="#efefef" />
+
+                <CheckBox
+                    android:id="@+id/dialog_status_N"
+                    style="@style/dialog_status_item_style"
+                    android:text="@string/dialog_status_N" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="25dp"
+                    android:background="#efefef" />
+
+                <CheckBox
+                    android:id="@+id/dialog_status_WT"
+                    style="@style/dialog_status_item_style"
+                    android:text="@string/dialog_status_WT" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="25dp"
+                    android:background="#efefef" />
+
+                <CheckBox
+                    android:id="@+id/dialog_status_P"
+                    style="@style/dialog_status_item_style"
+                    android:text="@string/dialog_status_P" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="25dp"
+                    android:background="#efefef" />
+
+                <CheckBox
+                    android:id="@+id/dialog_status_TP"
+                    style="@style/dialog_status_item_style"
+                    android:text="@string/dialog_status_TP" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="25dp"
+                    android:background="#efefef" />
+
+                <CheckBox
+                    android:id="@+id/dialog_status_G"
+                    style="@style/dialog_status_item_style"
+                    android:text="@string/dialog_status_G" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="25dp"
+                    android:background="#efefef" />
+
+                <CheckBox
+                    android:id="@+id/dialog_status_search"
+                    style="@style/dialog_status_item_style"
+                    android:text="@string/dialog_status_S" />
+
+            </com.centanet.hk.aplus.Widgets.MyCheckBoxLayout>
+
+        </ScrollView>
+
+        <Button
+            android:id="@+id/dialog_status_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_item_search_btn"
+            android:paddingLeft="80dp"
+            android:paddingRight="80dp"
+            android:text="@string/dialog_status_confirm"
+            android:textColor="@color/colorBackground"
+            android:textSize="@dimen/themeSizeplus" />
+
+    </RelativeLayout>
+
+
+    <!--=====================價格============================= -->
+    <RelativeLayout
+        android:id="@+id/dialog_price_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="gone">
+
+
+        <RadioGroup
+            android:id="@+id/dialog_price_chioce_radiogroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:background="@drawable/shape_radiogroup_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/t1234"
+                style="@style/dialog_radiobtn_choice_style"
+                android:background="@drawable/selector_radiobtn_left"
+                android:checked="true"
+                android:text="出售" />
+
+            <RadioButton
+                android:id="@+id/t12345"
+                style="@style/dialog_radiobtn_choice_style"
+                android:background="@drawable/selector_radiobtn_right"
+                android:text="出租" />
+
+
+        </RadioGroup>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/dialog_price_edittext_layout"
+            android:layout_below="@+id/dialog_price_chioce_radiogroup"
+            android:padding="2dp">
+
+            <RadioGroup
+                android:id="@+id/dialog_price_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_default"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_unlimit" />
+
+                <View
+                    style="@style/dialog_line_style" />
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_0_400"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_400" />
+
+                <View
+                    style="@style/dialog_line_style" />
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_400_600"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_600" />
+
+                <View
+                    style="@style/dialog_line_style" />
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_600_800"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_800" />
+
+                <View
+                    style="@style/dialog_line_style" />
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_800_1000"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_1000" />
+
+                <View
+                    style="@style/dialog_line_style"/>
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_1000_2000"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_2000" />
+
+                <View
+                    style="@style/dialog_line_style" />
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_2000_3000"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_3000" />
+
+                <View
+                    style="@style/dialog_line_style"/>
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_above3000"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_3000up" />
+
+
+            </RadioGroup>
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/dialog_price_edittext_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/dialog_price_ratting"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <EditText
+                android:id="@+id/dialog_price_left_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/shape_detal_date"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="至" />
+
+            <EditText
+                android:id="@+id/dialog_price_right_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/shape_detal_date"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="萬" />
+
+
+        </LinearLayout>
+
+        <com.centanet.hk.aplus.Widgets.TwoWayRattingBar
+            android:id="@+id/dialog_price_ratting"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_above="@id/dialog_price_confirm"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            app:color_line_normal="#dedede"
+            app:color_line_select="#BB2E2D"
+            app:progress_icon="@mipmap/ic_height_knob"
+            app:stroke_width_normal="1dp"
+            app:stroke_width_select="2dp"
+            app:text_color="@android:color/transparent" />
+
+        <Button
+            android:id="@+id/dialog_price_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_confirm_backgound"
+            android:paddingLeft="80dp"
+            android:paddingRight="80dp"
+            android:text="@string/dialog_status_confirm"
+            android:textColor="@color/colorBackground"
+            android:textSize="@dimen/themeSizeplus" />
+
+
+    </RelativeLayout>
+
+
+    <!--=====================提示============================= -->
+    <RelativeLayout
+        android:id="@+id/dialog_hint_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_dialog_hint"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@+id/dialog_hints_title"
+            android:background="@color/colorline" />
+
+        <TextView
+            android:id="@+id/dialog_hints_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/dialog_hint_title"
+            android:textColor="@color/color_itemt_detail_title" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/dialog_hints_confirm"
+            android:layout_below="@+id/dialog_hints_title"
+            android:layout_marginBottom="1px"
+            android:layout_marginTop="1px"></ScrollView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_above="@+id/dialog_hints_confirm"
+            android:background="@color/colorline" />
+
+        <TextView
+            android:id="@+id/dialog_hints_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:padding="8dp"
+            android:text="@string/dialog_hint_confirm"
+            android:textColor="@color/colortheme" />
+
+    </RelativeLayout>
+
+
+    <!-- ===================== 開盤日期 ============================= -->
+    <RelativeLayout
+        android:id="@+id/dialog_opendate_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/dialog_opendate_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="left|center"
+            android:padding="10dp"
+            android:text="開盤日期"
+            android:textColor="@color/colortheme"
+            android:textSize="@dimen/themeSize" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/dialog_opendate_title">
+
+            <RadioGroup
+                android:id="@+id/dialog_opendate_radiogroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <RadioButton
+                    style="@style/dialog_status_item_style"
+                    android:text="@string/dialog_opendate_last_modify" />
+
+                <RadioButton
+
+                    style="@style/dialog_status_item_style"
+                    android:text="@string/dialog_opendate_last_follow" />
+
+                <RadioButton
+                    style="@style/dialog_status_item_style"
+                    android:text="@string/dialog_opendate_last_changeprice" />
+
+                <RadioButton
+                    style="@style/dialog_status_item_style"
+                    android:text="@string/dialog_opendate_entrust_begin" />
+
+                <RadioButton
+                    style="@style/dialog_status_item_style"
+                    android:text="@string/dialog_opendate_entrust_end" />
+
+                <RadioButton
+                    style="@style/dialog_status_item_style"
+                    android:text="@string/dialog_opendate_estimate_date" />
+
+                <RadioButton
+                    style="@style/dialog_status_item_style"
+                    android:text="@string/dialog_opendate_change_date" />
+
+            </RadioGroup>
+
+        </ScrollView>
+
+
+    </RelativeLayout>
+
+    <!-- ===================== 確認/取消 ============================= -->
+
+    <RelativeLayout
+        android:id="@+id/dialog_confirm_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/shape_dialog_hint"
+        android:visibility="gone">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/dialog_confirm_btns_layout"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="1px"
+            android:layout_marginTop="1px">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="確定提交？"
+                android:textColor="@android:color/black"
+                android:textSize="17dp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_above="@+id/dialog_confirm_btns_layout"
+            android:background="@color/colorline" />
+
+
+        <LinearLayout
+            android:id="@+id/dialog_confirm_btns_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+
+            <TextView
+
+                android:id="@+id/dialog_confirm_cancl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/dialog_confirm_cancl"
+                android:textColor="@color/colortheme" />
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="@color/colorline" />
+
+            <TextView
+                android:id="@+id/dialog_confirm_confirm"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="@string/dialog_confirm_confirm"
+                android:textColor="@color/colortheme" />
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <!-- ===================== 登出 ============================= -->
+
+    <LinearLayout
+        android:id="@+id/dialog_logout_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#00ffffff"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:visibility="gone">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/shape_logout_background_top"
+                android:gravity="center"
+                android:maxHeight="52dp"
+                android:minHeight="52dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="10dp"
+                android:text="登出後不會刪除任何歷史數據，下次登錄依然可以使用本賬號"
+                android:textSize="@dimen/themeSizesmall" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#00ffffff" />
+
+
+            <TextView
+                android:id="@+id/dialog_logout_logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/shape_logout_background_buttom"
+                android:gravity="center"
+                android:maxHeight="52dp"
+                android:minHeight="52dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="登出"
+                android:textColor="#E13F4F"
+                android:textSize="@dimen/themeSizeplus" />
+
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/dialog_logout_cancl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_logout_background_all"
+            android:gravity="center"
+            android:maxHeight="52dp"
+            android:minHeight="52dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="取消"
+            android:textColor="#007AFF"
+            android:textSize="@dimen/themeSizeplus" />
+
+
+    </LinearLayout>
+
+    <!--記錄搜索框-->
+    <LinearLayout
+        android:id="@+id/dialog_remark_search"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shape_detal_date"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="11dp"
+            android:layout_marginTop="11dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="請輸入關鍵字"
+            android:textColor="#000000"
+            android:textSize="17dp" />
+
+        <EditText
+            android:id="@+id/dialog_edit_remark_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_detal_date"
+            android:gravity="center"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:singleLine="true" />
+
+        <Button
+            android:id="@+id/dialog_btn_remark_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:text="搜索"
+            android:textColor="#BB2E2D"
+            android:textSize="17dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

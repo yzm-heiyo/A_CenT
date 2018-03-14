@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:drawable="@drawable/ico_active"
+        android:maxLevel="1"/>
+    <item
+        android:drawable="@drawable/ico_pending"
+        android:maxLevel="2"/>
+    <item android:drawable="@drawable/ico_withtenancy" android:maxLevel="3"/>
+    <item android:drawable="@drawable/ico_tenancy_pending" android:maxLevel="4"/>
+    <item android:drawable="@drawable/ico_txned" android:maxLevel="5"/>
+    <item android:drawable="@drawable/ico_search" android:maxLevel="6"/>
+
+</level-list>

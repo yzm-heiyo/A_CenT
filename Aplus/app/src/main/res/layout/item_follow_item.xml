@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="6dp"
+        android:paddingTop="6dp">
+
+        <TextView
+            android:id="@+id/follow_txt_follower"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:text="TONY POON"
+            android:textColor="@color/color_itemt_detail_title"
+            android:textSize="@dimen/themeSizeplus" />
+
+        <TextView
+            android:id="@+id/follow_txt_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="right|center"
+            android:text="2017-07-19 12:30:05"
+            android:textColor="@color/color_itemt_result_text"
+            android:textSize="@dimen/themeSizesmall" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/follow_txt_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="當前房源狀態由WT (With Tenancy)變更為TP(Tenacy Pending)跟進內容:NOT SELL."
+        android:textColor="@color/color_itemt_detail_title"
+        android:textSize="@dimen/themeSize" />
+
+
+</LinearLayout>

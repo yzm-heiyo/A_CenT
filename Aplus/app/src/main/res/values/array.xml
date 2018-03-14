@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="dialog_prices">
+        <item>@string/dialog_price_unlimit</item>
+        <item>@string/dialog_price_400</item>
+        <item>@string/dialog_price_600</item>
+        <item>@string/dialog_price_800</item>
+        <item>@string/dialog_price_1000</item>
+        <item>@string/dialog_price_2000</item>
+        <item>@string/dialog_price_3000</item>
+        <item>@string/dialog_price_3000up</item>
+
+    </string-array>
+
+    <string-array name="dialog_rents">
+        <item>@string/dialog_rent_unlimit</item>
+        <item>@string/dialog_rent_10000</item>
+        <item>@string/dialog_rent_15000</item>
+        <item>@string/dialog_rent_20000</item>
+        <item>@string/dialog_rent_40000</item>
+        <item>@string/dialog_rent_60000</item>
+        <item>@string/dialog_rent_100000</item>
+        <item>@string/dialog_rent_100000up</item>
+
+    </string-array>
+
+
+</resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/dialog_title_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="19dp"
+        android:text="提示"
+        android:textColor="#000000"
+        android:textSize="17dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/dialog_note_content_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="13dp"
+        android:paddingLeft="14dp"
+        android:paddingRight="14dp"
+        android:lineSpacingExtra = "15dp"
+        android:text="Any person Contacting the ventor again will breach the persona data (Privacy) ordinance and on conviction, is personally liable to a maximum fine of HK$500,000 and imprisonment of 3 years"
+        android:textColor="#000000"
+        android:textSize="14dp" />
+
+</LinearLayout>

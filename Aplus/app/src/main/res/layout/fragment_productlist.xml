@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@color/colortheme"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/fragment_reset"
+                    android:textColor="@color/colorBackground"
+                    android:textSize="@dimen/themeSizesmall"></TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="6dp"
+                android:layout_marginTop="6dp"
+                android:layout_weight="6"
+                android:background="@drawable/search_background"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="12dp"
+
+                    android:src="@drawable/btn_search_bar_search" />
+
+                <TextView
+                    android:id="@+id/fragment_presmises_search"
+                    android:gravity="center|left"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:background="@null"
+                    android:singleLine="true"
+                    android:hint="@string/fragment_hints"
+                    android:paddingLeft="4dp"
+                    android:textSize="@dimen/themeSizesmall" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="12dp"
+                    android:src="@drawable/btn_mic" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/fragment_presmises_sort"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/fragment_search"
+                android:textColor="@color/colorBackground"
+                android:textSize="@dimen/themeSizesmall"></TextView>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="36dp"
+            android:orientation="horizontal">
+
+            <!-- 狀態 -->
+            <RelativeLayout
+                android:id="@+id/fragment_presmises_status"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/statuc"
+                    style="@style/fragment_same_text"
+                    android:text="@string/fragment_status" />
+
+                <ImageView
+                    style="@style/fragment_same_image"
+                    android:layout_toRightOf="@+id/statuc"
+                    android:src="@drawable/ico_arrow_dropdown" />
+
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:background="#EFEFEF" />
+
+            <!-- 價格 -->
+            <RelativeLayout
+                android:id="@+id/fragment_presmises_price"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/price"
+                    style="@style/fragment_same_text"
+                    android:text="@string/fragment_price" />
+
+                <ImageView
+                    style="@style/fragment_same_image"
+                    android:layout_toRightOf="@+id/price"
+                    android:src="@drawable/ico_arrow_dropdown" />
+
+            </RelativeLayout>
+
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:background="#EFEFEF" />
+
+            <!-- 更多 -->
+            <RelativeLayout
+                android:id="@+id/fragment_presmises_more"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/more"
+                    style="@style/fragment_same_text"
+                    android:text="@string/fragment_more" />
+
+                <ImageView
+                    style="@style/fragment_same_image"
+                    android:layout_toRightOf="@+id/more"
+                    android:src="@drawable/ico_filtering" />
+
+
+            </RelativeLayout>
+
+
+        </LinearLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#EFEFEF"
+            />
+
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/smartLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#444444"
+            app:srlPrimaryColor="@android:color/white"
+            app:srlAccentColor="#444444"
+            app:srlEnablePreviewInEditMode="true">
+            <!--srlAccentColor srlPrimaryColor 将会改变 Header 和 Footer 的主题颜色-->
+            <!--srlEnablePreviewInEditMode 可以开启和关闭预览功能-->
+            <com.scwang.smartrefresh.layout.header.ClassicsHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <ListView
+                android:background="@color/color_theme_item"
+                android:id="@+id/fragment_presmises_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@drawable/shape_listview_divider"
+                android:dividerHeight="8dp"
+                android:layerType="software"></ListView>
+            <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="30dp"
+                app:srlPrimaryColor="@android:color/white"
+                app:srlAccentColor="#444444"/>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|center"
+        android:background="@drawable/shape_pageindex"
+        android:gravity="center"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:text="1/200"
+        android:textColor="@color/colorBackground" />
+
+</FrameLayout>

@@ -1,0 +1,119 @@
+<resources>
+    <string name="app_name">Aplus</string>
+
+    <string name="login_staff_account_hint">員工編號</string>
+    <string name="login_staff_password_hint">登入密碼</string>
+
+    <string name="login_login_btn">登入</string>
+
+    <string name="login_versioncode_btn">版本1.0.0</string>
+
+
+    <string name="main_premises_manager">樓盤管理</string>
+    <string name="main_mine_collect">我的收藏</string>
+    <string name="main_mine_account">我的賬戶</string>
+
+    <string name="fragment_search">排序</string>
+    <string name="fragment_reset">重設</string>
+    <string name="fragment_hints">請輸入屋苑或中英文名稱</string>
+    <string name="fragment_status">狀態</string>
+    <string name="fragment_price">價格</string>
+    <string name="fragment_more">更多</string>
+
+    <string name="fragment_mine">我的賬號</string>
+
+    <string name="fragment_mine_installation">裝置管理</string>
+    <string name="fragment_mine_staff">員工管理</string>
+    <string name="fragment_mine_about">關於 A+</string>
+    <string name="fragment_mine_question">問題回報</string>
+    <string name="fragment_mine_logout">登出</string>
+
+    <string name="feedback_limit">最多輸入200字</string>
+    <string name="feedback_hint">跟進內容...</string>
+
+    <string name="opendate">開盤日</string>
+
+    <string name="dialog_sort">預設排序</string>
+    <string name="dialog_price">售價</string>
+    <string name="dialog_rent">租價</string>
+    <string name="dialog_saleableArea">實用面積</string>
+    <string name="dialog_coveredArea">建築面積</string>
+
+    <string name="dialog_status_ALL">全部</string>
+    <string name="dialog_status_N">N(Active)</string>
+    <string name="dialog_status_WT">WT(With Tenancy)</string>
+    <string name="dialog_status_P">P(Pending)</string>
+    <string name="dialog_status_TP">TP(Tenancy Pending)</string>
+    <string name="dialog_status_G">G(已成交)</string>
+    <string name="dialog_status_S">Search</string>
+    <string name="dialog_status_confirm">確 定</string>
+
+
+    <string name="dialog_price_unlimit">不限</string>
+    <string name="dialog_price_400">0 - 400萬</string>
+    <string name="dialog_price_600">400萬 - 600萬</string>
+    <string name="dialog_price_800">600萬 - 800萬</string>
+    <string name="dialog_price_1000">800萬 - 1,000萬</string>
+    <string name="dialog_price_2000">1,000萬 - 2,000萬</string>
+    <string name="dialog_price_3000">2,000萬 - 3,000萬</string>
+    <string name="dialog_price_3000up">3,000萬以上</string>
+
+
+    <string name="dialog_rent_unlimit">不限</string>
+    <string name="dialog_rent_10000">0 - 10,000</string>
+    <string name="dialog_rent_15000">10,000 - 15,000</string>
+    <string name="dialog_rent_20000">15,000 - 20,000</string>
+    <string name="dialog_rent_40000">20,000 - 40,000</string>
+    <string name="dialog_rent_60000">40,000 - 60,000</string>
+    <string name="dialog_rent_100000">60,000 - 100,000</string>
+    <string name="dialog_rent_100000up">100,000以上</string>
+
+
+    <string name="dialog_hint_title">提示</string>
+    <string name="dialog_hint_confirm">確定</string>
+
+
+    <string name="dialog_opendate_last_modify">最後修改日期</string>
+    <string name="dialog_opendate_last_follow">最後跟進日期</string>
+    <string name="dialog_opendate_last_changeprice">最後改價日期</string>
+    <string name="dialog_opendate_entrust_begin">委託書開始日</string>
+    <string name="dialog_opendate_entrust_end">委託書到期日</string>
+    <string name="dialog_opendate_estimate_date">估計日期</string>
+    <string name="dialog_opendate_change_date">改盤日期</string>
+
+
+    <string name="search_search">搜索</string>
+    <string name="search_confirm">確定</string>
+
+
+    <string name="dialog_confirm_cancl">取消</string>
+    <string name="dialog_confirm_confirm">確定</string>
+
+    <string name="cutline">CUTLINEE</string>
+    <string name="line_busy">LINE BUSY</string>
+    <string name="nolistener">無人接聼</string>
+    <string name="voicemailmessage">留言信箱</string>
+    <string name="wrongnumb">WRONG NUMBER</string>
+
+    <string name="dialog_tips_back">確定返回？</string>
+    <string name="dialog_tips_put">確定提交？</string>
+    <string name="dialog_tips_remove_favorite">移除收藏</string>
+    <string name="dialog_tips_remove">移除</string>
+
+    <string name="loading_more">加載更多</string>
+    
+    <string name="search_floot">樓層</string>
+    <string name="search_units">單位</string>
+
+    <string name="client">樓主:</string>
+    <string name="detail_no_owner">暫無樓主</string>
+    <string name="house_umber">樓盤編號</string>
+
+    <string name="to">至</string>
+    <string name="from">由</string>
+
+    <string name="feedback_save">儲存</string>
+
+    <string name="detail_attention">關注事項</string>
+
+</resources>

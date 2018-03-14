@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <com.centanet.hk.aplus.Widgets.TitleBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titlebarShowImage_left="false"
+        app:titlebarText="@string/fragment_mine"></com.centanet.hk.aplus.Widgets.TitleBar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_weight="1"
+            android:src="@mipmap/ic_launcher_round" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="6"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="歐陽大文"
+                android:textSize="@dimen/themeSizeplus"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="CHRISTROPHER AU YEUNG"
+                android:textSize="@dimen/themeSize" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="E-123456"
+                android:textSize="@dimen/themeSize" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:maxLines="1"
+                android:text="香港區區域經理"
+                android:textSize="@dimen/themeSizesmall" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="西環&amp;西南區(西南區)"
+                android:textSize="@dimen/themeSizesmall" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:background="@color/color_theme_item" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.5"
+        android:background="@color/color_theme_item">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/fragment_mine_item_style"
+                    android:visibility="gone"
+                    android:text="@string/fragment_mine_installation" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/colorline" />
+
+
+                <TextView
+                    style="@style/fragment_mine_item_style"
+                    android:visibility="gone"
+                    android:text="@string/fragment_mine_staff" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:visibility="gone"
+                    android:background="@color/color_theme_item" />
+
+                <TextView
+                    style="@style/fragment_mine_item_style"
+                    android:text="@string/fragment_mine_about" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/colorline" />
+
+                <TextView
+                    android:id="@+id/fragment_mine_question"
+                    style="@style/fragment_mine_item_style"
+                    android:text="@string/fragment_mine_question" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:background="@color/color_theme_item" />
+
+                <TextView
+                    android:id="@+id/fragment_mine_logout"
+                    style="@style/fragment_mine_item_style"
+                    android:gravity="center"
+                    android:text="@string/fragment_mine_logout"
+                    android:textColor="@color/colortheme" />
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+</LinearLayout>

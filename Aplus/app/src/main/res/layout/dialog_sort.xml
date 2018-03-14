@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/dialog_sort_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RadioGroup
+                android:id="@+id/sort_txt_group"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="35dp"
+                android:layout_marginTop="30dp"
+                android:orientation="vertical"
+                android:paddingTop="7dp">
+
+                <RadioButton
+                    android:id="@+id/sort_txt_default"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:text="@string/dialog_sort"
+                    android:textColor="@color/textcolor" />
+
+                <RadioButton
+                    android:id="@+id/sort_txt_sale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:text="@string/dialog_price"
+                    android:textColor="@color/textcolor" />
+
+                <RadioButton
+                    android:id="@+id/sort_txt_rent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:text="@string/dialog_rent"
+                    android:textColor="@color/textcolor" />
+
+                <RadioButton
+                    android:id="@+id/sort_txt_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:text="@string/dialog_saleableArea"
+                    android:textColor="@color/textcolor" />
+
+                <RadioButton
+                    android:id="@+id/sort_txt_really"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:text="@string/dialog_coveredArea"
+                    android:textColor="@color/textcolor" />
+            </RadioGroup>
+
+            <RadioGroup
+                android:id="@+id/sort_left_group"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="73dp"
+                android:layout_marginTop="25dp"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:button="@null"
+                    android:clickable="false" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_price_up"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_up"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_rent_up"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_up"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_use_up"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_up"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_real_up"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_up"
+                    android:button="@null" />
+            </RadioGroup>
+
+            <RadioGroup
+                android:id="@+id/sort_right_group"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="22dp"
+                android:layout_marginTop="25dp"
+                android:layout_toLeftOf="@id/sort_left_group"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/sort_rb_default"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/selector_sort_down"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_price_down"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_down"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_rent_down"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_down"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_use_down"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_down"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_real_down"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_down"
+                    android:button="@null" />
+            </RadioGroup>
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

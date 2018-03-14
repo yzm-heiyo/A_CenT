@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <RelativeLayout
+        android:id="@+id/dialog_price_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:visibility="visible">
+
+        <RadioGroup
+            android:id="@+id/dialog_price_chioce_radiogroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="60dp"
+            android:layout_marginRight="60dp"
+            android:background="@drawable/shape_radiogroup_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/dialog_price_rad_sale"
+                style="@style/dialog_radiobtn_choice_style"
+                android:background="@drawable/selector_radiobtn_left"
+                android:checked="true"
+                android:text="@string/dialog_price" />
+
+            <RadioButton
+                android:id="@+id/dialog_price_rad_rent"
+                style="@style/dialog_radiobtn_choice_style"
+                android:background="@drawable/selector_radiobtn_right"
+                android:text="@string/dialog_rent" />
+
+
+        </RadioGroup>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/dialog_price_edittext_layout"
+            android:layout_below="@+id/dialog_price_chioce_radiogroup"
+            android:padding="2dp">
+
+            <RadioGroup
+                android:id="@+id/dialog_price_group"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_default"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_unlimit" />
+
+                <View style="@style/dialog_line_style" />
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_0_400"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_400" />
+
+                <View style="@style/dialog_line_style" />
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_400_600"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_600" />
+
+                <View style="@style/dialog_line_style" />
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_600_800"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_800" />
+
+                <View style="@style/dialog_line_style" />
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_800_1000"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_1000" />
+
+                <View style="@style/dialog_line_style" />
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_1000_2000"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_2000" />
+
+                <View style="@style/dialog_line_style" />
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_2000_3000"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_3000" />
+
+                <View style="@style/dialog_line_style" />
+
+                <RadioButton
+                    android:id="@+id/dialog_radiobtn_above3000"
+                    style="@style/dialog_price_item_style"
+                    android:text="@string/dialog_price_3000up" />
+
+
+            </RadioGroup>
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/dialog_price_edittext_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/dialog_price_ratting"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <EditText
+                android:id="@+id/dialog_price_left_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/shape_detal_date"
+                android:digits="1234567890"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:singleLine="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/to" />
+
+            <EditText
+                android:id="@+id/dialog_price_right_edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/shape_detal_date"
+                android:digits="1234567890"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:singleLine="true" />
+
+            <TextView
+                android:id="@+id/dialog_price_edit_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="萬" />
+
+
+        </LinearLayout>
+
+        <com.centanet.hk.aplus.Widgets.ProcessBarView
+            android:id="@+id/dialog_price_ratting"
+            android:layout_width="match_parent"
+            android:layout_height="25dp"
+            android:layout_above="@id/dialog_price_confirm"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            app:color_line_normal="#dedede"
+            app:color_line_select="#BB2E2D"
+            app:progress_icon="@mipmap/ic_height_knob"
+            app:stroke_width_normal="1dp"
+            app:stroke_width_select="2dp"
+            app:text_color="@android:color/transparent" />
+
+        <Button
+            android:id="@+id/dialog_price_confirm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/shape_item_search_btn"
+            android:paddingLeft="80dp"
+            android:paddingRight="80dp"
+            android:text="@string/dialog_status_confirm"
+            android:textColor="@color/colorBackground"
+            android:textSize="@dimen/themeSizeplus" />
+
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

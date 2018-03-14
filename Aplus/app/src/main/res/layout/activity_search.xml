@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:percent="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@color/colortheme"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/activity_search_back"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:src="@drawable/btn_back_white" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="6dp"
+            android:layout_marginTop="6dp"
+            android:layout_weight="6"
+            android:background="@drawable/search_background"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="12dp"
+                android:src="@drawable/btn_search_bar_search" />
+
+            <EditText
+                android:id="@+id/search_edit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:background="@null"
+                android:hint="@string/fragment_hints"
+                android:imeOptions="actionSearch"
+                android:paddingLeft="4dp"
+                android:singleLine="true"
+                android:textSize="@dimen/themeSizesmall" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="12dp"
+                android:src="@drawable/btn_mic" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"></LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:background="@color/colortheme"
+        android:orientation="horizontal">
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+
+        </View>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_marginBottom="6dp"
+            android:layout_weight="6"
+            android:orientation="horizontal">
+
+
+            <EditText
+                android:id="@+id/search_edit_floot"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/search_background"
+                android:gravity="center"
+                android:hint="@string/search_floot"
+                android:textSize="@dimen/themeSizesmall"/>
+
+
+            <EditText
+                android:id="@+id/search_edit_unit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/search_background"
+                android:gravity="center"
+                android:hint="@string/search_units"
+                android:textSize="@dimen/themeSizesmall"/>
+
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"></View>
+
+
+    </LinearLayout>
+
+
+    <!-- 智能搜索界面 -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--歷史記錄界面-->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/search_history_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/search_select_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#efefef"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/select_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginLeft="17dp"
+                        android:layout_marginTop="14dp"
+                        android:text="已選屋苑"
+                        android:textColor="#848484"
+                        android:textSize="14dp"
+                        android:textStyle="bold" />
+
+                    <com.centanet.hk.aplus.Widgets.LineBreakLayout
+                        android:id="@+id/search_labelgroup"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/select_txt"
+                        android:layout_marginBottom="15dp"
+                        android:layout_marginLeft="17dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="7dp">
+
+                    </com.centanet.hk.aplus.Widgets.LineBreakLayout>
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@id/search_select_layout"
+                    android:visibility="visible">
+
+                    <RelativeLayout
+                        android:id="@+id/search_history_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#efefef"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/search_history_img"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_marginBottom="8dp"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/ico_search_history" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_toRightOf="@id/search_history_img"
+                            android:text="搜索記錄" />
+                    </RelativeLayout>
+
+                    <ListView
+                        android:id="@+id/search_history_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@id/search_history_title"
+                        android:visibility="visible"></ListView>
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
+
+        <!--搜索界面-->
+        <LinearLayout
+            android:id="@+id/search_simple_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ListView
+                android:id="@+id/activity_search_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></ListView>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/activity_search_confirm_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|bottom"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shape_item_search_btn"
+            android:paddingBottom="10dp"
+            android:paddingLeft="80dp"
+            android:paddingRight="80dp"
+            android:paddingTop="10dp"
+            android:text="@string/search_search"
+            android:textColor="@color/colorBackground"
+            android:textSize="@dimen/themeSizeplus" />
+
+    </FrameLayout>
+
+</LinearLayout>
