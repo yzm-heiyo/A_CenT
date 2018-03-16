@@ -1,6 +1,5 @@
 package com.centanet.hk.aplus.Views.LoginView.persent;
 
-import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.MD5Util;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.LoginView.model.ILoginModel;
@@ -35,7 +34,6 @@ public class LoginPresent implements ILoginPresent {
     public LoginPresent(ILoginView loginView) {
         loginModel = LoginModel.getInstance();
         loginModel.setLisenter(listener);
-        ssoHeader = new SSOHeaderDescription();
         headerDescription = new AHeaderDescription();
         this.loginView = loginView;
     }
@@ -73,6 +71,7 @@ public class LoginPresent implements ILoginPresent {
             staffNo = login.getResult().getDomainUser().getStaffNo();
             ssoHeader.setHKSession(login.getResult().getSession());
             ssoHeader.setCompanyCode(login.getResult().getDomainUser().getCityCode());
+
             loginModel.doGet(HttpUtil.URL_HomeConfig, ssoHeader, new SSOHomeConfigDescription());
         }
 
@@ -88,7 +87,9 @@ public class LoginPresent implements ILoginPresent {
     };
 
     @Override
-    public void login(SSOLoginDescription ssoLoginDescription) {
-        loginModel.doPost(HttpUtil.URL_SSO, headerDescription, ssoLoginDescription);
+    public void login(SSOHeaderDescription ssoHeaderDescription,SSOLoginDescription ssoLoginDescription) {
+        ssoHeader = ssoHeaderDescription;
+        ssoHeader.setUdid(loginModel.getUniquePsuedoID());
+        loginModel.doPost(HttpUtil.URL_SSO, ssoHeaderDescription, ssoLoginDescription);
     }
 }

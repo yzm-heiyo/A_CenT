@@ -9,5 +9,5 @@ public interface ILoginModel {
     void doGet(String address,Object header,Object param);
     void doPost(String address,Object header,Object body);
     void setLisenter(LoginModel.OnReceiveLisenter lisenter);
-
+    String getUniquePsuedoID();
 }

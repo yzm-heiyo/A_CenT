@@ -4,8 +4,10 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -18,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.MyApplication;
+import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.common.DataManager;
 import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.Views.HousetListView.present.IResultPresenter;
@@ -59,6 +62,7 @@ import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SE
 import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SEARCH_HISTORY_SAVE;
 import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SEARCH_LABEL;
 import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SEARCH_UNIT;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.HouseListDataCount.HOUSELIST_COUNT;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.NetWorkState.NETWORK_STATE_FAIL;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.NetWorkState.NETWORK_STATE_SUCCESS;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.RefreshView.VIEW_LOAD_START;
@@ -76,13 +80,14 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
     private ListView lv;
     private ItemAdapter adapter;
     private View status, price, more, sort;
-    private TextView search;
+    private TextView search, currentPosition;
     private static List<Properties> listData;
     private List<String> searchHistory;
     private IResultPresenter presenter;
     private RefreshLayout refreshLayout;
     private AHeaderDescription aHeaderDescription;
     private HouseDescription bodyDescription;
+    private String houseCount = "0";
 
 
     @Override
@@ -90,6 +95,7 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
         super.onCreate(savedInstanceState);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -109,7 +115,7 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
         more = view.findViewById(R.id.fragment_presmises_more);
         sort = view.findViewById(R.id.fragment_presmises_sort);
         search = view.findViewById(R.id.fragment_presmises_search);
-
+        currentPosition = view.findViewById(R.id.fragment_presmises_current_position);
         refreshLayout = view.findViewById(R.id.smartLayout);
     }
 
@@ -133,6 +139,7 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
         presenter.doPost(HttpUtil.URL_PARAMETER, aHeaderDescription, new ParameterDescription());
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     private void initListeners() {
 
         status.setOnClickListener(this);
@@ -140,6 +147,17 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
         sort.setOnClickListener(this);
         more.setOnClickListener(this);
         search.setOnClickListener(this);
+
+        lv.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if (houseCount.equals("0")) {
+                    currentPosition.setText("0/0");
+                } else {
+                    currentPosition.setText(lv.getFirstVisiblePosition() + 1 + "/" + houseCount);
+                }
+            }
+        });
 
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -161,7 +179,7 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), DetailActicity.class);
-                intent.putExtra("keyId",listData.get(position).getKeyId());
+                intent.putExtra("keyId", listData.get(position).getKeyId());
                 startActivity(intent);
             }
         });
@@ -298,6 +316,7 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMoonEvent(MessageEventBus messageEvent) {
+        L.d(thiz, messageEvent.getMsg() + "");
         switch (messageEvent.getMsg()) {
             case NETWORK_STATE_FAIL:
                 //todo 失敗彈出提示框
@@ -311,8 +330,17 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
             case VIEW_LOAD_START:
                 openLoadView();
                 break;
+            case HOUSELIST_COUNT:
+                setCountTxt(messageEvent);
+                break;
         }
         closeRefresh();
+    }
+
+    private void setCountTxt(MessageEventBus messageEvent) {
+        houseCount = (String) messageEvent.getObject();
+        if (houseCount.equals("0")) return;
+        currentPosition.setText("1" + "/" + houseCount);
     }
 
     private void closeRefresh() {
@@ -363,7 +391,7 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
                     bodyDescription.setSearcherAddress(addressList);
                 }
                 String label = bundle.getString(VIEW_SEARCH_LABEL);
-                if(label!=null)search.setText(label);
+                if (label != null) search.setText(label);
                 bodyDescription.setFloors(bundle.getString(VIEW_SEARCH_FLOOT));
                 bodyDescription.setUnits(bundle.getString(VIEW_SEARCH_UNIT));
                 openFreshView();
@@ -476,9 +504,10 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
                 viewHolder.useRveRentTxt.setText(properties.getRentPriceUnit());
                 String useSquare = properties.getSquareUseFoot();
                 String useSquareNum = properties.getSquareUseSourceNum();
-                if (useSquareNum!=null&&useSquareNum.equals("10"))
-                    viewHolder.useTxt.setText(TextUtil.changeTextColor(useSquare, Color.BLUE+""));
-                else if(useSquareNum==null||!useSquareNum.equals("10"))viewHolder.useTxt.setText(useSquare);
+                if (useSquareNum != null && useSquareNum.equals("10"))
+                    viewHolder.useTxt.setText(TextUtil.changeTextColor(useSquare, Color.BLUE + ""));
+                else if (useSquareNum == null || !useSquareNum.equals("10"))
+                    viewHolder.useTxt.setText(useSquare);
 
                 viewHolder.iconSingle.setSelected(properties.isOnlyTrust());
                 viewHolder.iconFavo.setSelected(properties.isFavoriteFlag());

@@ -34,6 +34,7 @@ import okhttp3.Response;
 
 import static com.centanet.hk.aplus.Utils.net.HttpUtil.*;
 import static com.centanet.hk.aplus.Utils.net.HttpUtil.URL_PARAMETER;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.HouseListDataCount.HOUSELIST_COUNT;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.NetWorkState.NETWORK_STATE_FAIL;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.NetWorkState.NETWORK_STATE_SUCCESS;
 
@@ -114,6 +115,7 @@ public class ResultModel extends BaseClass implements IResultModel {
             receiveListener.onReceive(data);
             isEnd = data.size() < 15 ? true : false;
         }
+        notifyBusMessage(HOUSELIST_COUNT,centaData.getRecordCount()+"");
     }
 
     /**
@@ -169,6 +171,7 @@ public class ResultModel extends BaseClass implements IResultModel {
             {
                 if (reader != null) {
                     try {
+                        inputStream.close();
                         reader.close();
                     } catch (IOException e) {
                         e.printStackTrace();

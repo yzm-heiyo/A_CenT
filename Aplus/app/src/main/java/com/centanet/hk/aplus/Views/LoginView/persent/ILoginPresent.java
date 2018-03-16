@@ -1,5 +1,6 @@
 package com.centanet.hk.aplus.Views.LoginView.persent;
 
+import com.centanet.hk.aplus.entity.http.SSOHeaderDescription;
 import com.centanet.hk.aplus.entity.http.SSOLoginDescription;
 
 /**
@@ -7,5 +8,5 @@ import com.centanet.hk.aplus.entity.http.SSOLoginDescription;
  */
 
 public interface ILoginPresent {
-    void login(SSOLoginDescription ssoLoginDescription);
+    void login(SSOHeaderDescription ssoHeaderDescription,SSOLoginDescription ssoLoginDescription);
 }

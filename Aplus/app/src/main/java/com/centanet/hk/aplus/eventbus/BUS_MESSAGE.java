@@ -22,4 +22,8 @@ public class BUS_MESSAGE {
         public static final int DETAIL_CLIENT_INFO = 8;
     }
 
+    public class HouseListDataCount{
+        public static final int HOUSELIST_COUNT = 9;
+    }
+
 }

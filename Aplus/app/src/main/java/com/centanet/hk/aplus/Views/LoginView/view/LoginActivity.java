@@ -1,8 +1,13 @@
 package com.centanet.hk.aplus.Views.LoginView.view;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -25,6 +30,7 @@ import com.centanet.hk.aplus.entity.http.SSOLoginDescription;
 import com.centanet.hk.aplus.entity.login.Login;
 
 import java.io.IOException;
+import java.util.UUID;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -52,7 +58,8 @@ public class LoginActivity extends LoginActivityAbst implements LoginActivityAbs
         SSOLoginDescription loginDescription = new SSOLoginDescription();
         loginDescription.setDomainAccount(account);
         loginDescription.setDomainPass(password);
-        present.login(loginDescription);
+        SSOHeaderDescription ssoHeader = new SSOHeaderDescription();
+        present.login(ssoHeader,loginDescription);
     }
 
     @Override

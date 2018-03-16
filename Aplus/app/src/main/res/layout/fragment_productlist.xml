@@ -16,6 +16,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
             android:background="@color/colortheme"
             android:orientation="horizontal">
 
@@ -54,14 +56,14 @@
 
                 <TextView
                     android:id="@+id/fragment_presmises_search"
-                    android:gravity="center|left"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="4"
                     android:background="@null"
-                    android:singleLine="true"
+                    android:gravity="center|left"
                     android:hint="@string/fragment_hints"
                     android:paddingLeft="4dp"
+                    android:singleLine="true"
                     android:textSize="@dimen/themeSizesmall" />
 
                 <ImageView
@@ -209,16 +211,18 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/fragment_presmises_current_position"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="right|center"
+        android:layout_marginTop="120dp"
+        android:layout_gravity="right"
         android:background="@drawable/shape_pageindex"
         android:gravity="center"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
-        android:text="1/200"
+        android:text="0/0"
         android:textColor="@color/colorBackground" />
 
 </FrameLayout>

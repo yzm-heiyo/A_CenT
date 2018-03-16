@@ -6,7 +6,7 @@ package com.centanet.hk.aplus.entity.http;
 
 public class SSOHeaderDescription {
 
-    private String Udid = "9774d56d682e549c";
+    private String Udid;
     private String ClientVer = "1.0.1";
     private String Channel = "none";
     private String platform = "Android";
