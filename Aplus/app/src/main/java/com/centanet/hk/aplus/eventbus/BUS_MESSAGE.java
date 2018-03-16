@@ -19,6 +19,7 @@ public class BUS_MESSAGE {
         public static final int DETAIL_ADDRESS = 5;
         public static final int DETAIL_DETAILDATA = 6;
         public static final int DETAIL_FOLLOW = 7;
+        public static final int DETAIL_CLIENT_INFO = 8;
     }
 
 }

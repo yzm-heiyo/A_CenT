@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="95dp"
             android:layout_centerHorizontal="true"
-            android:gravity="center_vertical"
+            android:gravity="center"
             android:textSize="17dp"
             android:textColor="@android:color/black"
             android:textStyle="bold"/>

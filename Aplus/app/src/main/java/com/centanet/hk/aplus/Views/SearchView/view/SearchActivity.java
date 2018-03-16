@@ -20,6 +20,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Utils.TextUtil;
@@ -54,6 +55,7 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
     private List<String> searchLabelList;
     private List<PropertyParamHints> oldHistoryList;
     private List<PropertyParamHints> newHistoryList;
+    private AHeaderDescription headerDescription;
 
     private List<PropertyParamHints> dataList;
     private List<String> selectList;
@@ -85,6 +87,7 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
         present = new SearchPreesent(this);
         dataList = new ArrayList<>();
         Bundle bundle = getIntent().getExtras();
+        headerDescription = ((MyApplication)getApplicationContext()).getHeaderDescription();
 
         searchLabelList = new ArrayList<>();
         oldHistoryList = new ArrayList<>();
@@ -450,7 +453,7 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
             String params = s.toString();
             autoSearchDescription.setName(params);
             keyword = params;
-            present.doPost(HttpUtil.URL_AUTOSEARCH, new AHeaderDescription(), autoSearchDescription);
+            present.doPost(HttpUtil.URL_AUTOSEARCH, headerDescription, autoSearchDescription);
         }
     }
 

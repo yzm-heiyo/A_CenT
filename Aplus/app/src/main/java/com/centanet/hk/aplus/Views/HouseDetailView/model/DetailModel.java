@@ -17,6 +17,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_ADDRESS;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_CLIENT_INFO;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_DETAILDATA;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_FOLLOW;
 
@@ -46,7 +47,7 @@ public class DetailModel extends BaseClass implements IDetailModel {
         HttpUtil.doPost(address, bodys, headers, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                L.d(thiz + "-Response", e.toString());
             }
 
             @Override
@@ -82,7 +83,7 @@ public class DetailModel extends BaseClass implements IDetailModel {
         try {
             detailTrustor = GsonUtil.parseJson(dataBack,DetailTrustor.class);
             L.d(thiz,"permission: "+detailTrustor.isDeptContactInformationSearch()+"");
-            L.d(thiz,detailTrustor.getTrustors().toString());
+            notifyBusMessage(DETAIL_CLIENT_INFO,detailTrustor);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {

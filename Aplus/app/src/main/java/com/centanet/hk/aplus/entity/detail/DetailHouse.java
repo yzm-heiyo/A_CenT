@@ -28,6 +28,8 @@ public class DetailHouse implements Serializable {
     private String SaleFloorPrice;
     private String OldSalePrice;
     private String RentFloorPrice;
+    private String SaleFloorPriceFormate;
+    private String RentFloorPriceFormate;
     private int TakeSeeCount;
     private String DistrictName;
     private String AreaName;
@@ -179,6 +181,14 @@ public class DetailHouse implements Serializable {
 
     public String getDistrictName() {
         return DistrictName;
+    }
+
+    public String getSaleFloorPriceFormate() {
+        return SaleFloorPriceFormate;
+    }
+
+    public String getRentFloorPriceFormate() {
+        return RentFloorPriceFormate;
     }
 
     public String getAreaName() {
@@ -391,6 +401,22 @@ public class DetailHouse implements Serializable {
 
     public void setDetailAddressChInfo(String detailAddressChInfo) {
         DetailAddressChInfo = detailAddressChInfo;
+    }
+
+    public void setHasOnlyTrust(boolean hasOnlyTrust) {
+        HasOnlyTrust = hasOnlyTrust;
+    }
+
+    public void setSaleFloorPriceFormate(String saleFloorPriceFormate) {
+        SaleFloorPriceFormate = saleFloorPriceFormate;
+    }
+
+    public void setRentFloorPriceFormate(String rentFloorPriceFormate) {
+        RentFloorPriceFormate = rentFloorPriceFormate;
+    }
+
+    public void setPropertyKeyType(int propertyKeyType) {
+        PropertyKeyType = propertyKeyType;
     }
 
     public void setPropertyNo(String propertyNo) {

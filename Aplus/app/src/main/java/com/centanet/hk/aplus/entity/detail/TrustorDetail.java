@@ -4,7 +4,7 @@ package com.centanet.hk.aplus.entity.detail;
  * Created by yangzm4 on 2018/3/13.
  */
 
-class TrustorDetail {
+public class TrustorDetail {
 
     private String PropertyKeyId;
     private String TrustorKeyId;

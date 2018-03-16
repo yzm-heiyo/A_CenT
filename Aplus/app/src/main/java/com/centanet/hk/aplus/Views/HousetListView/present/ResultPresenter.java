@@ -2,7 +2,7 @@ package com.centanet.hk.aplus.Views.HousetListView.present;
 
 import com.centanet.hk.aplus.Views.HousetListView.model.IResultModel;
 import com.centanet.hk.aplus.Views.HousetListView.model.ResultModel;
-import com.centanet.hk.aplus.Views.HousetListView.view.IResultFragment;
+import com.centanet.hk.aplus.Views.HousetListView.view.IHouseListFragment;
 import com.centanet.hk.aplus.entity.http.AHeaderDescription;
 import com.centanet.hk.aplus.entity.house.Properties;
 
@@ -16,7 +16,7 @@ public class ResultPresenter implements IResultPresenter {
 
     private String thiz = getClass().getSimpleName();
     private IResultModel resultModel;
-    private IResultFragment resultFragment;
+    private IHouseListFragment resultFragment;
     private ResultModel.OnReceiveListener receiveListener = new ResultModel.OnReceiveListener() {
         @Override
         public void onReceive(List<Properties> dataBack) {
@@ -30,7 +30,7 @@ public class ResultPresenter implements IResultPresenter {
         }
     };
 
-    public ResultPresenter(IResultFragment resultFragment) {
+    public ResultPresenter(IHouseListFragment resultFragment) {
         resultModel = ResultModel.getInstance();
         resultModel.setRespontListener(receiveListener);
         this.resultFragment = resultFragment;

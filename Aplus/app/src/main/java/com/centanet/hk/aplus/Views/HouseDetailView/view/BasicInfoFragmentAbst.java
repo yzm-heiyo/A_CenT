@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.Widgets.LineBreakLayout;
 import com.centanet.hk.aplus.Widgets.SmallItemView;
@@ -150,19 +151,21 @@ public class BasicInfoFragmentAbst extends Fragment {
         attentionTxt.setContentName(detailHouseData.getPropertyNote());
         searchTxt.setContentName(detailHouseData.getSearchDate());
 
-        setSalePriceTxt(detailHouseData.getSalePrice(), detailHouseData.getSaleFloorPrice());
-        setRentPriceTxt(detailHouseData.getRentPrice(), detailHouseData.getRentFloorPrice());
+        setSalePriceTxt(detailHouseData.getSalePrice(), detailHouseData.getSaleFloorPriceFormate());
+        setRentPriceTxt(detailHouseData.getRentPrice(), detailHouseData.getRentFloorPriceFormate());
 
-        String[] tags = detailHouseData.getPropertyTags().split(",");
-        for (String tag : tags)
-            tagLayout.addItem(tag);
+        if (detailHouseData.getPropertyTags() != null) {
+            String[] tags = detailHouseData.getPropertyTags().split(",");
+            for (String tag : tags)
+                tagLayout.addItem(tag);
+        }
 
     }
 
     private void setRentPriceTxt(String rentPrice, String rentFloorPrice) {
-        String price = "租:" + rentPrice;
-        if (rentFloorPrice != ""){
-            price = price + "("+rentFloorPrice+")";
+        String price = "租:" + rentPrice.split("\\.")[0];
+        if (rentFloorPrice != "") {
+            price = price + "(" + rentFloorPrice.split("\\.")[0] + ")";
         }
         rentPriceTxt.setText(price);
     }
@@ -177,7 +180,7 @@ public class BasicInfoFragmentAbst extends Fragment {
 
     private void setUseSquare(String squareUseFoot, String squareSource) {
         Spanned spanned = null;
-        if (squareSource != "") {
+        if (squareSource != null && squareSource != "") {
             if (squareSource == "RVD" || squareSource == "rvd")
                 spanned = TextUtil.changeKeyWordColor(squareUseFoot + "{" + squareSource + "}", squareSource, Color.RED + "");
             else

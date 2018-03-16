@@ -24,22 +24,27 @@ import okhttp3.RequestBody;
 public class HttpUtil {
 
     public static String URL = "";
-    public static final String URL_PATH = "http://10.29.174.182:8080/api/property/war-zone";
-    public static final String URL_PARAMETER = "http://10.29.174.182:8080/api/permission/update-parameter";
-    public static final String URL_AUTOSEARCH = "http://10.29.174.182:8080/api/property/auto-estate";
-    public static final String URL_FAVORITE = "http://10.29.174.182:8080/api/property/favorite";
-    public static final String URL_CANCELFAVO = "http://10.29.174.182:8080/api/property/cancelfavorite";
-    public static final String URL_DETAIL = "http://10.29.174.182:8080/api/property/details";
-    public static final String URL_ADDRESS_DETAIL = "http://10.29.174.182:8080/api/property/property-address-detail";
-    public static final String URL_FOLLOWS = "http://10.29.174.182:8080/api/property/follows";
-    public static final String URL_FOLLOW_ADD = "http://10.29.174.182:8080/api/property/follow-add";
-    public static final String URL_TRUSTOR = "http://10.29.174.182:8080/api/property/trustor";
+    public static final String URL_PATH = "property/war-zone";
+    public static final String URL_PARAMETER = "permission/update-parameter";
+    public static final String URL_AUTOSEARCH = "property/auto-estate";
+    public static final String URL_FAVORITE = "property/favorite";
+    public static final String URL_CANCELFAVO = "property/cancelfavorite";
+    public static final String URL_DETAIL = "property/details";
+    public static final String URL_ADDRESS_DETAIL = "property/property-address-detail";
+    public static final String URL_FOLLOWS = "property/follows";
+    public static final String URL_FOLLOW_ADD = "property/follow-add";
+    public static final String URL_TRUSTOR = "property/trustor";
     public static final String URL_SSO = "https://hkqasso.centanet.com/api/api/Login";
     public static final String URL_HomeConfig = "https://hkqasso.centanet.com/api/api/HomeConfig";
     public static final String URL_PERMISSION = "permission/user-permisstion";
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     public static void doPost(String address, Object bodys, Object headers, okhttp3.Callback callback) {
+
+        L.d("Http_Util",address);
+        String url = address;
+        if (address != HttpUtil.URL_SSO && address != HttpUtil.URL_HomeConfig)
+            url = HttpUtil.URL + address;
 
         OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS).build();
@@ -57,7 +62,7 @@ public class HttpUtil {
         RequestBody requestBody = RequestBody.create(JSON, requestJson);
         L.d("HttpUtil-Json", requestJson);
 
-        Request request = builder.url(address).post(requestBody).build();
+        Request request = builder.url(url).post(requestBody).build();
         client.newCall(request).enqueue(callback);
     }
 

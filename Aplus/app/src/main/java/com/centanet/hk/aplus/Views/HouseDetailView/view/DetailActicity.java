@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.Views.Dialog.SimpleTipsDialog;
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.L;
@@ -46,6 +47,7 @@ public class DetailActicity extends DetailActivityAbst implements IDetailView, F
     private TextView ssdTxt, clineNameTxt, houseEnNameTxt, houseChNameTxt, addDetailTxt;
     private TitleBar titleBar;
     private DetailHouse detailHouseData;
+    private AHeaderDescription headerDescription;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,17 +76,18 @@ public class DetailActicity extends DetailActivityAbst implements IDetailView, F
             public void onClick(View v) {
                 DetailsDescription detailsDescription = new DetailsDescription();
                 detailsDescription.setKeyId(keyId);
-                present.doPost(URL_ADDRESS_DETAIL, new AHeaderDescription(), detailsDescription);
+                present.doPost(URL_ADDRESS_DETAIL, headerDescription, detailsDescription);
             }
         });
     }
 
     private void init() {
+        headerDescription = ((MyApplication)getApplicationContext()).getHeaderDescription();
         keyId = getIntent().getStringExtra("keyId");
         present = new DetailPresent(this);
         DetailsDescription detailsDescription = new DetailsDescription();
         detailsDescription.setKeyId(keyId);
-        present.doPost(HttpUtil.URL_DETAIL, new AHeaderDescription(), detailsDescription);
+        present.doPost(HttpUtil.URL_DETAIL, headerDescription, detailsDescription);
         EventBus.getDefault().register(this);
     }
 
@@ -174,6 +177,7 @@ public class DetailActicity extends DetailActivityAbst implements IDetailView, F
 
     private void setIconViewLevel(int level, String properties) {
         L.d(thiz, properties);
+        if(properties==null)return;
         switch (properties.substring(0, 1)) {
             case "N":
                 level = 1;
@@ -205,9 +209,9 @@ public class DetailActicity extends DetailActivityAbst implements IDetailView, F
 
 
     @Override
-    public void onRefresh(String address, AHeaderDescription AHeaderDescription, FollowDescription body) {
+    public void onRefresh(String address, AHeaderDescription aHeaderDescription, FollowDescription body) {
         body.setPropertyKeyId(keyId);
-        present.doPost(address, AHeaderDescription, body);
+        present.doPost(address, headerDescription, body);
     }
 
     @Override
@@ -225,6 +229,6 @@ public class DetailActicity extends DetailActivityAbst implements IDetailView, F
     @Override
     public void getClientInfo(String address, AHeaderDescription AHeaderDescription, TrustorDescription body) {
         body.setKeyId(keyId);
-        present.doPost(address, AHeaderDescription, body);
+        present.doPost(address, headerDescription, body);
     }
 }

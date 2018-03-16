@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.support.v4.app.DialogFragment;
 
 import com.bigkoo.pickerview.TimePickerView;
+import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.Dialog.DialogFactory;
@@ -64,6 +65,7 @@ public abstract class FollowFragmentAbst extends Fragment implements View.OnClic
     private OnUpdateListener onUpdateListener;
     private List<PropertyFollow> follows;
     private FollowDescription description = new FollowDescription();
+    private AHeaderDescription headerDescription;
 
 
     @Override
@@ -125,7 +127,7 @@ public abstract class FollowFragmentAbst extends Fragment implements View.OnClic
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
                 description.setPageIndex(follows.size() / 5 + 1);
-                onUpdateListener.onRefresh(HttpUtil.URL_FOLLOWS, new AHeaderDescription(), description);
+                onUpdateListener.onRefresh(HttpUtil.URL_FOLLOWS, headerDescription, description);
             }
         });
 
@@ -135,7 +137,7 @@ public abstract class FollowFragmentAbst extends Fragment implements View.OnClic
                 description.setPageIndex(1);
                 follows.clear();
                 onUpdateListener.clearFlag();
-                onUpdateListener.onRefresh(HttpUtil.URL_FOLLOWS, new AHeaderDescription(), description);
+                onUpdateListener.onRefresh(HttpUtil.URL_FOLLOWS, headerDescription, description);
             }
         });
 
@@ -154,6 +156,7 @@ public abstract class FollowFragmentAbst extends Fragment implements View.OnClic
     };
 
     private void initDatas() {
+        headerDescription = ((MyApplication)getActivity().getApplicationContext()).getHeaderDescription();
         follows = new ArrayList<>();
         adapter = new InnerAdapter(getContext(), follows);
         lv.setAdapter(adapter);

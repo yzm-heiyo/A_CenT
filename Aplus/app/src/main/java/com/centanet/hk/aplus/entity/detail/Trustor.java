@@ -6,7 +6,7 @@ import java.util.List;
  * Created by yangzm4 on 2018/3/13.
  */
 
-class Trustor {
+public class Trustor {
 
     private String KeyId;
     private String Creator;

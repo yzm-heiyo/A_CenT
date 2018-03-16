@@ -5,7 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 
 import com.centanet.hk.aplus.Views.abst.MainActivityAbst;
-import com.centanet.hk.aplus.Views.HousetListView.view.ResultFragment;
+import com.centanet.hk.aplus.Views.HousetListView.view.HouseListFragment;
 
 /**
  * Created by mzh1608258 on 2018/1/2.
@@ -29,8 +29,8 @@ public class MainActivity extends MainActivityAbst {
     protected Fragment[] setFragments() {
 
         Fragment[] fragments = new Fragment[3];
-        fragments[0] = new ResultFragment();
-        fragments[1] = new ResultFragment();
+        fragments[0] = new HouseListFragment();
+        fragments[1] = new HouseListFragment();
         fragments[2] = new MineFragment();
 
         return fragments;

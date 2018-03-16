@@ -3,12 +3,9 @@ package com.centanet.hk.aplus.Views.LoginView.model;
 import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
-import com.centanet.hk.aplus.Views.FeedBackView.model.FeedBackModel;
-import com.centanet.hk.aplus.entity.http.SSOHeaderDescription;
-import com.centanet.hk.aplus.entity.http.SSOLoginDescription;
 import com.centanet.hk.aplus.entity.login.HomeConfig;
 import com.centanet.hk.aplus.entity.login.Login;
-import com.google.gson.Gson;
+import com.centanet.hk.aplus.entity.login.UserPermission;
 
 import java.io.IOException;
 
@@ -58,10 +55,10 @@ public class LoginModel implements ILoginModel {
 
     @Override
     public void doPost(final String address, Object header, Object body) {
-        String url = address;
-        if (address != HttpUtil.URL_SSO && address != HttpUtil.URL_HomeConfig)
-            url = HttpUtil.URL + address;
-        HttpUtil.doPost(url, body, header, new Callback() {
+//        String url = address;
+//        if (address != HttpUtil.URL_SSO && address != HttpUtil.URL_HomeConfig)
+//            url = HttpUtil.URL + address;
+        HttpUtil.doPost(address, body, header, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 
@@ -102,7 +99,16 @@ public class LoginModel implements ILoginModel {
     }
 
     private void getPermission(String data) {
-        L.d("Permission", data);
+
+        try {
+            UserPermission permission = GsonUtil.parseJson(data, UserPermission.class);
+            L.d("permission", permission.toString());
+            if (listener != null) listener.OnPermissionFinish(permission);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -112,6 +118,9 @@ public class LoginModel implements ILoginModel {
     }
 
     public interface OnReceiveLisenter {
+
+        void OnPermissionFinish(UserPermission permission);
+
         void OnGetConfig(HomeConfig config);
 
         void OnLogin(Login login);

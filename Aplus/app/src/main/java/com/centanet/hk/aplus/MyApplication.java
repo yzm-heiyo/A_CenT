@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
+import com.centanet.hk.aplus.entity.http.AHeaderDescription;
+
 import org.litepal.LitePalApplication;
 
 import java.util.ArrayList;
@@ -19,6 +21,8 @@ public class MyApplication extends LitePalApplication {
 
     private static boolean isRelase;
 
+    private AHeaderDescription headerDescription;
+
     public static Context context;
 
     @Override
@@ -30,6 +34,14 @@ public class MyApplication extends LitePalApplication {
 
     public static Context getContext() {
         return context;
+    }
+
+    public void setHeaderDescription(AHeaderDescription headerDescription) {
+        this.headerDescription = headerDescription;
+    }
+
+    public AHeaderDescription getHeaderDescription() {
+        return headerDescription;
     }
 
     public static boolean getRelase() {

@@ -99,7 +99,6 @@ public class SimpleTipsDialog extends DialogFragment implements View.OnClickList
         if(!isLeftVisibility){
             leftBtn.setVisibility(View.GONE);
             lineView.setVisibility(View.GONE);
-//            rightBtn.setBackground(getActivity().getDrawable(R.drawable.shape_dialog_hint));
         }
 
 
