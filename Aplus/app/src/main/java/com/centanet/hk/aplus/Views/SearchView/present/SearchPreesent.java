@@ -58,6 +58,7 @@ public class SearchPreesent implements ISearchPresent {
     }
 
     private SearchModel.OnReceiveListener onReceiveListener = new SearchModel.OnReceiveListener() {
+
         @Override
         public void onReceive(List<PropertyParamHints> dataBack) {
             searchView.addListData(dataBack);

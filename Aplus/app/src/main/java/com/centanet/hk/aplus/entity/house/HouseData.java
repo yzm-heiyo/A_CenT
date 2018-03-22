@@ -1,5 +1,7 @@
 package com.centanet.hk.aplus.entity.house;
 
+import com.centanet.hk.aplus.entity.login.Permisstions;
+
 import java.util.List;
 
 /**
@@ -12,7 +14,7 @@ public class HouseData {
     private List<Properties> Properties;
     private boolean Flag;
     private String ErrorMsg;
-    private PermisstionsModel PermisstionsModel;
+    private Permisstions PermisstionsModel;
     private String RunTime;
 
     public int getRecordCount() {
@@ -55,11 +57,11 @@ public class HouseData {
         RunTime = runTime;
     }
 
-    public void setPermisstionsModel(PermisstionsModel permisstionsModel) {
+    public void setPermisstionsModel(Permisstions permisstionsModel) {
         this.PermisstionsModel = permisstionsModel;
     }
 
-    public PermisstionsModel getPermisstionsModel() {
+    public Permisstions getPermisstionsModel() {
 
         return PermisstionsModel;
     }

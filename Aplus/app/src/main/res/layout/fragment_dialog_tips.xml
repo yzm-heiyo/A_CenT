@@ -12,6 +12,8 @@
         android:layout_above="@id/levelline"
         android:layout_alignParentTop="true"
         android:gravity="center_horizontal"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:background="@drawable/shape_dialog_hint">
 
         <TextView

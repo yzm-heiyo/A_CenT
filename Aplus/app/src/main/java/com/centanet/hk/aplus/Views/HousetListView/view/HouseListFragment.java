@@ -21,10 +21,11 @@ import android.widget.TextView;
 
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Views.LoginView.view.LoginActivity;
 import com.centanet.hk.aplus.common.DataManager;
 import com.centanet.hk.aplus.Utils.TextUtil;
-import com.centanet.hk.aplus.Views.HousetListView.present.IResultPresenter;
-import com.centanet.hk.aplus.Views.HousetListView.present.ResultPresenter;
+import com.centanet.hk.aplus.Views.HousetListView.present.IHouseListPresenter;
+import com.centanet.hk.aplus.Views.HousetListView.present.HouseListPresenter;
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.SearchView.view.SearchActivity;
@@ -33,7 +34,7 @@ import com.centanet.hk.aplus.Views.Dialog.DialogFactory;
 import com.centanet.hk.aplus.Views.Dialog.PriceDialog;
 import com.centanet.hk.aplus.Views.Dialog.SimpleTipsDialog;
 import com.centanet.hk.aplus.Views.Dialog.SortDialog;
-import com.centanet.hk.aplus.Views.Unensure.MoreActivity;
+import com.centanet.hk.aplus.Views.ComplexSearchView.ComplexSearchActivity;
 import com.centanet.hk.aplus.entity.http.FavoriteDescription;
 import com.centanet.hk.aplus.entity.http.AHeaderDescription;
 import com.centanet.hk.aplus.entity.http.HouseDescription;
@@ -65,6 +66,8 @@ import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SE
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.HouseListDataCount.HOUSELIST_COUNT;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.NetWorkState.NETWORK_STATE_FAIL;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.NetWorkState.NETWORK_STATE_SUCCESS;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.HOUSELIST;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.HOUSELIST_NO;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.RefreshView.VIEW_LOAD_START;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.RefreshView.VIEW_REFRESH_START;
 
@@ -83,16 +86,30 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
     private TextView search, currentPosition;
     private static List<Properties> listData;
     private List<String> searchHistory;
-    private IResultPresenter presenter;
+    private IHouseListPresenter presenter;
     private RefreshLayout refreshLayout;
     private AHeaderDescription aHeaderDescription;
     private HouseDescription bodyDescription;
     private String houseCount = "0";
+    private boolean isFavorite = false;
+
+//    public static HouseListFragment newInstance(int pageType, String parentCategory) {
+//        HouseListFragment f = new HouseListFragment();
+//        Bundle b = new Bundle();
+//        b.putInt("pageType", pageType);
+//        b.putSerializable("parentCategory", parentCategory);
+//        f.setArguments(b);
+//        return f;
+//    }
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            isFavorite = args.getBoolean("isFavorite");
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -104,6 +121,10 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
             initViews();
             init();
             initListeners();
+            if (isFavorite) {
+                bodyDescription.setPropertyType(5);
+                openFreshView();
+            }
         }
         return view;
     }
@@ -133,10 +154,10 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
             }
         });
         lv.setAdapter(adapter);
-        presenter = new ResultPresenter(this);
+        presenter = new HouseListPresenter(this);
         EventBus.getDefault().register(this);
         ClassicsFooter.REFRESH_FOOTER_LOADING = getString(R.string.loading_more);
-        presenter.doPost(HttpUtil.URL_PARAMETER, aHeaderDescription, new ParameterDescription());
+//        presenter.doPost(HttpUtil.URL_PARAMETER, aHeaderDescription, new ParameterDescription());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -198,7 +219,7 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
                 startActivityForResult(intent, 0);
                 break;
             case R.id.fragment_presmises_more:
-                startActivity(new Intent(getContext(), MoreActivity.class));
+                startActivity(new Intent(getContext(), ComplexSearchActivity.class));
                 break;
             case R.id.fragment_presmises_sort:
                 showSortDialog();
@@ -238,7 +259,7 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
         priceDialog.setOnDialogClikeLisenter(new PriceDialog.onDialogOnclikeLisenter() {
 
             @Override
-            public void onClike(Dialog dialog, Map<String, Object> params) {
+            public void onClike(Dialog dialog, int viewID, Map<String, Object> params) {
                 dialog.dismiss();
                 int type = (int) params.get(PriceDialog.PARAMS_TYPE);
                 DataManager.priceType = type;
@@ -271,7 +292,7 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
         SortDialog sortDialog = new SortDialog(DataManager.sortDialogSelectId);
         sortDialog.setOnDialogClikeLisenter(new SortDialog.onDialogOnclikeLisenter() {
             @Override
-            public void onClike(Dialog dialog, Map<String, Object> params) {
+            public void onClike(Dialog dialog, int viewID, Map<String, Object> params) {
                 dialog.dismiss();
                 bodyDescription.setPageIndex(1);
                 DataManager.sortDialogSelectId = (int) params.get(SortDialog.PARAMS_SELECTID);
@@ -301,6 +322,7 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
                     presenter.doPost(address, aHeaderDescription, favoriteDescription);
                     listData.get(position).setFavoriteFlag(!data.isFavoriteFlag());
                     adapter.updateView(position, lv);
+//                    PermissionManager.set();
                 }
             }
         });
@@ -333,6 +355,12 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
             case HOUSELIST_COUNT:
                 setCountTxt(messageEvent);
                 break;
+            case HOUSELIST:
+                lv.setVisibility(View.VISIBLE);
+                break;
+            case HOUSELIST_NO:
+                showNoPermissionDialog();
+                break;
         }
         closeRefresh();
     }
@@ -340,7 +368,7 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
     private void setCountTxt(MessageEventBus messageEvent) {
         houseCount = (String) messageEvent.getObject();
         if (houseCount.equals("0")) return;
-        currentPosition.setText("1" + "/" + houseCount);
+//        currentPosition.setText("1" + "/" + houseCount);
     }
 
     private void closeRefresh() {
@@ -359,6 +387,7 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
     @Override
     public void refreshListData(List<Properties> properties) {
         listData.addAll(properties);
+//        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -372,6 +401,20 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
     public void openLoadView() {
         if (refreshLayout.isLoading()) return;
         refreshLayout.autoLoadmore();
+    }
+
+    @Override
+    public void toLogin() {
+        startActivity(new Intent(getActivity(), LoginActivity.class));
+    }
+
+    @Override
+    public void showNoPermissionDialog() {
+        SimpleTipsDialog simpleTipsDialog = new SimpleTipsDialog();
+        simpleTipsDialog.setContentString(getString(R.string.dialog_tips_permission_no_houselist));
+        simpleTipsDialog.setLeftBtnVisibility(false);
+        simpleTipsDialog.show(getFragmentManager(), "");
+        closeRefresh();
     }
 
     @Override
@@ -576,6 +619,10 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
             }
         }
 
+        @Override
+        public void notifyDataSetChanged() {
+            super.notifyDataSetChanged();
+        }
 
         public interface OnItemClickListener {
             void onClick(View v, int position);

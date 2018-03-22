@@ -1,13 +1,8 @@
 package com.centanet.hk.aplus.Views.LoginView.view;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.telephony.TelephonyManager;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -15,31 +10,23 @@ import android.widget.EditText;
 
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.Utils.L;
-import com.centanet.hk.aplus.Utils.net.GsonUtil;
-import com.centanet.hk.aplus.Utils.net.HttpUtil;
+import com.centanet.hk.aplus.Utils.PreferenceUtils;
 import com.centanet.hk.aplus.Views.Dialog.SimpleTipsDialog;
-import com.centanet.hk.aplus.Views.LoginView.model.LoginModel;
 import com.centanet.hk.aplus.Views.LoginView.persent.ILoginPresent;
 import com.centanet.hk.aplus.Views.LoginView.persent.LoginPresent;
-import com.centanet.hk.aplus.Views.Unensure.MainActivity;
+import com.centanet.hk.aplus.Views.MainActivity.MainActivity;
 import com.centanet.hk.aplus.Views.abst.LoginActivityAbst;
 import com.centanet.hk.aplus.entity.http.AHeaderDescription;
 import com.centanet.hk.aplus.entity.http.SSOHeaderDescription;
-import com.centanet.hk.aplus.entity.http.SSOHomeConfigDescription;
 import com.centanet.hk.aplus.entity.http.SSOLoginDescription;
-import com.centanet.hk.aplus.entity.login.Login;
-
-import java.io.IOException;
-import java.util.UUID;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
+import com.centanet.hk.aplus.entity.login.Permisstions;
 
 public class LoginActivity extends LoginActivityAbst implements LoginActivityAbst.ILoginManager, ILoginView {
 
 
     private ILoginPresent present;
+    private String account;
+    private String thiz =getClass().getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,17 +42,20 @@ public class LoginActivity extends LoginActivityAbst implements LoginActivityAbs
 
     @Override
     public void login(View v, String account, String password) {
+        this.account = account;
         SSOLoginDescription loginDescription = new SSOLoginDescription();
-        loginDescription.setDomainAccount(account);
+        loginDescription.setDomainAccount(account.trim());
         loginDescription.setDomainPass(password);
         SSOHeaderDescription ssoHeader = new SSOHeaderDescription();
-        present.login(ssoHeader,loginDescription);
+        present.login(ssoHeader, loginDescription);
     }
 
     @Override
-    public void reFreshApplication(AHeaderDescription headerDescription) {
+    public void reFreshApplication(AHeaderDescription headerDescription, Permisstions permission,SSOHeaderDescription ssoHeaderDescription) {
         MyApplication application = (MyApplication) getApplicationContext();
         application.setHeaderDescription(headerDescription);
+        application.setUserPermission(permission);
+        application.setSsoHeaderDescription(ssoHeaderDescription);
     }
 
     @Override
@@ -78,7 +68,13 @@ public class LoginActivity extends LoginActivityAbst implements LoginActivityAbs
 
     @Override
     public void toLogin() {
+        finish();
+        saveAccount();
         startActivity(new Intent(this, MainActivity.class));
+    }
+
+    private void saveAccount() {
+        PreferenceUtils.addParams("account",account.trim());
     }
 
     @Override

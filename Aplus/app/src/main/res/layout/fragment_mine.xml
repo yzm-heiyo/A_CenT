@@ -32,6 +32,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/mine_txt_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -40,6 +41,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/mine_txt_fullname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -47,6 +49,7 @@
                 android:textSize="@dimen/themeSize" />
 
             <TextView
+                android:id="@+id/mine_txt_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -54,6 +57,7 @@
                 android:textSize="@dimen/themeSize" />
 
             <TextView
+                android:id="@+id/mine_txt_position"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -62,6 +66,7 @@
                 android:textSize="@dimen/themeSizesmall" />
 
             <TextView
+                android:id="@+id/mine_txt_departname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
@@ -117,6 +122,7 @@
                     android:background="@color/color_theme_item" />
 
                 <TextView
+                    android:id="@+id/mine_txt_about"
                     style="@style/fragment_mine_item_style"
                     android:text="@string/fragment_mine_about" />
 
@@ -124,6 +130,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:background="@color/colorline" />
+
+                <TextView
+                    android:id="@+id/mine_txt_clause"
+                    style="@style/fragment_mine_item_style"
+                    android:text="@string/app_use_clause" />
 
                 <TextView
                     android:id="@+id/fragment_mine_question"

@@ -303,7 +303,7 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
             params.put(PARAMS_SELECTID,selectRadId);
             params.put(PARAMS_PRICE,price);
 
-            onDialogClikeLisenter.onClike(getDialog(), params);
+            onDialogClikeLisenter.onClike(getDialog(),0,params);
         }
     }
 

@@ -1,5 +1,7 @@
 package com.centanet.hk.aplus.common;
 
+import com.centanet.hk.aplus.entity.house.Properties;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -24,4 +26,8 @@ public class DataManager {
     public static int priceType = SALE;
     //排序id
     public static int sortDialogSelectId;
+
+    public static List<Properties> listData = new ArrayList<>();
+
+    public static List<Properties> listFavo = new ArrayList<>();
 }

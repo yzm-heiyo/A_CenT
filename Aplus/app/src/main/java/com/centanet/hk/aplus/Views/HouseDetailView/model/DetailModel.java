@@ -9,6 +9,7 @@ import com.centanet.hk.aplus.entity.detail.DetailHouse;
 import com.centanet.hk.aplus.entity.detail.DetailTrustor;
 import com.centanet.hk.aplus.entity.http.AHeaderDescription;
 import com.centanet.hk.aplus.eventbus.BaseClass;
+import com.centanet.hk.aplus.manager.PermissionManager;
 
 import java.io.IOException;
 
@@ -20,6 +21,11 @@ import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAI
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_CLIENT_INFO;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_DETAILDATA;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_FOLLOW;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.CLIENTINFO_NO;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.FOLLOW_ADD;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.FOLLOW_ADD_NO;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.SEARCH_ALL_NO;
+import static com.centanet.hk.aplus.manager.PermissionManager.FOLLOW_ALL;
 
 /**
  * Created by yangzm4 on 2018/3/8.
@@ -35,6 +41,8 @@ public class DetailModel extends BaseClass implements IDetailModel {
     private OnReceiveListener onReceiveListener;
 
     private DetailHouse houseData;
+
+    private String departmentPermission;
 
     public static synchronized DetailModel getInstance() {
         return detailModel;
@@ -79,11 +87,17 @@ public class DetailModel extends BaseClass implements IDetailModel {
     }
 
     private void getTrustor(String dataBack) {
+
+        if (!verifyPermission(departmentPermission,PermissionManager.CLIENTINFO_ALL)) {
+            notifyEmptyBusMessage(CLIENTINFO_NO);
+            return;
+        }
+
         DetailTrustor detailTrustor;
         try {
-            detailTrustor = GsonUtil.parseJson(dataBack,DetailTrustor.class);
-            L.d(thiz,"permission: "+detailTrustor.isDeptContactInformationSearch()+"");
-            notifyBusMessage(DETAIL_CLIENT_INFO,detailTrustor);
+            detailTrustor = GsonUtil.parseJson(dataBack, DetailTrustor.class);
+            L.d(thiz, "permission: " + detailTrustor.isDeptContactInformationSearch() + "");
+            notifyBusMessage(DETAIL_CLIENT_INFO, detailTrustor);
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -91,7 +105,26 @@ public class DetailModel extends BaseClass implements IDetailModel {
         }
     }
 
+    private boolean verifyPermission(String pers, String per) {
+        boolean departPer = PermissionManager.verifyPermission(pers, per);
+        boolean permission = PermissionManager.verifyPermission(per);
+        L.d("",departPer + " : " + permission);
+        if (!departPer || !permission) return false;
+        return true;
+    }
+
     private void getFollow(String dataBack) {
+
+        if (!verifyPermission(departmentPermission,PermissionManager.SEARCH_ALL)) {
+            notifyEmptyBusMessage(SEARCH_ALL_NO);
+            notifyEmptyBusMessage(DETAIL_FOLLOW);
+            return;
+        }
+
+        if(verifyPermission(departmentPermission,FOLLOW_ALL)){
+            notifyEmptyBusMessage(FOLLOW_ADD);
+        }
+
         DetailFollow follows = null;
         try {
             follows = GsonUtil.parseJson(dataBack, DetailFollow.class);
@@ -120,6 +153,7 @@ public class DetailModel extends BaseClass implements IDetailModel {
 
         try {
             houseData = GsonUtil.parseJson(dataBack, DetailHouse.class);
+            departmentPermission = houseData.getDepartmentPermissions();
             if (onReceiveListener != null) onReceiveListener.onReceive(houseData);
         } catch (IllegalAccessException e) {
             e.printStackTrace();

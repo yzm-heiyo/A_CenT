@@ -154,7 +154,6 @@ public class DialogFactory extends DialogFragment implements RadioGroup.OnChecke
         sortLeftRG = sortLayout.findViewById(R.id.sort_left_group);
         sortLeftRG.setOnCheckedChangeListener(this);
         sortRightRG = sortLayout.findViewById(R.id.sort_right_group);
-        sortRightRG.check(R.id.sort_rb_default);
         sortRightRG.setOnCheckedChangeListener(this);
         checkBoxLayout = statusLayout.findViewById(R.id.dialog_status_confirm_layout);
         statusBtn = statusLayout.findViewById(R.id.dialog_status_confirm);
@@ -203,7 +202,7 @@ public class DialogFactory extends DialogFragment implements RadioGroup.OnChecke
 
             case STATUS:
                 statusLayout.setVisibility(View.VISIBLE);
-                lp.height = getActivity().getWindowManager().getDefaultDisplay().getHeight() * 65 / 100;
+                lp.height = getActivity().getWindowManager().getDefaultDisplay().getHeight() * 6 / 10;
                 L.d(thiz, "StatusDialogShow");
                 return statusLayout;
 
@@ -222,7 +221,7 @@ public class DialogFactory extends DialogFragment implements RadioGroup.OnChecke
 
             case OPENDATE:
                 openDateLayout.setVisibility(View.VISIBLE);
-                lp.height = getActivity().getWindowManager().getDefaultDisplay().getHeight() * 3 / 5;
+                lp.height = getContext().getResources().getDisplayMetrics().heightPixels *  1 / 2;
                 return openDateLayout;
 
             case CONFIRM:

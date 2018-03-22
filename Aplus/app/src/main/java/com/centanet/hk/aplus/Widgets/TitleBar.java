@@ -24,7 +24,7 @@ import com.centanet.hk.aplus.Utils.DensityUtil;
  * Created by mzh1608258 on 2017/7/13.
  */
 
-public class TitleBar extends LinearLayout implements View.OnClickListener{
+public class TitleBar extends LinearLayout implements View.OnClickListener {
 
     private ImageView backicon;
     private TextView titleContent;
@@ -32,7 +32,7 @@ public class TitleBar extends LinearLayout implements View.OnClickListener{
     private LinearLayout ll, content, right;
     private int statusBarHeight;
     private OnItemClickListener mOnItemClickListener;
-    public static final int TYPE_BACK=0,TYPE_PUT=1;
+    public static final int TYPE_BACK = 0, TYPE_PUT = 1;
     private Context context;
 
 
@@ -58,7 +58,7 @@ public class TitleBar extends LinearLayout implements View.OnClickListener{
 
 
     private void init(final Context context) {
-        this.context=context;
+        this.context = context;
         LayoutInflater.from(context).inflate(R.layout.titlebar, this);
         backicon = this.findViewById(R.id.titlebar_backicon);
         titleContent = this.findViewById(R.id.titlebar_text);
@@ -152,26 +152,26 @@ public class TitleBar extends LinearLayout implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.titlebar_right_layout:
-                if(mOnItemClickListener!=null)
-                    mOnItemClickListener.onClick(v,TYPE_PUT);
+                if (mOnItemClickListener != null)
+                    mOnItemClickListener.onClick(v, TYPE_PUT);
                 break;
 
             case R.id.titlebar_backplace:
-                if(mOnItemClickListener!=null) {
+                if (mOnItemClickListener != null) {
                     mOnItemClickListener.onClick(v, TYPE_BACK);
                     break;
                 }
                 ((Activity) context).finish();
 
             default:
-                    break;
+                break;
         }
     }
 
     public interface OnItemClickListener {
-        void onClick(View v,int type);
+        void onClick(View v, int type);
 
     }
 

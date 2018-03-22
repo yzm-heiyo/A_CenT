@@ -180,7 +180,7 @@
             android:id="@+id/smartLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#444444"
+            android:background="@android:color/white"
             app:srlPrimaryColor="@android:color/white"
             app:srlAccentColor="#444444"
             app:srlEnablePreviewInEditMode="true">
@@ -196,6 +196,7 @@
                 android:layout_height="match_parent"
                 android:divider="@drawable/shape_listview_divider"
                 android:dividerHeight="8dp"
+                android:visibility="invisible"
                 android:layerType="software"></ListView>
             <com.scwang.smartrefresh.layout.footer.ClassicsFooter
                 android:layout_width="match_parent"

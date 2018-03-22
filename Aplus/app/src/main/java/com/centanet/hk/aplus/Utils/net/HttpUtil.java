@@ -24,6 +24,7 @@ import okhttp3.RequestBody;
 public class HttpUtil {
 
     public static String URL = "";
+    public static String URL_USERLAUSE;
     public static final String URL_PATH = "property/war-zone";
     public static final String URL_PARAMETER = "permission/update-parameter";
     public static final String URL_AUTOSEARCH = "property/auto-estate";
@@ -37,14 +38,16 @@ public class HttpUtil {
     public static final String URL_SSO = "https://hkqasso.centanet.com/api/api/Login";
     public static final String URL_HomeConfig = "https://hkqasso.centanet.com/api/api/HomeConfig";
     public static final String URL_PERMISSION = "permission/user-permisstion";
+    public static final String URL_USERINFO = "permission/user-info";
+    public static final String URL_SSO_FEEDBACK = "https://hkqasso.centanet.com/api/api/Feedback";
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     public static void doPost(String address, Object bodys, Object headers, okhttp3.Callback callback) {
 
-        L.d("Http_Util",address);
         String url = address;
-        if (address != HttpUtil.URL_SSO && address != HttpUtil.URL_HomeConfig)
+        if (address != HttpUtil.URL_SSO && address != HttpUtil.URL_HomeConfig && address != URL_USERLAUSE && address != URL_SSO_FEEDBACK)
             url = HttpUtil.URL + address;
+        L.d("Http_Util", url);
 
         OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS).build();
@@ -141,7 +144,7 @@ public class HttpUtil {
                     paramMoreItemList.add(item);
                     continue;
                 }
-                if(field.getName()=="serialVersionUID"){
+                if (field.getName() == "serialVersionUID") {
                     continue;
                 }
 

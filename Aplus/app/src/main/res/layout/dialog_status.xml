@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_status_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/dialog_status_confirm"
+        android:layout_alignParentTop="true">
+
+        <com.centanet.hk.aplus.Widgets.SmartCheckBoxLayout
+            android:id="@+id/dialog_status_confirm_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <CheckBox
+                android:id="@+id/dialog_status_all"
+                style="@style/dialog_status_item_style"
+                android:text="@string/dialog_status_ALL" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginLeft="25dp"
+                android:background="#efefef" />
+
+            <CheckBox
+                android:id="@+id/dialog_status_N"
+                style="@style/dialog_status_item_style"
+                android:text="@string/dialog_status_N" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginLeft="25dp"
+                android:background="#efefef" />
+
+            <CheckBox
+                android:id="@+id/dialog_status_WT"
+                style="@style/dialog_status_item_style"
+                android:text="@string/dialog_status_WT" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginLeft="25dp"
+                android:background="#efefef" />
+
+            <CheckBox
+                android:id="@+id/dialog_status_P"
+                style="@style/dialog_status_item_style"
+                android:text="@string/dialog_status_P" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginLeft="25dp"
+                android:background="#efefef" />
+
+            <CheckBox
+                android:id="@+id/dialog_status_TP"
+                style="@style/dialog_status_item_style"
+                android:text="@string/dialog_status_TP" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginLeft="25dp"
+                android:background="#efefef" />
+
+            <CheckBox
+                android:id="@+id/dialog_status_G"
+                style="@style/dialog_status_item_style"
+                android:text="@string/dialog_status_G" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2px"
+                android:layout_marginLeft="25dp"
+                android:background="#efefef" />
+
+            <CheckBox
+                android:id="@+id/dialog_status_search"
+                style="@style/dialog_status_item_style"
+                android:text="@string/dialog_status_S" />
+
+        </com.centanet.hk.aplus.Widgets.SmartCheckBoxLayout>
+
+    </ScrollView>
+
+    <Button
+        android:id="@+id/dialog_status_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/shape_item_search_btn"
+        android:paddingLeft="80dp"
+        android:paddingRight="80dp"
+        android:text="@string/dialog_status_confirm"
+        android:textColor="@color/colorBackground"
+        android:textSize="@dimen/themeSizeplus" />
+
+</RelativeLayout>

@@ -28,6 +28,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:button="@null"
+                    android:checked="true"
                     android:text="@string/dialog_sort"
                     android:textColor="@color/textcolor" />
 
@@ -135,14 +136,15 @@
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:background="@drawable/selector_sort_down"
+                    android:checked="true"
                     android:button="@null" />
 
                 <RadioButton
                     android:id="@+id/sort_rb_price_down"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:layout_marginTop="8dp"
                     android:background="@drawable/selector_sort_down"
+                    android:layout_marginTop="8dp"
                     android:button="@null" />
 
                 <RadioButton

@@ -27,7 +27,6 @@ public abstract class DetailActivityAbst extends BasicActivty {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.item_result_detail);
         initViews();
-
     }
 
     private void initViews() {
@@ -38,7 +37,6 @@ public abstract class DetailActivityAbst extends BasicActivty {
         tab.setupWithViewPager(vp);
 
         initFragmentTitles();
-
     }
 
     private void initFragmentTitles() {

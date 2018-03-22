@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.PreferenceUtils;
 import com.centanet.hk.aplus.Views.basic.BasicActivty;
 
 /**
@@ -30,8 +31,12 @@ public abstract class LoginActivityAbst extends BasicActivty {
 
 
     private void initViews() {
+
         account = this.findViewById(R.id.login_account);
         password = this.findViewById(R.id.login_password);
+
+        String clientAccount = PreferenceUtils.getValue("account");
+        if (!clientAccount.equals("")) account.setText(clientAccount);
     }
 
     private void init() {
@@ -47,12 +52,11 @@ public abstract class LoginActivityAbst extends BasicActivty {
     public void login(View v) throws Exception {
         if (manager == null) {
             throw new Exception("ILoginManager is null ! pls check!!");
-        }else{
+        } else {
             manager.login(v, account.getText().toString(), password.getText().toString());
         }
 
     }
-
 
 
     protected abstract ILoginManager setLoginHelper();

@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 
 public class DetailHouse implements Serializable {
-    private String UserIsShowAddressDetail;
+    private boolean UserIsShowAddressDetail;
     private String DetailAddressEnNoFoolrInfo;
     private String DetailAddressChNoFoolrInfo;
     private String DetailAddressChInfo;
@@ -87,7 +87,7 @@ public class DetailHouse implements Serializable {
         return PropertyKeyType;
     }
 
-    public String getUserIsShowAddressDetail() {
+    public boolean getUserIsShowAddressDetail() {
         return UserIsShowAddressDetail;
     }
 
@@ -387,7 +387,7 @@ public class DetailHouse implements Serializable {
         return RunTime;
     }
 
-    public void setUserIsShowAddressDetail(String userIsShowAddressDetail) {
+    public void setUserIsShowAddressDetail(boolean userIsShowAddressDetail) {
         UserIsShowAddressDetail = userIsShowAddressDetail;
     }
 

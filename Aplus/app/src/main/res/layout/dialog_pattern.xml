@@ -339,56 +339,49 @@
                     style="@style/dialog_price_item_style"
                     android:text="@string/dialog_price_unlimit" />
 
-                <View
-                    style="@style/dialog_line_style" />
+                <View style="@style/dialog_line_style" />
 
                 <RadioButton
                     android:id="@+id/dialog_radiobtn_0_400"
                     style="@style/dialog_price_item_style"
                     android:text="@string/dialog_price_400" />
 
-                <View
-                    style="@style/dialog_line_style" />
+                <View style="@style/dialog_line_style" />
 
                 <RadioButton
                     android:id="@+id/dialog_radiobtn_400_600"
                     style="@style/dialog_price_item_style"
                     android:text="@string/dialog_price_600" />
 
-                <View
-                    style="@style/dialog_line_style" />
+                <View style="@style/dialog_line_style" />
 
                 <RadioButton
                     android:id="@+id/dialog_radiobtn_600_800"
                     style="@style/dialog_price_item_style"
                     android:text="@string/dialog_price_800" />
 
-                <View
-                    style="@style/dialog_line_style" />
+                <View style="@style/dialog_line_style" />
 
                 <RadioButton
                     android:id="@+id/dialog_radiobtn_800_1000"
                     style="@style/dialog_price_item_style"
                     android:text="@string/dialog_price_1000" />
 
-                <View
-                    style="@style/dialog_line_style"/>
+                <View style="@style/dialog_line_style" />
 
                 <RadioButton
                     android:id="@+id/dialog_radiobtn_1000_2000"
                     style="@style/dialog_price_item_style"
                     android:text="@string/dialog_price_2000" />
 
-                <View
-                    style="@style/dialog_line_style" />
+                <View style="@style/dialog_line_style" />
 
                 <RadioButton
                     android:id="@+id/dialog_radiobtn_2000_3000"
                     style="@style/dialog_price_item_style"
                     android:text="@string/dialog_price_3000" />
 
-                <View
-                    style="@style/dialog_line_style"/>
+                <View style="@style/dialog_line_style" />
 
                 <RadioButton
                     android:id="@+id/dialog_radiobtn_above3000"
@@ -541,28 +534,17 @@
     <RelativeLayout
         android:id="@+id/dialog_opendate_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:background="#ffffff"
-        android:gravity="center"
+        android:gravity="top"
         android:orientation="vertical"
         android:padding="16dp"
         android:visibility="gone">
 
-        <TextView
-            android:id="@+id/dialog_opendate_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:gravity="left|center"
-            android:padding="10dp"
-            android:text="開盤日期"
-            android:textColor="@color/colortheme"
-            android:textSize="@dimen/themeSize" />
-
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/dialog_opendate_title">
+            android:paddingLeft="25dp">
 
             <RadioGroup
                 android:id="@+id/dialog_opendate_radiogroup"
@@ -572,32 +554,71 @@
                 android:orientation="vertical">
 
                 <RadioButton
-                    style="@style/dialog_status_item_style"
+                    style="@style/dialog_opendata_item_style"
+                    android:text="開盤日期" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EFEFEF" />
+
+                <RadioButton
+                    style="@style/dialog_opendata_item_style"
                     android:text="@string/dialog_opendate_last_modify" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EFEFEF" />
+
                 <RadioButton
 
-                    style="@style/dialog_status_item_style"
+                    style="@style/dialog_opendata_item_style"
                     android:text="@string/dialog_opendate_last_follow" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EFEFEF" />
+
                 <RadioButton
-                    style="@style/dialog_status_item_style"
+                    style="@style/dialog_opendata_item_style"
                     android:text="@string/dialog_opendate_last_changeprice" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EFEFEF" />
+
                 <RadioButton
-                    style="@style/dialog_status_item_style"
+                    style="@style/dialog_opendata_item_style"
                     android:text="@string/dialog_opendate_entrust_begin" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EFEFEF" />
+
                 <RadioButton
-                    style="@style/dialog_status_item_style"
+                    style="@style/dialog_opendata_item_style"
                     android:text="@string/dialog_opendate_entrust_end" />
 
-                <RadioButton
-                    style="@style/dialog_status_item_style"
-                    android:text="@string/dialog_opendate_estimate_date" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EFEFEF" />
 
                 <RadioButton
-                    style="@style/dialog_status_item_style"
+                    style="@style/dialog_opendata_item_style"
+                    android:text="@string/dialog_opendate_estimate_date" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#EFEFEF" />
+
+                <RadioButton
+                    style="@style/dialog_opendata_item_style"
                     android:text="@string/dialog_opendate_change_date" />
 
             </RadioGroup>

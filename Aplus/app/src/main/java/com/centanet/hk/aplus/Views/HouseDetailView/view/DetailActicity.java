@@ -15,8 +15,6 @@ import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.HouseDetailView.present.DetailPresent;
 import com.centanet.hk.aplus.Views.HouseDetailView.present.IDetailPresent;
-import com.centanet.hk.aplus.Views.Unensure.BasicInfoFragment;
-import com.centanet.hk.aplus.Views.Unensure.FollowFragment;
 import com.centanet.hk.aplus.Views.abst.DetailActivityAbst;
 import com.centanet.hk.aplus.Widgets.TitleBar;
 import com.centanet.hk.aplus.entity.detail.DetailHouse;
@@ -33,6 +31,9 @@ import org.greenrobot.eventbus.ThreadMode;
 import static com.centanet.hk.aplus.MyApplication.getContext;
 import static com.centanet.hk.aplus.Utils.net.HttpUtil.URL_ADDRESS_DETAIL;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_ADDRESS;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.CLIENTINFO_NO;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.FOLLOW_ADD_NO;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.SEARCH_ALL_NO;
 
 /**
  * Created by mzh1608258 on 2018/1/3.
@@ -48,6 +49,7 @@ public class DetailActicity extends DetailActivityAbst implements IDetailView, F
     private TitleBar titleBar;
     private DetailHouse detailHouseData;
     private AHeaderDescription headerDescription;
+    private View addressView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class DetailActicity extends DetailActivityAbst implements IDetailView, F
     }
 
     private void initView() {
+        addressView = findViewById(R.id.detail_view_address);
         titleBar = findViewById(R.id.detail_titlebar_top);
         ssdTxt = findViewById(R.id.item_icon_ssd);
         addDetailTxt = findViewById(R.id.detail_txt_adddetail);
@@ -82,7 +85,7 @@ public class DetailActicity extends DetailActivityAbst implements IDetailView, F
     }
 
     private void init() {
-        headerDescription = ((MyApplication)getApplicationContext()).getHeaderDescription();
+        headerDescription = ((MyApplication) getApplicationContext()).getHeaderDescription();
         keyId = getIntent().getStringExtra("keyId");
         present = new DetailPresent(this);
         DetailsDescription detailsDescription = new DetailsDescription();
@@ -114,10 +117,30 @@ public class DetailActicity extends DetailActivityAbst implements IDetailView, F
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMoonEvent(MessageEventBus messageEvent) {
 
-        if (messageEvent.getMsg() == DETAIL_ADDRESS) {
-            String address = (String) messageEvent.getObject();
-            houseChNameTxt.setText(address);
+        switch (messageEvent.getMsg()) {
+            case DETAIL_ADDRESS:
+                String address = (String) messageEvent.getObject();
+                houseChNameTxt.setText(address);
+                addressView.setVisibility(View.GONE);
+                break;
+            case SEARCH_ALL_NO:
+                //todo 提示彈框
+                showPermissionTipDialog(getString(R.string.dialog_tips_permission_follow_no_look));
+                break;
+            case FOLLOW_ADD_NO:
+                showPermissionTipDialog(getString(R.string.dialog_tips_permission_follow_no_add));
+                break;
+            case CLIENTINFO_NO:
+                showPermissionTipDialog(getString(R.string.dialog_tips_permission_clientinfo_no_look));
+                break;
         }
+    }
+
+    private void showPermissionTipDialog(String per) {
+        SimpleTipsDialog simpleTipsDialog = new SimpleTipsDialog();
+        simpleTipsDialog.setContentString(per);
+        simpleTipsDialog.setLeftBtnVisibility(false);
+        simpleTipsDialog.show(getSupportFragmentManager(), "");
     }
 
     @Override
@@ -125,6 +148,8 @@ public class DetailActicity extends DetailActivityAbst implements IDetailView, F
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (data.getUserIsShowAddressDetail())
+                    addDetailTxt.setVisibility(View.VISIBLE);
                 detailHouseData = data;
                 iconSingle.setSelected(data.isHasOnlyTrust());
                 iconFavo.setSelected(data.isFavorite());
@@ -138,8 +163,8 @@ public class DetailActicity extends DetailActivityAbst implements IDetailView, F
                 houseEnNameTxt.setText(data.getDetailAddressEnNoFoolrInfo());
                 titleBar.setTitleContent(getString(R.string.house_umber) + ":" + data.getPropertyNo());
                 setIconViewLevel(0, data.getPropertyStatus());
-                showODishTips(data.getPropertyProprietors());
-                showNotoTips(data.getPropertyNote());
+                showHouseTips(data.getPropertyProprietors());
+                showHouseTips(data.getPropertyNote());
                 if (data.getSSDType() != 0) {
                     ssdTxt.setVisibility(View.VISIBLE);
                     int per = 5 * data.getSSDType();
@@ -148,36 +173,35 @@ public class DetailActicity extends DetailActivityAbst implements IDetailView, F
                 }
             }
         });
-
     }
 
-    private void showODishTips(String developmentEndCredits) {
-        if (developmentEndCredits != null && developmentEndCredits.length() > 0) {
+    private void showHouseTips(String tips) {
+        if (tips != null && tips.length() > 0) {
             View view = View.inflate(getContext(), R.layout.item_dialog_detailtips, null);
 
             SimpleTipsDialog simpleTipsDialog = new SimpleTipsDialog(view, 0.72, 0.50, R.id.item_tips_owner);
-            L.d(thiz, developmentEndCredits);
+            L.d(thiz, tips);
             simpleTipsDialog.setLeftBtnVisibility(false);
-            simpleTipsDialog.setContentString(developmentEndCredits);
+            simpleTipsDialog.setContentString(tips);
             simpleTipsDialog.show(getSupportFragmentManager(), "");
         }
     }
 
-    private void showNotoTips(String note) {
-        if (note != null && note.length() > 0) {
-            View view = View.inflate(getContext(), R.layout.item_dialog_note, null);
-            SimpleTipsDialog simpleTipsDialog = new SimpleTipsDialog(view, 0.72, 0.50, R.id.dialog_note_content_txt);
-            L.d(thiz, note);
-            simpleTipsDialog.setLeftBtnVisibility(false);
-            simpleTipsDialog.setContentString(note);
-            simpleTipsDialog.setTipString(getString(R.string.detail_attention));
-            simpleTipsDialog.show(getSupportFragmentManager(), "");
-        }
-    }
+//    private void showNotoTips(String note) {
+//        if (note != null && note.length() > 0) {
+//            View view = View.inflate(getContext(), R.layout.item_dialog_note, null);
+//            SimpleTipsDialog simpleTipsDialog = new SimpleTipsDialog(view, 0.72, 0.50, R.id.dialog_note_content_txt);
+//            L.d(thiz, note);
+//            simpleTipsDialog.setLeftBtnVisibility(false);
+//            simpleTipsDialog.setContentString(note);
+//            simpleTipsDialog.setTipString(getString(R.string.detail_attention));
+//            simpleTipsDialog.show(getSupportFragmentManager(), "");
+//        }
+//    }
 
     private void setIconViewLevel(int level, String properties) {
         L.d(thiz, properties);
-        if(properties==null)return;
+        if (properties == null) return;
         switch (properties.substring(0, 1)) {
             case "N":
                 level = 1;

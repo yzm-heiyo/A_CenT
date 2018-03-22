@@ -1,6 +1,8 @@
 package com.centanet.hk.aplus.Views.HousetListView.view;
 
 import com.centanet.hk.aplus.entity.house.Properties;
+import com.centanet.hk.aplus.entity.login.Permisstions;
+import com.centanet.hk.aplus.entity.login.UserPermission;
 
 import java.util.List;
 
@@ -14,4 +16,6 @@ public interface IHouseListFragment {
     void refreshListData(List<Properties> properties);
     void openFreshView();
     void openLoadView();
+    void toLogin();
+    void showNoPermissionDialog();
 }

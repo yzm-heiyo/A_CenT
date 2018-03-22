@@ -97,4 +97,17 @@ public class AHeaderDescription {
         return ClientVer;
     }
 
+    @Override
+    public String toString() {
+        return "AHeaderDescription{" +
+                "token='" + token + '\'' +
+                ", Accept='" + Accept + '\'' +
+                ", number='" + number + '\'' +
+                ", platform='" + platform + '\'' +
+                ", sign='" + sign + '\'' +
+                ", staffno='" + staffno + '\'' +
+                ", ClientVer='" + ClientVer + '\'' +
+                ", UserAgent='" + UserAgent + '\'' +
+                '}';
+    }
 }

@@ -26,8 +26,17 @@ public class MyCheckBoxLayout extends LinearLayout implements CheckBox.OnClickLi
 
     private static boolean isSelectAll = false;
 
+    private OnItemClick onItemClick;
+
+    private List<Integer> seletList;
+
     public MyCheckBoxLayout(Context context) {
-        this(context, null);
+        this(context, (AttributeSet) null);
+    }
+
+    public MyCheckBoxLayout(Context context, List<Integer> seletList) {
+        super(context, null);
+        this.seletList = seletList;
     }
 
     public MyCheckBoxLayout(Context context, @Nullable AttributeSet attrs) {
@@ -92,7 +101,7 @@ public class MyCheckBoxLayout extends LinearLayout implements CheckBox.OnClickLi
             if (view instanceof CheckBox) {
                 if (!((CheckBox) view).isChecked() && i != 0) {
                     viewChechBoxes.get(0).setChecked(false);
-                    isSelectAll=false;
+                    isSelectAll = false;
                     break;
                 }
             }
@@ -115,6 +124,11 @@ public class MyCheckBoxLayout extends LinearLayout implements CheckBox.OnClickLi
     }
 
 
+    public void setOnItemClick(OnItemClick onItemClick) {
+        this.onItemClick = onItemClick;
+    }
+
+
     public String[] getCheckBoxContent() {
 
         if (!DataManager.checkBoxSelecterList.isEmpty())
@@ -130,8 +144,8 @@ public class MyCheckBoxLayout extends LinearLayout implements CheckBox.OnClickLi
                 }
             }
 
-            if(!results.isEmpty()) {
-                L.d(thiz,"Method: ------> getCheckBoxContent");
+            if (!results.isEmpty()) {
+                L.d(thiz, "Method: ------> getCheckBoxContent");
                 return results.toArray(new String[results.size()]);
             }
         }
@@ -158,5 +172,9 @@ public class MyCheckBoxLayout extends LinearLayout implements CheckBox.OnClickLi
             default:
                 break;
         }
+    }
+
+    public interface OnItemClick {
+        void onClick(View v, int viewId, int position);
     }
 }

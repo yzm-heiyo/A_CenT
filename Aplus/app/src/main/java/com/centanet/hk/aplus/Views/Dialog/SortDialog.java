@@ -73,7 +73,7 @@ public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChange
 
         checkRadioButton(defaultId);
         checkTxt(defaultId);
-//        sortRightRG.check(defaultId == 0 ?R.id.sort_rb_default : defaultId);
+        sortRightRG.check(defaultId == 0 ? R.id.sort_rb_default : defaultId);
         sortRightRG.setOnCheckedChangeListener(this);
         sortLeftRG.setOnCheckedChangeListener(this);
 
@@ -88,12 +88,14 @@ public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChange
     }
 
     private void checkTxt(int defaultId) {
-        if(defaultId ==0){
+        if (defaultId == 0) {
             txtRG.check(R.id.sort_txt_default);
             return;
         }
         if (defaultId != 0) {
             switch (defaultId) {
+                case R.id.sort_rb_default:
+                    txtRG.check(R.id.sort_txt_default);
                 case R.id.sort_rb_price_up:
                 case R.id.sort_rb_price_down:
                     txtRG.check(R.id.sort_txt_sale);
@@ -199,7 +201,7 @@ public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChange
                 break;
         }
         L.d("SortDialog", "" + params.get("Ascending"));
-        onDialogClikeLisenter.onClike(dialog, params);
+        onDialogClikeLisenter.onClike(dialog, 0,params);
     }
 
     public interface onDialogOnclikeLisenter extends BaseDialog.onDialogOnclikeLisenter<Map<String, Object>> {

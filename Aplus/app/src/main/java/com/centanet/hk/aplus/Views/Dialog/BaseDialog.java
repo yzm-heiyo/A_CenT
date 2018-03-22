@@ -16,7 +16,8 @@ public class BaseDialog extends DialogFragment{
     }
 
     public interface onDialogOnclikeLisenter<T>{
-        void onClike(Dialog dialog,T result);
+        void onClike(Dialog dialog,int viewId,T result);
     }
+
 
 }

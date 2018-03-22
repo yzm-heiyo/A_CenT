@@ -5,6 +5,10 @@ import android.app.Application;
 import android.content.Context;
 
 import com.centanet.hk.aplus.entity.http.AHeaderDescription;
+import com.centanet.hk.aplus.entity.http.SSOHeaderDescription;
+import com.centanet.hk.aplus.entity.login.Permisstions;
+import com.centanet.hk.aplus.entity.login.UserPermission;
+import com.centanet.hk.aplus.entity.params.Parameter;
 
 import org.litepal.LitePalApplication;
 
@@ -21,9 +25,19 @@ public class MyApplication extends LitePalApplication {
 
     private static boolean isRelase;
 
+    private String useClauseUrl;
+
+    private int openDataType;
+
     private AHeaderDescription headerDescription;
 
+    private SSOHeaderDescription ssoHeaderDescription;
+
     public static Context context;
+
+    private Permisstions userPermission;
+
+    private Parameter parameter;
 
     @Override
     public void onCreate() {
@@ -36,8 +50,48 @@ public class MyApplication extends LitePalApplication {
         return context;
     }
 
+    public void setUseClauseUrl(String useClauseUrl) {
+        this.useClauseUrl = useClauseUrl;
+    }
+
+    public String getUseClauseUrl() {
+        return useClauseUrl;
+    }
+
+    public void setSsoHeaderDescription(SSOHeaderDescription ssoHeaderDescription) {
+        this.ssoHeaderDescription = ssoHeaderDescription;
+    }
+
+    public SSOHeaderDescription getSsoHeaderDescription() {
+        return ssoHeaderDescription;
+    }
+
+    public void setUserPermission(Permisstions userPermission) {
+        this.userPermission = userPermission;
+    }
+
+    public Permisstions getUserPermission() {
+        return userPermission;
+    }
+
     public void setHeaderDescription(AHeaderDescription headerDescription) {
         this.headerDescription = headerDescription;
+    }
+
+    public void setParameter(Parameter parameter) {
+        this.parameter = parameter;
+    }
+
+    public Parameter getParameter() {
+        return parameter;
+    }
+
+    public void setOpenDataType(int openDataType) {
+        this.openDataType = openDataType;
+    }
+
+    public int getOpenDataType() {
+        return openDataType;
     }
 
     public AHeaderDescription getHeaderDescription() {

@@ -23,11 +23,14 @@ import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.Dialog.DialogFactory;
-import com.centanet.hk.aplus.Views.FeedBackView.view.FeedbackActivity;
+import com.centanet.hk.aplus.Views.Dialog.SimpleTipsDialog;
+import com.centanet.hk.aplus.Views.FollowAddView.view.FollowAddActivity;
+import com.centanet.hk.aplus.Views.MineView.present.FeedBackPresent;
 import com.centanet.hk.aplus.Widgets.LineBreakLayout;
 import com.centanet.hk.aplus.entity.http.FollowDescription;
 import com.centanet.hk.aplus.entity.detail.PropertyFollow;
 import com.centanet.hk.aplus.entity.http.AHeaderDescription;
+import com.centanet.hk.aplus.entity.http.ParameterDescription;
 import com.centanet.hk.aplus.eventbus.MessageEventBus;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -45,6 +48,9 @@ import java.util.List;
 
 import static com.centanet.hk.aplus.common.CommandField.DialogType.REMARK;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_FOLLOW;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_FOLLOW_SUCCESS;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.FOLLOW_ADD;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.SEARCH_ALL_NO;
 
 /**
  * Created by mzh1608258 on 2018/1/4.
@@ -66,6 +72,8 @@ public abstract class FollowFragmentAbst extends Fragment implements View.OnClic
     private List<PropertyFollow> follows;
     private FollowDescription description = new FollowDescription();
     private AHeaderDescription headerDescription;
+    private boolean ableToSearchFollow = true;
+    private boolean ableToAddFollow = false;
 
 
     @Override
@@ -156,7 +164,7 @@ public abstract class FollowFragmentAbst extends Fragment implements View.OnClic
     };
 
     private void initDatas() {
-        headerDescription = ((MyApplication)getActivity().getApplicationContext()).getHeaderDescription();
+        headerDescription = ((MyApplication) getActivity().getApplicationContext()).getHeaderDescription();
         follows = new ArrayList<>();
         adapter = new InnerAdapter(getContext(), follows);
         lv.setAdapter(adapter);
@@ -165,7 +173,17 @@ public abstract class FollowFragmentAbst extends Fragment implements View.OnClic
     @Override
     public void onResume() {
         super.onResume();
-        openFreshView();
+//        openFreshView();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            openFreshView();
+        } else {
+            //相当于Fragment的onPause
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -179,6 +197,15 @@ public abstract class FollowFragmentAbst extends Fragment implements View.OnClic
                     adapter.notifyDataSetChanged();
                 }
                 closeRefresh();
+                break;
+            case SEARCH_ALL_NO:
+                ableToSearchFollow = false;
+                break;
+            case FOLLOW_ADD:
+                ableToAddFollow = true;
+                break;
+            case DETAIL_FOLLOW_SUCCESS:
+                openFreshView();
                 break;
         }
     }
@@ -197,22 +224,10 @@ public abstract class FollowFragmentAbst extends Fragment implements View.OnClic
                 setDate(v);
                 break;
             case R.id.img_add_remark:
-                onUpdateListener.trunToActivity(new Intent(getActivity(), FeedbackActivity.class));
+                trunToAddFollow();
                 break;
             case R.id.img_search_remark:
-                DialogFragment dialog = DialogFactory.newInstance(REMARK, new DialogFactory.IGetClickItem() {
-                    @Override
-                    public void getClickItem(android.support.v4.app.DialogFragment dialog, String... items) {
-                        dialog.dismiss();
-                        if (TextUtils.isEmpty(items[0].trim())) return;
-                        followLableView.setVisibility(View.VISIBLE);
-                        description.setKeyword(items[0]);
-                        searchLabelLayout.removeAllViews();
-                        searchLabelLayout.addItem(items[0] + "  X");
-                        openFreshView();
-                    }
-                });
-                dialog.show(getFragmentManager(), "");
+                showSearchEditView();
                 break;
 
             case R.id.fragment_follow_img_data_clear:
@@ -224,6 +239,40 @@ public abstract class FollowFragmentAbst extends Fragment implements View.OnClic
                 description.setFollowTimeTo(null);
                 defaultTxt.setVisibility(View.VISIBLE);
                 break;
+        }
+    }
+
+    private void trunToAddFollow() {
+        if (ableToAddFollow)
+            onUpdateListener.trunToActivity(new Intent(getActivity(), FollowAddActivity.class));
+        else {
+            SimpleTipsDialog simpleTipsDialog = new SimpleTipsDialog();
+            simpleTipsDialog.setLeftBtnVisibility(false);
+            simpleTipsDialog.setContentString(getString(R.string.dialog_tips_permission_follow_no_add));
+            simpleTipsDialog.show(getFragmentManager(), "");
+        }
+    }
+
+    private void showSearchEditView() {
+        if (ableToSearchFollow) {
+            DialogFragment dialog = DialogFactory.newInstance(REMARK, new DialogFactory.IGetClickItem() {
+                @Override
+                public void getClickItem(android.support.v4.app.DialogFragment dialog, String... items) {
+                    dialog.dismiss();
+                    if (TextUtils.isEmpty(items[0].trim())) return;
+                    followLableView.setVisibility(View.VISIBLE);
+                    description.setKeyword(items[0]);
+                    searchLabelLayout.removeAllViews();
+                    searchLabelLayout.addItem(items[0] + "  X");
+                    openFreshView();
+                }
+            });
+            dialog.show(getFragmentManager(), "");
+        } else {
+            SimpleTipsDialog simpleTipsDialog = new SimpleTipsDialog();
+            simpleTipsDialog.setLeftBtnVisibility(false);
+            simpleTipsDialog.setContentString(getString(R.string.dialog_tips_permission_follow_no_look));
+            simpleTipsDialog.show(getFragmentManager(), "");
         }
     }
 
@@ -341,7 +390,6 @@ public abstract class FollowFragmentAbst extends Fragment implements View.OnClic
         pvTime.show();
 
     }
-
 
     @Override
     public void onDestroy() {

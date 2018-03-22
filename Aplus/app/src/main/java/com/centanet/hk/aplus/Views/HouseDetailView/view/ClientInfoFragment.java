@@ -52,12 +52,14 @@ public class ClientInfoFragment extends Fragment {
         } else {
             throw new IllegalArgumentException("activity must implements FragmentInteraction");
         }
+        L.d("FRAGMENT", "onAttach");
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        L.d("FRAGMENT", "onCreate");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -79,13 +81,25 @@ public class ClientInfoFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_clientsinfo, null);
         ll_owners = view.findViewById(R.id.info_ll_owners);
         headerDescription = ((MyApplication) getActivity().getApplication()).getHeaderDescription();
-        onUpdateListener.getClientInfo(HttpUtil.URL_TRUSTOR, headerDescription, new TrustorDescription());
 
         return view;
     }
 
-    private void addClientInfo(List<Trustor> clients) {
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (onUpdateListener != null)
+                onUpdateListener.getClientInfo(HttpUtil.URL_TRUSTOR, headerDescription, new TrustorDescription());
+        } else {
+            //相当于Fragment的onPause
+        }
+    }
+
+
+    private void addClientInfo(List<Trustor> clients) {
+        ll_owners.removeAllViews();
         L.d("ClientInfo", clients.size() + "");
         boolean isFirstLine = true;
         for (Trustor trustor : clients) {

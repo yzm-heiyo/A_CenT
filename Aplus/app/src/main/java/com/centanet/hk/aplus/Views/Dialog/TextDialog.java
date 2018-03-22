@@ -9,7 +9,7 @@ import android.app.Dialog;
 public class TextDialog extends BaseDialog implements BaseDialog.onDialogOnclikeLisenter<String>{
 
     @Override
-    public void onClike(Dialog dialog, String result) {
+    public void onClike(Dialog dialog, int viewID,String result) {
 
     }
 }

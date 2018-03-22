@@ -9,5 +9,10 @@ public interface ILoginModel {
     void doGet(String address,Object header,Object param);
     void doPost(String address,Object header,Object body);
     void setLisenter(LoginModel.OnReceiveLisenter lisenter);
+
+    /**
+     * 獲得android設備唯一標識碼
+     * @return
+     */
     String getUniquePsuedoID();
 }
