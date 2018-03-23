@@ -25,7 +25,10 @@ import com.centanet.hk.aplus.Views.Dialog.DialogFactory;
 import com.centanet.hk.aplus.Views.Dialog.OpenDataDialog;
 import com.centanet.hk.aplus.Views.Dialog.StatusDialog;
 import com.centanet.hk.aplus.Views.basic.BasicActivty;
+import com.centanet.hk.aplus.Widgets.CheckBoxLayout;
 import com.centanet.hk.aplus.Widgets.MyRadioGroup;
+import com.centanet.hk.aplus.entity.params.SystemParam;
+import com.centanet.hk.aplus.entity.params.SystemParamItems;
 import com.centanet.hk.aplus.manager.ApplicationManager;
 
 
@@ -54,6 +57,7 @@ public abstract class MoreActivityAbst extends BasicActivty implements RadioGrou
     private TextView dateTipTxt;
     private List<Integer> staBeginSelectList, staEndSelectList;
     private EditText areaLft, areaRight, priceLeft, priceRight;
+    private CheckBoxLayout direction, interval,houseTag;
 
     private MyRadioGroup ssdRG, IntervalRG, directionRG, tagRG;
     private RadioGroup priceRG, areaRG;
@@ -62,7 +66,7 @@ public abstract class MoreActivityAbst extends BasicActivty implements RadioGrou
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_complex);
+        setContentView(R.layout.activity_search_more);
         setViews();
         setListeners();
         init();
@@ -73,6 +77,25 @@ public abstract class MoreActivityAbst extends BasicActivty implements RadioGrou
         openDataTtpe = ApplicationManager.getOpenDataType();
         staBeginSelectList = new ArrayList<>();
         staEndSelectList = new ArrayList<>();
+        SystemParam directionSys = ApplicationManager.getDirectionSystemParam();
+        List<String> directionList = getParams(directionSys);
+        direction.addItem(directionList, null);
+        SystemParam intervalSys = ApplicationManager.getIntervalSystemParam();
+        List<String> intervalList = getParams(intervalSys);
+        interval.addItem(intervalList,null);
+        SystemParam tagSys = ApplicationManager.getLabelSystenParam();
+        List<String> tagList = getParams(tagSys);
+        houseTag.addItem(tagList,null);
+
+    }
+
+    private List<String> getParams(SystemParam systemParam) {
+        List<String> params = new ArrayList<>();
+        List<SystemParamItems> directionList = systemParam.getSystemParamItems();
+        for (SystemParamItems d : directionList) {
+            params.add(d.getItemText());
+        }
+        return params;
     }
 
     protected abstract IMoreActivity setIMoreActivity();
@@ -126,6 +149,21 @@ public abstract class MoreActivityAbst extends BasicActivty implements RadioGrou
         areaLft.setInputType(InputType.TYPE_CLASS_NUMBER);
         areaRight = findViewById(R.id.complex_edit_price_right);
         areaRight.setInputType(InputType.TYPE_CLASS_NUMBER);
+
+        direction = findViewById(R.id.complex_cb_direction);
+        direction.setItemContentLayoutID(R.layout.item_complex_btn);
+        direction.setLeftRightSpace(25);
+        direction.setRowSpace(18);
+
+        interval = findViewById(R.id.complex_cb_interval);
+        interval.setItemContentLayoutID(R.layout.item_complex_btn);
+        interval.setLeftRightSpace(25);
+        interval.setRowSpace(18);
+
+        houseTag = findViewById(R.id.complex_cb_tag);
+        houseTag.setItemContentLayoutID(R.layout.item_complex_btn);
+        houseTag.setLeftRightSpace(25);
+        houseTag.setRowSpace(18);
     }
 
 
@@ -252,7 +290,6 @@ public abstract class MoreActivityAbst extends BasicActivty implements RadioGrou
                 showStatusEndDialog();
 
                 break;
-
 
             default:
                 break;

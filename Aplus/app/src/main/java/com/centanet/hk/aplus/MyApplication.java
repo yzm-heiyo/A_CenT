@@ -9,6 +9,7 @@ import com.centanet.hk.aplus.entity.http.SSOHeaderDescription;
 import com.centanet.hk.aplus.entity.login.Permisstions;
 import com.centanet.hk.aplus.entity.login.UserPermission;
 import com.centanet.hk.aplus.entity.params.Parameter;
+import com.centanet.hk.aplus.entity.params.SystemParam;
 
 import org.litepal.LitePalApplication;
 
@@ -39,11 +40,17 @@ public class MyApplication extends LitePalApplication {
 
     private Parameter parameter;
 
+    private SystemParam intervalSystemParam;
+
+    private SystemParam directionSystemParam;
+
+    private SystemParam labelSystenParam;
+
     @Override
     public void onCreate() {
         super.onCreate();
         isRelase = false;
-        context=getApplicationContext();
+        context = getApplicationContext();
     }
 
     public static Context getContext() {
@@ -60,6 +67,30 @@ public class MyApplication extends LitePalApplication {
 
     public void setSsoHeaderDescription(SSOHeaderDescription ssoHeaderDescription) {
         this.ssoHeaderDescription = ssoHeaderDescription;
+    }
+
+    public SystemParam getIntervalSystemParam() {
+        return intervalSystemParam;
+    }
+
+    public SystemParam getDirectionSystemParam() {
+        return directionSystemParam;
+    }
+
+    public void setDirectionSystemParam(SystemParam directionSystemParam) {
+        this.directionSystemParam = directionSystemParam;
+    }
+
+    public SystemParam getLabelSystenParam() {
+        return labelSystenParam;
+    }
+
+    public void setLabelSystenParam(SystemParam labelSystenParam) {
+        this.labelSystenParam = labelSystenParam;
+    }
+
+    public void setIntervalSystemParam(SystemParam intervalSystemParam) {
+        this.intervalSystemParam = intervalSystemParam;
     }
 
     public SSOHeaderDescription getSsoHeaderDescription() {

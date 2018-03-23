@@ -10,7 +10,7 @@ public class HouseDescription {
 
     private String UpdatePermisstionsTime = "2010-01-01T00:00:00";
     private int PropertyType = 1;
-    private String SortField;
+    private String SortField = "";
     private String TrustType = "";
     private int PageSize = 15;
     private int PageIndex = 1;

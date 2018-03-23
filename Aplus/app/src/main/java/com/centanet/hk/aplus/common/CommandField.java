@@ -18,6 +18,7 @@ public class CommandField {
     }
 
     public class ParamsType{
+
         public static final int propertyStatusCategory = 75;    // 房源狀態分類 1-有效，2-暫緩，3-預定，4-無效
     }
 
@@ -39,7 +40,5 @@ public class CommandField {
         public static final int CANNOT = 1;
         public static final int UNKNOWN =2;
     }
-
-
 
 }

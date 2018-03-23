@@ -6,6 +6,7 @@ import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
+import com.centanet.hk.aplus.common.APSystemParameterType;
 import com.centanet.hk.aplus.common.CommandField;
 import com.centanet.hk.aplus.common.DataManager;
 import com.centanet.hk.aplus.entity.login.HomeConfig;
@@ -14,6 +15,7 @@ import com.centanet.hk.aplus.entity.login.UserPermission;
 import com.centanet.hk.aplus.entity.params.Parameter;
 import com.centanet.hk.aplus.entity.params.SystemParam;
 import com.centanet.hk.aplus.entity.params.SystemParamItems;
+import com.centanet.hk.aplus.manager.ApplicationManager;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -34,6 +36,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static com.centanet.hk.aplus.Utils.net.HttpUtil.URL_PARAMETER;
+import static com.centanet.hk.aplus.common.APSystemParameterType.houseDirection;
 
 /**
  * Created by yangzm4 on 2018/3/13.
@@ -55,13 +58,11 @@ public class LoginModel implements ILoginModel {
         HttpUtil.doGet(address, header, params, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String dataBack = response.body().string().toString();
-
                 if (response.code() == 200) {
                     try {
                         HomeConfig config = GsonUtil.parseJson(dataBack, HomeConfig.class);
@@ -117,7 +118,6 @@ public class LoginModel implements ILoginModel {
         HttpUtil.doPost(address, body, header, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
             }
 
             @Override
@@ -125,7 +125,6 @@ public class LoginModel implements ILoginModel {
                 String data = response.body().string().toString();
 
                 if (response.code() == 200) {
-
                     switch (address) {
                         case HttpUtil.URL_SSO:
                             getLogin(data);
@@ -136,6 +135,7 @@ public class LoginModel implements ILoginModel {
                         case URL_PARAMETER:
                             getParams(data, isNeedVerify);
                             setParams(openFile());
+                            if (listener != null) listener.Onfinish();
                             break;
                         default:
                             break;
@@ -182,8 +182,20 @@ public class LoginModel implements ILoginModel {
         try {
             parameter = GsonUtil.parseJson(dataBack, Parameter.class);
 
-            for(SystemParam p:parameter.getSystemParam())
-                L.d("params_system",p.toString());
+            for (SystemParam p : parameter.getSystemParam()) {
+                L.d("params_system", p.toString());
+                switch (p.getParameterType()) {
+                    case APSystemParameterType.house:
+                        ApplicationManager.setIntervalSystemParam(p);
+                        break;
+                    case APSystemParameterType.houseDirection:
+                        ApplicationManager.setDirectionSystemParam(p);
+                        break;
+
+                    case APSystemParameterType.propertyTag:
+                        ApplicationManager.setLabelSystemParam(p);
+                }
+            }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
