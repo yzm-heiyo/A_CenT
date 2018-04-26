@@ -1,18 +1,25 @@
 package com.centanet.hk.aplus.Views.SearchView.view;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -24,13 +31,15 @@ import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Utils.TextUtil;
+import com.centanet.hk.aplus.Views.Dialog.voice.VoiceInputPanel;
 import com.centanet.hk.aplus.Views.SearchView.present.ISearchPresent;
 import com.centanet.hk.aplus.Views.SearchView.present.SearchPreesent;
 import com.centanet.hk.aplus.Views.basic.BasicActivty;
 import com.centanet.hk.aplus.Widgets.LineBreakLayout;
-import com.centanet.hk.aplus.entity.auto_estate.PropertyParamHints;
-import com.centanet.hk.aplus.entity.http.AutoSearchDescription;
-import com.centanet.hk.aplus.entity.http.AHeaderDescription;
+import com.centanet.hk.aplus.bean.auto_estate.PropertyParamHints;
+import com.centanet.hk.aplus.bean.http.AutoSearchDescription;
+import com.centanet.hk.aplus.bean.http.AHeaderDescription;
+import com.githang.statusbar.StatusBarCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +49,7 @@ import java.util.List;
  * Created by mzh1608258 on 2018/1/9.
  */
 
-public class SearchActivity extends BasicActivty implements ISearchView, View.OnClickListener {
+public class SearchActivity extends BasicActivty implements ISearchView, View.OnClickListener, VoiceInputPanel.EventListener {
 
     private static final int VIEW_HISRORY = 0;
     private static final int VIEW_SEARCH = 1;
@@ -65,11 +74,12 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
     private View finish, selectLabelView, searchView, historyView, searchHistoryView;
     private LineBreakLayout searchLabelGroup;
     private String thiz = getClass().getSimpleName();
-    private EditText mEditText, flootEdit, unitEdit;
+    private EditText searchEdit, flootEdit, unitEdit;
     private ISearchPresent present;
     private DataAdapter searchAdapter;
+    private View mic;
 
-    private int viewType = VIEW_HISRORY;
+    private int viewType = VIEW_SEARCH;
     private String flootStr = "", unitsStr = "";
 
     AutoSearchDescription autoSearchDescription;
@@ -79,6 +89,7 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        StatusBarCompat.setStatusBarColor(this, Color.parseColor("#BB2E2D"), false);
         init();
     }
 
@@ -87,7 +98,7 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
         present = new SearchPreesent(this);
         dataList = new ArrayList<>();
         Bundle bundle = getIntent().getExtras();
-        headerDescription = ((MyApplication)getApplicationContext()).getHeaderDescription();
+        headerDescription = ((MyApplication) getApplicationContext()).getHeaderDescription();
 
         searchLabelList = new ArrayList<>();
         oldHistoryList = new ArrayList<>();
@@ -99,13 +110,18 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
         historyView = findViewById(R.id.search_history_view);
         searchHistoryView = findViewById(R.id.search_history_title);
 
+        mic = this.findViewById(R.id.search_img_mic);
+        mic.setOnClickListener(this);
+
         lv_search = this.findViewById(R.id.activity_search_listview);
         btn = this.findViewById(R.id.activity_search_confirm_btn);
         finish = this.findViewById(R.id.activity_search_back);
         selectLabelView = findViewById(R.id.search_select_layout);
-        mEditText = findViewById(R.id.search_edit);
+        searchEdit = findViewById(R.id.search_edit);
+
         flootEdit = findViewById(R.id.search_edit_floot);
         unitEdit = findViewById(R.id.search_edit_unit);
+
         flootEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -149,80 +165,84 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
 
         if (bundle != null) {
             selectList = (List<String>) bundle.get(VIEW_SEARCH_HISTORY_SAVE);
-            present.recoverLabelHistiry(selectList);
+            if (selectList != null)
+                present.recoverLabelHistiry(selectList);
+            else selectList = new ArrayList<>();
         } else {
             selectList = new ArrayList<>();
         }
 
         btn.setOnClickListener(this);
         finish.setOnClickListener(this);
-        mEditText.addTextChangedListener(new EditChangedListener());
-        mEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
-                    historyView.setVisibility(View.GONE);
-                    searchView.setVisibility(View.VISIBLE);
-                    viewType = VIEW_SEARCH;
-                }
-                return false;
+        searchEdit.addTextChangedListener(new EditChangedListener());
+
+        searchEdit.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+                historyView.setVisibility(View.GONE);
+                searchView.setVisibility(View.VISIBLE);
+                viewType = VIEW_SEARCH;
             }
+            return false;
         });
+
+        View footView = LayoutInflater.from(this).inflate(R.layout.list_footview, null, false);
+        lv_search.addFooterView(footView, null, false);
+        lv_history.addFooterView(footView, null, false);
 
         searchAdapter = new DataAdapter(this, dataList, selectList);
         lv_search.setAdapter(searchAdapter);
         historyAdapter = new DataAdapter(this, oldHistoryList);
         lv_history.setAdapter(historyAdapter);
 
-        lv_search.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-                DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) view.getTag();
-                boolean check = holder.box.isChecked();
-                PropertyParamHints data = dataList.get(position);
-                if (check || selectList.size() < VIEW_SELECT_MAX) {
-                    holder.box.setChecked(!check);
-                    if (check) {
-                        selectList.remove(data.getKeyId());
-                        newHistoryList.remove(data);
-                        searchLabelList = deleteSearchLableData(data, searchLabelList);
-                    } else if (!check) {
-                        selectList.add(data.getKeyId());
-                        newHistoryList.add(data);
-                        addSearchLabelData(data, searchLabelList);
-                    }
+        lv_search.setOnItemClickListener((parent, view, position, id) -> {
+            DataAdapter.ViewHolder holder = (DataAdapter.ViewHolder) view.getTag();
+            boolean check = holder.box.isChecked();
+            PropertyParamHints data = dataList.get(position);
+            if (check || selectList.size() < VIEW_SELECT_MAX) {
+                holder.box.setChecked(!check);
+                if (check) {
+                    selectList.remove(data.getKeyId());
+                    newHistoryList.remove(data);
+                    searchLabelList = deleteSearchLableData(data, searchLabelList);
+                } else if (!check) {
+                    selectList.add(data.getKeyId());
+                    newHistoryList.add(data);
+                    addSearchLabelData(data, searchLabelList);
                 }
             }
         });
-        lv_history.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                PropertyParamHints data = oldHistoryList.get(position);
-                addSearchLabelData(data, searchLabelList);
-                if (!newHistoryList.contains(data))
-                    newHistoryList.add(data);
-                if (!selectList.contains(data.getKeyId()))
-                    selectList.add(data.getKeyId());
-                showHistoryLableView();
-            }
+
+        lv_history.setOnItemClickListener((parent, view, position, id) -> {
+            PropertyParamHints data = oldHistoryList.get(position);
+            addSearchLabelData(data, searchLabelList);
+            if (!newHistoryList.contains(data))
+                newHistoryList.add(data);
+            if (!selectList.contains(data.getKeyId()))
+                selectList.add(data.getKeyId());
+            showHistoryLableView();
         });
+
         present.getSearchHistory();
+
+        boolean isMicToThis = getIntent().getBooleanExtra("mic", false);
+        if (isMicToThis) showVoiceInputPanel();
+        else {
+            searchEdit.setFocusable(true);
+            searchEdit.setFocusableInTouchMode(true);
+            searchEdit.requestFocus();
+            this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
     }
 
-    public LineBreakLayout.onItemOnclickListener mOnItemOnclickListener = new LineBreakLayout.onItemOnclickListener() {
-        @Override
-        public void onItemClick(View view, ViewGroup contentView, int position) {
-            contentView.removeView(view);
-            if (contentView.getChildCount() == 0) selectLabelView.setVisibility(View.GONE);
-            if (!searchLabelList.isEmpty()) searchLabelList.remove(position);
-            if (!selectList.isEmpty()) selectList.remove(position);
-            if (!newHistoryList.isEmpty()) newHistoryList.remove(position);
-        }
+    public LineBreakLayout.onItemOnclickListener mOnItemOnclickListener = (view, contentView, position) -> {
+        contentView.removeView(view);
+        if (contentView.getChildCount() == 0) selectLabelView.setVisibility(View.GONE);
+        if (!searchLabelList.isEmpty()) searchLabelList.remove(position);
+        if (!selectList.isEmpty()) selectList.remove(position);
+        if (!newHistoryList.isEmpty()) newHistoryList.remove(position);
     };
-
 
     @Override
     public void onClick(View v) {
@@ -240,9 +260,22 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
             case R.id.activity_search_back:
                 finish();
                 break;
+            case R.id.search_img_mic:
+                showVoiceInputPanel();
+//                VoiceInputPanel.show(SearchActivity.this, false, SearchActivity.this);
+                break;
             default:
                 break;
         }
+    }
+
+    public void showVoiceInputPanel() {
+        if (Build.VERSION.SDK_INT >= 23)
+            if (ContextCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                this.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
+                        1);
+            }
+        VoiceInputPanel.show(this, false, this);
     }
 
     private void showSelectCondition() {
@@ -282,12 +315,12 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
 
             condition = builder.toString();
             bundle.putString(VIEW_SEARCH_KEY_TYPE, condition.substring(0, condition.length() - 1));
-            builder.delete(0,condition.length());
-            for(String label:searchLabelList){
-                builder.append(label+";");
+            builder.delete(0, condition.length());
+            for (String label : searchLabelList) {
+                builder.append(label + ";");
             }
             String labelString = builder.toString();
-            bundle.putString(VIEW_SEARCH_LABEL,labelString.substring(0, labelString.length() - 1));
+            bundle.putString(VIEW_SEARCH_LABEL, labelString.substring(0, labelString.length() - 1));
         }
 
         bundle.putString(VIEW_SEARCH_FLOOT, flootStr);
@@ -315,6 +348,7 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
     public void addListData(final List<PropertyParamHints> data) {
         dataList.clear();
         dataList.addAll(data);
+        autoSearchDescription.setVoice(false);
     }
 
     @Override
@@ -339,17 +373,28 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
 
     @Override
     public void refreshHistoryView() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (viewType == VIEW_SEARCH)
-                    searchAdapter.notifyDataSetChanged();
-                if (viewType == VIEW_HISRORY) {
-                    historyAdapter.notifyDataSetChanged();
-                    setListViewHeightBasedOnChildren(lv_history);
-                }
+        runOnUiThread(() -> {
+            if (viewType == VIEW_SEARCH)
+                searchAdapter.notifyDataSetChanged();
+            if (viewType == VIEW_HISRORY) {
+                historyAdapter.notifyDataSetChanged();
+                setListViewHeightBasedOnChildren(lv_history);
             }
         });
+    }
+
+    @Override
+    public void onConfirmClick(String msg) {
+        if (msg != null && !msg.equals("")) {
+            autoSearchDescription.setVoice(true);
+            searchEdit.setText(msg);
+            searchEdit.setSelection(msg.length());
+        }
+    }
+
+    @Override
+    public void onCancel() {
+
     }
 
     private static class DataAdapter extends BaseAdapter {
@@ -525,5 +570,4 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
     }
-
 }

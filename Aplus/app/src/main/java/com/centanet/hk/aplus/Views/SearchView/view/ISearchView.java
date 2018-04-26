@@ -1,6 +1,6 @@
 package com.centanet.hk.aplus.Views.SearchView.view;
 
-import com.centanet.hk.aplus.entity.auto_estate.PropertyParamHints;
+import com.centanet.hk.aplus.bean.auto_estate.PropertyParamHints;
 
 import java.util.List;
 

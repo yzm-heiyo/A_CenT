@@ -18,29 +18,33 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.ItemCountUtil;
 import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
-import com.centanet.hk.aplus.Views.Dialog.DialogFactory;
+import com.centanet.hk.aplus.Views.ComplexSearchView.ComplexActivity;
 import com.centanet.hk.aplus.Views.Dialog.PriceDialog;
 import com.centanet.hk.aplus.Views.Dialog.SimpleTipsDialog;
 import com.centanet.hk.aplus.Views.Dialog.SortDialog;
+import com.centanet.hk.aplus.Views.Dialog.StatusDialog;
 import com.centanet.hk.aplus.Views.FavoriteView.present.HouseListPresenter;
 import com.centanet.hk.aplus.Views.FavoriteView.present.IHouseListPresenter;
 import com.centanet.hk.aplus.Views.HouseDetailView.view.DetailActicity;
 import com.centanet.hk.aplus.Views.LoginView.view.LoginActivity;
 import com.centanet.hk.aplus.Views.SearchView.view.SearchActivity;
-import com.centanet.hk.aplus.Views.ComplexSearchView.ComplexSearchActivity;
-import com.centanet.hk.aplus.common.DataManager;
+import com.centanet.hk.aplus.Widgets.CircleTipsView;
+import com.centanet.hk.aplus.entity.complexSearch.Operation;
 import com.centanet.hk.aplus.entity.house.Properties;
 import com.centanet.hk.aplus.entity.http.AHeaderDescription;
 import com.centanet.hk.aplus.entity.http.FavoriteDescription;
 import com.centanet.hk.aplus.entity.http.HouseDescription;
 import com.centanet.hk.aplus.entity.http.ParameterDescription;
 import com.centanet.hk.aplus.eventbus.MessageEventBus;
+import com.centanet.hk.aplus.manager.ApplicationManager;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -60,13 +64,14 @@ import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SE
 import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SEARCH_HISTORY_SAVE;
 import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SEARCH_LABEL;
 import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SEARCH_UNIT;
-import static com.centanet.hk.aplus.common.CommandField.DialogType.STATUS;
 import static com.centanet.hk.aplus.common.CommandField.PriceType.SALE;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.FavoState.FAVO_NO;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.HouseListDataCount.FAVOLIST_COUNT;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.NetWorkState.NETWORK_STATE_FAIL;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.NetWorkState.NETWORK_STATE_SUCCESS;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.HOUSELIST;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.HOUSELIST_NO;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.ReFreshDataState.DATA_FAVO_END;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.RefreshView.VIEW_LOAD_START;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.RefreshView.VIEW_REFRESH_START;
 
@@ -91,15 +96,16 @@ public class FavoriteFragment extends Fragment implements IFavorieFragment, View
     private HouseDescription bodyDescription;
     private String houseCount = "0";
     private boolean isFavorite = false;
-
-//    public static HouseListFragment newInstance(int pageType, String parentCategory) {
-//        HouseListFragment f = new HouseListFragment();
-//        Bundle b = new Bundle();
-//        b.putInt("pageType", pageType);
-//        b.putSerializable("parentCategory", parentCategory);
-//        f.setArguments(b);
-//        return f;
-//    }
+    private List<Integer> staSelectList;
+    public static String[] priceInterval;
+    private int priceType = SALE;
+    private int priceDialogSeletedId;
+    private int sortDialogSelectId;
+    private int position;
+    private int refreshType = 0;
+    private CircleTipsView statusCircleTipsView;
+    private CircleTipsView complexTipsView;
+    private View statusDown, complexDown;
 
 
     @Override
@@ -115,18 +121,17 @@ public class FavoriteFragment extends Fragment implements IFavorieFragment, View
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_productlist, null, false);
+        view = inflater.inflate(R.layout.fragment_houselist, null, false);
         if (view != null) {
             initViews();
             init();
             initListeners();
-            if (isFavorite) {
+            if (isFavorite)
                 bodyDescription.setPropertyType(5);
-                openFreshView();
-            }
         }
         return view;
     }
+
 
     private void initViews() {
         lv = view.findViewById(R.id.fragment_presmises_listview);
@@ -136,7 +141,12 @@ public class FavoriteFragment extends Fragment implements IFavorieFragment, View
         sort = view.findViewById(R.id.fragment_presmises_sort);
         search = view.findViewById(R.id.fragment_presmises_search);
         currentPosition = view.findViewById(R.id.fragment_presmises_current_position);
+        statusCircleTipsView = view.findViewById(R.id.list_status_tip);
+        statusDown = view.findViewById(R.id.fragment_img_status_down);
+        complexTipsView = view.findViewById(R.id.list_complex_tip);
+        complexDown = view.findViewById(R.id.fragment_img_complex_down);
         refreshLayout = view.findViewById(R.id.smartLayout);
+        refreshLayout.setEnableLoadmore(false);
     }
 
     private void init() {
@@ -144,12 +154,15 @@ public class FavoriteFragment extends Fragment implements IFavorieFragment, View
         aHeaderDescription = application.getHeaderDescription();
         bodyDescription = new HouseDescription();
         listFavo = new ArrayList<>();
+        staSelectList = new ArrayList<>();
         searchHistory = new ArrayList<>();
+        priceInterval = new String[2];
         adapter = new ItemAdapter(getActivity(), listFavo);
         adapter.setOnItemClickListener(new ItemAdapter.OnItemClickListener() {
             @Override
             public void onClick(View v, int position) {
                 showFavoriteDialog(v, position);
+                FavoriteFragment.this.position = position;
             }
         });
         lv.setAdapter(adapter);
@@ -192,14 +205,22 @@ public class FavoriteFragment extends Fragment implements IFavorieFragment, View
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                listFavo.clear();
+                refreshType = 0;
                 presenter.clearFlag();
+                refreshLayout.setEnableLoadmore(true);
                 presenter.doPost(HttpUtil.URL_PATH, aHeaderDescription, bodyDescription);
             }
         });
         refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
             @Override
             public void onLoadmore(RefreshLayout refreshlayout) {
+                refreshType = 1;
+                if (listFavo.size() == Integer.parseInt(houseCount)) {
+                    refreshLayout.setEnableLoadmore(false);
+                    refreshlayout.finishLoadmore(2000);
+                    showEndTips();
+                    return;
+                }
                 bodyDescription.setPageIndex(listFavo.size() / 15 + 1);
                 presenter.doPost(HttpUtil.URL_PATH, aHeaderDescription, bodyDescription);
             }
@@ -228,7 +249,11 @@ public class FavoriteFragment extends Fragment implements IFavorieFragment, View
                 startActivityForResult(intent, 0);
                 break;
             case R.id.fragment_presmises_more:
-                startActivity(new Intent(getContext(), ComplexSearchActivity.class));
+                Intent in = new Intent(getContext(), ComplexActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("operation", ApplicationManager.getFavoOperation());
+                in.putExtras(bundle);
+                startActivityForResult(in, 0);
                 break;
             case R.id.fragment_presmises_sort:
                 showSortDialog();
@@ -243,36 +268,39 @@ public class FavoriteFragment extends Fragment implements IFavorieFragment, View
     }
 
     private void showStatusDialog() {
-        DialogFragment statusDialog = DialogFactory.newInstance(STATUS, new DialogFactory.IGetClickItem() {
+
+        StatusDialog statusEndDialog = new StatusDialog(ApplicationManager.getStatusText(), staSelectList);
+        statusEndDialog.setOnDialogOnclikeLisenter(new StatusDialog.onDialogOnclikeLisenter() {
             @Override
-            public void getClickItem(DialogFragment dialog, String... items) {
-                dialog.dismiss();
-                List<String> statuList = new ArrayList<>();
-                for (int i = 0; i < DataManager.checkBoxSelecterList.size(); i++) {
-                    int index = DataManager.checkBoxSelecterList.get(i) - 1;//數據矯正
-                    index = index == -1 ? 0 : index;
-                    for (Map.Entry<String, String> entry : DataManager.parameter.get(index).entrySet()) {
-                        statuList.add(entry.getValue());
-                    }
+            public void onClick(Dialog v, int viewID, List<Integer> viewList, String[] content) {
+                v.dismiss();
+                staSelectList = viewList;
+                statusCircleTipsView.setText(viewList.size() == 7 ? 6 : viewList.size());
+                if (viewList.isEmpty()) {
+                    statusDown.setVisibility(View.VISIBLE);
+                    statusCircleTipsView.setVisibility(View.GONE);
+                } else {
+                    statusCircleTipsView.setVisibility(View.VISIBLE);
+                    statusDown.setVisibility(View.GONE);
                 }
-                bodyDescription.setPropertyStatus(statuList);
-                listFavo.clear();
+                bodyDescription.setPropertyStatus(ApplicationManager.getStatusValue(content));
                 openFreshView();
             }
         });
-        statusDialog.show(getFragmentManager(), "");
+
+        statusEndDialog.show(getFragmentManager(), "");
     }
 
     private void showPriceDialog() {
-        PriceDialog priceDialog = new PriceDialog(DataManager.priceType, DataManager.priceDialogSeletedId, DataManager.priceInterval);
+        PriceDialog priceDialog = new PriceDialog(priceType, priceDialogSeletedId, priceInterval);
         priceDialog.setOnDialogClikeLisenter(new PriceDialog.onDialogOnclikeLisenter() {
 
             @Override
             public void onClike(Dialog dialog, int viewID, Map<String, Object> params) {
                 dialog.dismiss();
                 int type = (int) params.get(PriceDialog.PARAMS_TYPE);
-                DataManager.priceType = type;
-                DataManager.priceDialogSeletedId = (int) params.get(PriceDialog.PARAMS_SELECTID);
+                priceType = type;
+                priceDialogSeletedId = (int) params.get(PriceDialog.PARAMS_SELECTID);
                 String[] items = (String[]) params.get(PriceDialog.PARAMS_PRICE);
                 bodyDescription.setPageIndex(1);
                 if (items != null) {
@@ -288,8 +316,8 @@ public class FavoriteFragment extends Fragment implements IFavorieFragment, View
                         bodyDescription.setSalePriceTo(null);
                     }
 
-                    DataManager.priceInterval[0] = items[0];
-                    DataManager.priceInterval[1] = items[1];
+                    priceInterval[0] = items[0];
+                    priceInterval[1] = items[1];
                 }
                 openFreshView();
             }
@@ -298,13 +326,13 @@ public class FavoriteFragment extends Fragment implements IFavorieFragment, View
     }
 
     private void showSortDialog() {
-        SortDialog sortDialog = new SortDialog(DataManager.sortDialogSelectId);
+        SortDialog sortDialog = new SortDialog(sortDialogSelectId);
         sortDialog.setOnDialogClikeLisenter(new SortDialog.onDialogOnclikeLisenter() {
             @Override
             public void onClike(Dialog dialog, int viewID, Map<String, Object> params) {
                 dialog.dismiss();
                 bodyDescription.setPageIndex(1);
-                DataManager.sortDialogSelectId = (int) params.get(SortDialog.PARAMS_SELECTID);
+                sortDialogSelectId = (int) params.get(SortDialog.PARAMS_SELECTID);
                 bodyDescription.setAscending((Boolean) params.get(SortDialog.PARAMS_ASCENDING));
                 String sort = params.get(SortDialog.PARAMS_SORTFIELD) != null ? (String) params.get(SortDialog.PARAMS_SORTFIELD) : null;
                 bodyDescription.setSortField(sort);
@@ -329,9 +357,6 @@ public class FavoriteFragment extends Fragment implements IFavorieFragment, View
             public void onClick(DialogFragment dialog, int type) {
                 if (type == SimpleTipsDialog.DIALOG_YES) {
                     presenter.doPost(address, aHeaderDescription, favoriteDescription);
-                    listFavo.get(position).setFavoriteFlag(!data.isFavoriteFlag());
-                    adapter.updateView(position, lv);
-//                    PermissionManager.set();
                 }
             }
         });
@@ -350,7 +375,7 @@ public class FavoriteFragment extends Fragment implements IFavorieFragment, View
         L.d(thiz, messageEvent.getMsg() + "");
         switch (messageEvent.getMsg()) {
             case NETWORK_STATE_FAIL:
-                //todo 失敗彈出提示框
+                onFailure();
                 break;
             case NETWORK_STATE_SUCCESS:
                 refreshListView();
@@ -370,14 +395,44 @@ public class FavoriteFragment extends Fragment implements IFavorieFragment, View
             case HOUSELIST_NO:
                 showNoPermissionDialog();
                 break;
+            case FAVO_NO:
+                L.d("no", "fvo");
+                removeFavo();
+                break;
+            case DATA_FAVO_END:
+                refreshLayout.setEnableLoadmore(false);
+                showEndTips();
+                break;
         }
         closeRefresh();
+    }
+
+    public void onFailure() {
+        SimpleTipsDialog tipsDialog = new SimpleTipsDialog();
+        tipsDialog.setContentString(getString(R.string.network_unenable));
+        tipsDialog.setLeftBtnVisibility(false);
+        tipsDialog.show(getFragmentManager(), "");
+    }
+
+    private void showEndTips() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(getActivity(), getString(R.string.no_more_data), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void removeFavo() {
+
+        listFavo.remove(position);
+        adapter.notifyDataSetChanged();
+        houseCount = Integer.parseInt(houseCount) - 1 + "";
     }
 
     private void setCountTxt(MessageEventBus messageEvent) {
         houseCount = (String) messageEvent.getObject();
         if (houseCount.equals("0")) return;
-//        currentPosition.setText("1" + "/" + houseCount);
     }
 
     private void closeRefresh() {
@@ -395,8 +450,9 @@ public class FavoriteFragment extends Fragment implements IFavorieFragment, View
 
     @Override
     public void refreshListData(List<Properties> properties) {
+        if (refreshType == 0) listFavo.clear();
+
         listFavo.addAll(properties);
-//        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -429,33 +485,72 @@ public class FavoriteFragment extends Fragment implements IFavorieFragment, View
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 1) {
-            if (data != null) {
-                Bundle bundle = data.getExtras();
-                List<String> addressList = new ArrayList<>();
-                String condition = bundle.getString(SearchActivity.VIEW_SEARCH_KEY_TYPE);
-                if (condition != null) {
-                    searchHistory.clear();
-                    for (String address : condition.split("/")) {
-                        searchHistory.add(address.split(":")[1]);
-                        addressList.add(address);
+        switch (resultCode){
+            case 1:
+                if (data != null) {
+                    Bundle bundle = data.getExtras();
+                    List<String> addressList = new ArrayList<>();
+                    String condition = bundle.getString(SearchActivity.VIEW_SEARCH_KEY_TYPE);
+                    if (condition != null) {
+                        searchHistory.clear();
+                        for (String address : condition.split("/")) {
+                            searchHistory.add(address.split(":")[1]);
+                            addressList.add(address);
+                        }
+                        bodyDescription.setSearcherAddress(addressList);
                     }
-                    bodyDescription.setSearcherAddress(addressList);
+                    String label = bundle.getString(VIEW_SEARCH_LABEL);
+                    if (label != null) search.setText(label);
+                    bodyDescription.setFloors(bundle.getString(VIEW_SEARCH_FLOOT));
+                    bodyDescription.setUnits(bundle.getString(VIEW_SEARCH_UNIT));
+                    openFreshView();
+                } else {
+                    search.setText(null);
+                    searchHistory.clear();
+                    bodyDescription.setSearcherAddress(null);
+                    bodyDescription.setFloors(null);
+                    bodyDescription.setUnits(null);
+                    openFreshView();
                 }
-                String label = bundle.getString(VIEW_SEARCH_LABEL);
-                if (label != null) search.setText(label);
-                bodyDescription.setFloors(bundle.getString(VIEW_SEARCH_FLOOT));
-                bodyDescription.setUnits(bundle.getString(VIEW_SEARCH_UNIT));
-                openFreshView();
-            } else {
-                search.setText(null);
-                searchHistory.clear();
-                bodyDescription.setSearcherAddress(null);
-                bodyDescription.setFloors(null);
-                bodyDescription.setUnits(null);
-                openFreshView();
-            }
+                break;
+            case 2:
+                Bundle bundle = data.getExtras();
+                HouseDescription description = (HouseDescription) bundle.get("body");
+                int count = 0;
+                if (description != null) {
+                    try {
+                        count = ItemCountUtil.count(description);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    L.d(thiz,"count: "+count);
+                    if(count == 0){
+                        complexTipsView.setVisibility(View.GONE);
+                        complexDown.setVisibility(View.VISIBLE);
+                    }else {
+                        complexTipsView.setVisibility(View.VISIBLE);
+                        complexTipsView.setText(count);
+                        complexDown.setVisibility(View.GONE);
+                    }
+                    description.setPropertyStatus(bodyDescription.getPropertyStatus());
+                    description.setRentPriceFrom(bodyDescription.getRentPriceFrom());
+                    description.setRentPriceTo(bodyDescription.getRentPriceTo());
+                    description.setSalePriceFrom(bodyDescription.getSalePriceFrom());
+                    description.setSalePriceTo(bodyDescription.getSalePriceTo());
+                    description.setPropertyType(5);
+                    bodyDescription = description;
+                    openFreshView();
+                }
+                Operation operation = (Operation) bundle.get("operation");
+                ApplicationManager.setFavoOperation(operation);
+                break;
+            case 3:
+                complexTipsView.setVisibility(View.GONE);
+                complexDown.setVisibility(View.VISIBLE);
+                ApplicationManager.setHouseOperation(new Operation());
+                break;
         }
+
     }
 
     private static class ItemAdapter extends BaseAdapter implements View.OnClickListener {
@@ -568,8 +663,8 @@ public class FavoriteFragment extends Fragment implements IFavorieFragment, View
                 viewHolder.iconKey.setImageLevel(properties.getPropertyKeyEnum());
 
                 viewHolder.iconHot.setSelected(properties.getHotList() == null ? false : true);
-                viewHolder.iconL.setSelected(properties.getIsConfirmed() == null ? false : true);
-                viewHolder.iconD.setSelected(properties.getDevelopmentEndCredits() == null ? false : true);
+                viewHolder.iconL.setSelected(properties.getIsConfirmed());
+                viewHolder.iconD.setSelected(properties.getDevelopmentEndCredits());
                 if (properties.getSSDType() != 0) {
                     viewHolder.ssdTxt.setVisibility(View.VISIBLE);
                     int per = 5 * properties.getSSDType();

@@ -17,28 +17,41 @@ public class CommandField {
         public static final int REMARK = 8;
     }
 
-    public class ParamsType{
+    public class ParamsType {
 
         public static final int propertyStatusCategory = 75;    // 房源狀態分類 1-有效，2-暫緩，3-預定，4-無效
+
     }
 
-    public class PriceType{
+    public class PriceType {
         public static final int SALE = 9;
         public static final int RENT = 10;
     }
 
-    public class DialogItemStatus{
+    public class DialogItemStatus {
         public static final int UNSELECT = 11;
     }
 
-    public class FeedBackType{
+    public class FeedBackType {
         public static final int FOLLOW_GENERAL = 1;
     }
 
-    public class TrustorDirectSellEnum{
+    public class TrustorDirectSellEnum {
         public static final int CAN = 0;
         public static final int CANNOT = 1;
-        public static final int UNKNOWN =2;
+        public static final int UNKNOWN = 2;
+    }
+
+    //房源日期类型
+    public class APPropertyDateType {
+        public static final int statusChangedDate = 1;  // 改盤日期
+        public static final int lasetUpdate = 2;  // 最后修改日期
+        public static final int lastFollowDate = 3; // 最后跟進日期
+        public static final int registDate = 4;  // 開盤日期
+        public static final int estimatedDate = 5;  // 估計日期
+        public static final int changePriceDate = 6;  // 最后改價日期
+        public static final int onlyTrustStartDate = 7;  // 委託書開始日
+        public static final int onlyTrustEndDate = 8;  // 委託書到期日
     }
 
 }

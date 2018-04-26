@@ -4,6 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.util.List;
+
 /**
  * Created by mzh1608258 on 2018/1/3.
  */
@@ -11,9 +13,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 public class PagerAdapter extends FragmentPagerAdapter {
 
 
-    private Fragment[] fragments;
+    private List<Fragment> fragments;
 
-    public PagerAdapter(FragmentManager fm, Fragment[] fragments) {
+    public PagerAdapter(FragmentManager fm, List<Fragment> fragments) {
         super(fm);
         this.fragments = fragments;
     }
@@ -21,13 +23,13 @@ public class PagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int i) {
         // TODO Auto-generated method stub
-        return fragments[i];
+        return fragments.get(i);
     }
 
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return fragments.length;
+        return fragments.size();
     }
 
     @Override

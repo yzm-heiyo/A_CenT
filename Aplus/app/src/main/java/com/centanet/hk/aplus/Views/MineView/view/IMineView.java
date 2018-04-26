@@ -1,6 +1,6 @@
 package com.centanet.hk.aplus.Views.MineView.view;
 
-import com.centanet.hk.aplus.entity.mine.Infomation;
+import com.centanet.hk.aplus.bean.mine.Infomation;
 
 /**
  * Created by yangzm4 on 2018/3/20.

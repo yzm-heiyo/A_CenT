@@ -1,21 +1,21 @@
 package com.centanet.hk.aplus.Views.LoginView.persent;
 
-import com.centanet.hk.aplus.MyApplication;
+import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.MD5Util;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.LoginView.model.ILoginModel;
 import com.centanet.hk.aplus.Views.LoginView.model.LoginModel;
 import com.centanet.hk.aplus.Views.LoginView.view.ILoginView;
-import com.centanet.hk.aplus.entity.http.AHeaderDescription;
-import com.centanet.hk.aplus.entity.http.ParameterDescription;
-import com.centanet.hk.aplus.entity.http.PermissionDescription;
-import com.centanet.hk.aplus.entity.http.SSOHeaderDescription;
-import com.centanet.hk.aplus.entity.http.SSOHomeConfigDescription;
-import com.centanet.hk.aplus.entity.http.SSOLoginDescription;
-import com.centanet.hk.aplus.entity.login.HomeConfig;
-import com.centanet.hk.aplus.entity.login.Login;
-import com.centanet.hk.aplus.entity.login.Permisstions;
-import com.centanet.hk.aplus.entity.login.UserPermission;
+import com.centanet.hk.aplus.bean.http.AHeaderDescription;
+import com.centanet.hk.aplus.bean.http.ParameterDescription;
+import com.centanet.hk.aplus.bean.http.PermissionDescription;
+import com.centanet.hk.aplus.bean.http.SSOHeaderDescription;
+import com.centanet.hk.aplus.bean.http.SSOHomeConfigDescription;
+import com.centanet.hk.aplus.bean.http.SSOLoginDescription;
+import com.centanet.hk.aplus.bean.login.HomeConfig;
+import com.centanet.hk.aplus.bean.login.Login;
+import com.centanet.hk.aplus.bean.login.Permisstions;
+import com.centanet.hk.aplus.bean.login.UserPermission;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,13 +46,17 @@ public class LoginPresent implements ILoginPresent {
 
         @Override
         public void OnPermissionFinish(UserPermission permission) {
+            if (permission.getPermisstionUserInfo() == null || permission.getPermisstionUserInfo().isEmpty()) {
+                loginView.showTipDialog(permission.getErrorMsg());
+                return;
+            }
             headerDescription.setToken(permission.getPermisstionUserInfo().get(0).getAccountInfo());
             headerDescription.setStaffno(staffNo);
             String number = new Date().getTime() + "";
             headerDescription.setNumber(number);
             headerDescription.setSign(MD5Util.getMD5Str(headerDescription.getSign() + number + staffNo));
             userPermission = permission.getPermisstionUserInfo().get(0).getPermisstions();
-            loginModel.doPost(HttpUtil.URL_PARAMETER,headerDescription,new ParameterDescription());
+            loginModel.doPost(HttpUtil.URL_PARAMETER, headerDescription, new ParameterDescription());
         }
 
         @Override
@@ -77,8 +81,10 @@ public class LoginPresent implements ILoginPresent {
             }
             staffNo = login.getResult().getDomainUser().getStaffNo();
             ssoHeader.setHKSession(login.getResult().getSession());
+            L.d("HkSession", login.getResult().getSession());
             ssoHeader.setCompanyCode(login.getResult().getDomainUser().getCityCode());
-
+            //todo 强制更新測試
+            loginModel.doGet(HttpUtil.URL_UPDATE, ssoHeader, null);
             loginModel.doGet(HttpUtil.URL_HomeConfig, ssoHeader, new SSOHomeConfigDescription());
         }
 
@@ -88,21 +94,37 @@ public class LoginPresent implements ILoginPresent {
                 loginView.showTipDialog(loginData.getRMessage());
                 return;
             }
-            loginView.reFreshApplication(headerDescription,userPermission,ssoHeader);
+            loginView.reFreshApplication(headerDescription, userPermission, ssoHeader);
             loginView.toLogin();
+        }
+
+        @Override
+        public void onFailure() {
+            loginView.onFailure();
+        }
+
+        @Override
+        public void isNeedUpdate(String updateUrl, boolean isForceUpdate) {
+            loginView.setUpdateUrl(updateUrl,isForceUpdate);
         }
     };
 
-    private String parseJumpContent(String param){
+    private String parseJumpContent(String param) {
         String[] url = param.split(":");
         return url[1].substring(1) + ":" + url[2].substring(0, url[2].length() - 2);
     }
 
 
     @Override
-    public void login(SSOHeaderDescription ssoHeaderDescription,SSOLoginDescription ssoLoginDescription) {
+    public void login(SSOHeaderDescription ssoHeaderDescription, SSOLoginDescription ssoLoginDescription) {
         ssoHeader = ssoHeaderDescription;
         ssoHeader.setUdid(loginModel.getUniquePsuedoID());
         loginModel.doPost(HttpUtil.URL_SSO, ssoHeaderDescription, ssoLoginDescription);
+    }
+
+    @Override
+    public void doGet(String address, Object header) {
+//        ((SSOHeaderDescription)header).setUdid(loginModel.getUniquePsuedoID());
+//        loginModel.doGet(address,header,null);
     }
 }

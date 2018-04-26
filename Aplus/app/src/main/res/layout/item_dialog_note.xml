@@ -16,7 +16,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/dialog_note_content_txt"
+        android:id="@+id/item_tips_owner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -24,8 +24,8 @@
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
         android:lineSpacingExtra = "15dp"
-        android:text="Any person Contacting the ventor again will breach the persona data (Privacy) ordinance and on conviction, is personally liable to a maximum fine of HK$500,000 and imprisonment of 3 years"
         android:textColor="#000000"
+        android:layout_marginBottom="15dp"
         android:textSize="14dp" />
 
 </LinearLayout>

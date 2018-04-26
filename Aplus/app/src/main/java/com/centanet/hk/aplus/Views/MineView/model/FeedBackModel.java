@@ -3,10 +3,7 @@ package com.centanet.hk.aplus.Views.MineView.model;
 import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
-import com.centanet.hk.aplus.Views.LoginView.model.LoginModel;
-import com.centanet.hk.aplus.entity.login.HomeConfig;
-import com.centanet.hk.aplus.entity.login.UserPermission;
-import com.centanet.hk.aplus.entity.mine.Infomation;
+import com.centanet.hk.aplus.bean.mine.Infomation;
 
 import java.io.IOException;
 

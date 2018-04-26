@@ -3,9 +3,9 @@ package com.centanet.hk.aplus.Views.SearchView.model;
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Utils.L;
-import com.centanet.hk.aplus.entity.auto_estate.AutoHouseData;
-import com.centanet.hk.aplus.entity.auto_estate.PropertyParamHints;
-import com.centanet.hk.aplus.entity.http.AHeaderDescription;
+import com.centanet.hk.aplus.bean.auto_estate.AutoHouseData;
+import com.centanet.hk.aplus.bean.auto_estate.PropertyParamHints;
+import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;

@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RadioButton;
@@ -14,11 +15,10 @@ import android.widget.RadioGroup;
 
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Views.basic.BaseDialog;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import retrofit2.http.PUT;
 
 /**
  * Created by yangzm4 on 2018/2/28.
@@ -34,6 +34,7 @@ public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChange
     private RadioGroup sortLeftRG, sortRightRG, txtRG;
     private View sortLayout;
     private int defaultId;
+    private boolean isFirst = true;
 
     public SortDialog() {
     }
@@ -77,13 +78,22 @@ public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChange
         sortRightRG.setOnCheckedChangeListener(this);
         sortLeftRG.setOnCheckedChangeListener(this);
 
-        Window window = dialog.getWindow();
+        final Window window = dialog.getWindow();
         window.setWindowAnimations(R.style.AnimBottom);
         lp = window.getAttributes();
         lp.gravity = Gravity.BOTTOM; // 紧贴底部
         lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
-        lp.height = getActivity().getWindowManager().getDefaultDisplay().getHeight() * 2 / 5;
-        window.setAttributes(lp);
+        sortLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if(isFirst) {
+                    lp.height = getActivity().getWindowManager().getDefaultDisplay().getHeight() * 2 / 5;
+                    window.setAttributes(lp);
+                    isFirst = !isFirst;
+                }
+            }
+        });
+
         window.setBackgroundDrawableResource(android.R.color.transparent);
     }
 
@@ -96,6 +106,7 @@ public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChange
             switch (defaultId) {
                 case R.id.sort_rb_default:
                     txtRG.check(R.id.sort_txt_default);
+                    break;
                 case R.id.sort_rb_price_up:
                 case R.id.sort_rb_price_down:
                     txtRG.check(R.id.sort_txt_sale);

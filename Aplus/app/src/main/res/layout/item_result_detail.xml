@@ -9,8 +9,7 @@
     <com.centanet.hk.aplus.Widgets.TitleBar
         android:id="@+id/detail_titlebar_top"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:titlebarText="樓盤編號:SWO530"></com.centanet.hk.aplus.Widgets.TitleBar>
+        android:layout_height="wrap_content"/>
 
 
     <LinearLayout
@@ -38,7 +37,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text="海灣豪庭1期1座A座"
                 android:textColor="@color/color_itemt_detail_title"
                 android:textSize="@dimen/themeSizeplus"
                 android:textStyle="bold" />
@@ -49,7 +47,6 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:text="METRO HARBOUR VIEW PHASE 1 TOWER 1"
                 android:textColor="@color/color_itemt_result_text"
                 android:textSize="@dimen/themeSize" />
         </LinearLayout>
@@ -61,6 +58,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="top"
+            android:visibility="gone"
             android:orientation="vertical">
 
             <TextView
@@ -75,7 +73,6 @@
                 android:paddingRight="5dp"
                 android:paddingTop="2dp"
                 android:text="地址詳情"
-                android:visibility="invisible"
                 android:textColor="@color/colorBackground"
                 android:textSize="@dimen/themeSizesmall" />
         </LinearLayout>
@@ -180,7 +177,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginRight="17dp"
             android:layout_marginTop="11dp"
-            android:text="暫無樓主" />
+            android:text="" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -194,29 +191,6 @@
 
     </RelativeLayout>
 
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:orientation="horizontal"-->
-    <!--android:paddingBottom="8dp">-->
-
-    <!--<RelativeLayout-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_weight="2.5">-->
-
-    <!--</RelativeLayout>-->
-
-    <!--<TextView-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_weight="1"-->
-    <!--android:gravity="center|right"-->
-    <!--android:text="樓主:暫無樓主"-->
-    <!--android:layout_marginRight="13dp"-->
-    <!--android:textColor="@color/color_itemt_result_text" />-->
-
-    <!--</LinearLayout>-->
 
     <android.support.design.widget.TabLayout
         android:id="@+id/detail_activity_tablayout"
@@ -245,6 +219,14 @@
 
     </android.support.design.widget.TabLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/shape_line_shade_up_to_down"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/translucent"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/detail_activity_viewpager"

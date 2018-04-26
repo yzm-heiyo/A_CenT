@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:orientation="vertical">
+
+    <com.centanet.hk.aplus.Widgets.TitleBar
+        android:id="@+id/detail_titlebar_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="13dp">
+
+        <ImageView
+            android:id="@+id/detail_icon_statu"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:paddingLeft="8dp">
+
+            <TextView
+                android:id="@+id/detail_txt_ch_housename"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/color_itemt_detail_title"
+                android:textSize="@dimen/themeSizeplus"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/detail_txt_en_housename"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/color_itemt_result_text"
+                android:textSize="@dimen/themeSize" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/detail_view_address"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="top"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/detail_txt_adddetail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/shape_confirm_backgound"
+                android:gravity="center"
+                android:paddingBottom="2dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:paddingTop="2dp"
+                android:text="地址詳情"
+                android:textColor="@color/colorBackground"
+                android:textSize="@dimen/themeSizesmall" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/item_icon_hot"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="11dp"
+            android:scaleType="center"
+            android:src="@drawable/selector_icon_hot" />
+
+        <ImageView
+            android:id="@+id/item_icon_key"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@id/item_icon_hot"
+            android:scaleType="center"
+            android:src="@drawable/level_icon_key" />
+
+        <ImageView
+            android:id="@+id/item_icon_o"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@id/item_icon_key"
+            android:scaleType="center"
+            android:src="@drawable/selector_icon_o" />
+
+        <ImageView
+            android:id="@+id/item_icon_l"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@id/item_icon_o"
+            android:scaleType="center"
+            android:src="@drawable/selector_icon_l" />
+
+        <ImageView
+            android:id="@+id/item_icon_d"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@id/item_icon_l"
+            android:scaleType="center"
+            android:src="@drawable/selector_icon_d" />
+
+        <ImageView
+            android:id="@+id/item_icon_medal"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@id/item_icon_d"
+            android:scaleType="center"
+            android:src="@drawable/selector_icon_dujia" />
+
+        <TextView
+            android:id="@+id/item_icon_ssd"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@id/item_icon_medal"
+            android:gravity="center"
+            android:paddingBottom="2dp"
+            android:text="20"
+            android:textColor="#bb842d"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/item_icon_favo"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@id/item_icon_ssd"
+            android:scaleType="center"
+            android:src="@drawable/selector_icon_favo" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/item_icon_favo">
+
+            <TextView
+                android:id="@+id/item_txt_client"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginTop="11dp"
+                android:text="" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="11dp"
+                android:layout_toLeftOf="@id/item_txt_client"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/client" />
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/detail_activity_tablayout"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#00ffffff"
+        app:tabIndicatorColor="@color/colortheme"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/colortheme"
+        app:tabTextColor="#646464">
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="基本資料" />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="跟進" />
+
+        <android.support.design.widget.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="業主資料" />
+
+    </android.support.design.widget.TabLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@drawable/shape_line_shade_up_to_down" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@color/translucent" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/detail_activity_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></android.support.v4.view.ViewPager>
+
+
+</LinearLayout>

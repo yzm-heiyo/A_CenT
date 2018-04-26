@@ -14,16 +14,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:background="@color/color_theme_item" />
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="6dp"-->
+            <!--android:background="@color/color_theme_item" />-->
 
         <!-- 租售信息 -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorBackground"
+            android:background="@drawable/layer_rim_line"
             android:orientation="vertical">
 
             <LinearLayout
@@ -47,7 +47,7 @@
                         android:gravity="center|left"
                         android:paddingBottom="2dp"
                         android:paddingTop="2dp"
-                        android:text="售:$600萬(590)"
+                        android:text="售: "
                         android:textColor="@color/colortheme"
                         android:textSize="@dimen/themeSizeplus" />
 
@@ -55,44 +55,44 @@
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_use_rvg_price"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="18,750"
-                        app:SmallItemTitle="實均價:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="實均價"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_really_rvg_price"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="12,570"
-                        app:SmallItemTitle="建均價:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="建均價"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_entrust_3"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="590萬-650萬(1%)"
-                        app:SmallItemTitle="委託書三:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="委託書三"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_conjecture_data"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="2017-07-19"
-                        app:SmallItemTitle="估計日期:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="估計日期"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_use_area"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="320{RVD}"
-                        app:SmallItemTitle="實用面積:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="實用面積"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_really_area"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="477(不明來源)"
-                        app:SmallItemTitle="建築面積:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="建築面積"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_usepercent"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="67.09%"
-                        app:SmallItemTitle="實用率:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="實用率"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
 
                 </LinearLayout>
@@ -112,7 +112,7 @@
                         android:gravity="center|left"
                         android:paddingBottom="2dp"
                         android:paddingTop="2dp"
-                        android:text="租:$15,000(14,000)"
+                        android:text="租: "
                         android:textColor="#BB842D"
                         android:textSize="@dimen/themeSizeplus" />
 
@@ -120,43 +120,50 @@
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_use_rvg_rent"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="18"
-                        app:SmallItemTitle="實均租:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="實均租"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_really_rvg_rent"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="12"
-                        app:SmallItemTitle="建均租:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="建均租"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_entrust_5"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="590萬-650萬(1%)"
-                        app:SmallItemTitle="委託書五:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="委託書五"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_ssd"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="未知"
-                        app:SmallItemTitle="SSD:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="SSD"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_rvd_data"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="1900-01-01"
-                        app:SmallItemTitle="RVD日期:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="RVD日期"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_open_date"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="2017-11-11"
-                        app:SmallItemTitle="開盤日:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="開盤日"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                 </LinearLayout>
 
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorline" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -167,17 +174,17 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|left"
+                    android:layout_gravity="left"
                     android:layout_weight="1"
-                    android:text="提示:"
+                    android:text="提示"
                     android:textSize="@dimen/themeSize" />
 
                 <TextView
                     android:id="@+id/detail_txt_tips"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:text="業主方便睇樓時間 19:00-23:00"
+                    android:layout_weight="5"
+                    android:text=""
                     android:textColor="@color/color_itemt_detail_title"
                     android:textSize="@dimen/themeSize" />
 
@@ -194,7 +201,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorBackground"
+            android:background="@drawable/layer_rim_line"
             android:orientation="vertical"
             android:padding="8dp">
 
@@ -211,13 +218,14 @@
                     android:src="@drawable/ico_key_unit" />
 
                 <TextView
+                    android:id="@+id/detail_key_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left|center"
                     android:paddingLeft="8dp"
-                    android:text="鎖匙號 DO123"
                     android:textColor="@color/colortheme"
-                    android:textSize="@dimen/themeSize" />
+                    android:textSize="@dimen/themeSize"
+                    android:text="@string/keyhouse"/>
 
 
             </LinearLayout>
@@ -236,31 +244,31 @@
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_house_type"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="私人住宅"
-                        app:SmallItemTitle="物業類型:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="物業類型"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_catplace"
                         style="@style/smallitem_style"
-                        app:SmallItemTitle="車位:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemTitle="車位"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_interval"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="1房 2廳 1廁 0套"
-                        app:SmallItemTitle="間隔:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="間隔"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_number"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="221-24205-0028"
-                        app:SmallItemTitle="差餉編號:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="差餉編號"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_search"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="2016-09-05"
-                        app:SmallItemTitle="土地查冊:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="土地查冊"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                 </LinearLayout>
 
@@ -273,20 +281,20 @@
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_direction"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="東北"
-                        app:SmallItemTitle="座向:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="座向"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_housesum"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="44"
-                        app:SmallItemTitle="樓層總數:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="樓層總數"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_from"
                         style="@style/smallitem_style"
-                        app:SmallItemContent="其他"
-                        app:SmallItemTitle="來源:"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                        app:SmallItemContent=""
+                        app:SmallItemTitle="來源"></com.centanet.hk.aplus.Widgets.SmallItemView>
                 </LinearLayout>
 
             </LinearLayout>
@@ -302,7 +310,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="標籤:"
+                    android:text="標籤"
                     android:textSize="@dimen/themeSizesmall" />
 
                 <LinearLayout
@@ -324,50 +332,56 @@
             <com.centanet.hk.aplus.Widgets.SmallItemView
                 android:id="@+id/detail_txt_attention"
                 style="@style/smallitem_style"
-                app:SmallItemContent="#################################################################"
+                app:SmallItemContent=""
                 app:SmallItemContentWeight="5"
-                app:SmallItemTitle="關注事項:"
+                app:SmallItemTitle="關注事項"
                 app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
 
             <com.centanet.hk.aplus.Widgets.SmallItemView
                 android:id="@+id/detail_txt_supplement"
                 style="@style/smallitem_style"
-                app:SmallItemContent="續約新租金 $17,000 到2018年"
+                app:SmallItemContent=""
                 app:SmallItemContentWeight="5"
-                app:SmallItemTitle="補充:"
+                app:SmallItemTitle="補充"
                 app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
 
             <com.centanet.hk.aplus.Widgets.SmallItemView
                 android:id="@+id/detail_txt_customization_1"
                 style="@style/smallitem_style"
-                app:SmallItemContent="FLAT ROOF 300'"
+                app:SmallItemContent=""
                 app:SmallItemContentWeight="5"
-                app:SmallItemTitle="自訂一:"
+                app:SmallItemTitle="自訂一"
                 app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
             <com.centanet.hk.aplus.Widgets.SmallItemView
                 android:id="@+id/detail_txt_customization_2"
                 style="@style/smallitem_style"
                 app:SmallItemContentWeight="5"
-                app:SmallItemTitle="自訂二:"
+                app:SmallItemTitle="自訂二"
                 app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
             <com.centanet.hk.aplus.Widgets.SmallItemView
                 android:id="@+id/detail_txt_customization_3"
                 style="@style/smallitem_style"
-                app:SmallItemContent="FLAT ROOF 27.9M'"
+                app:SmallItemContent=""
                 app:SmallItemContentWeight="5"
-                app:SmallItemTitle="自訂三:"
+                app:SmallItemTitle="自訂三"
                 app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorline" />
 
             <com.centanet.hk.aplus.Widgets.SmallItemView
                 android:id="@+id/detail_txt_remark"
                 style="@style/smallitem_style"
-                app:SmallItemContent="STANLEY ISLAND LOT No. 116'"
+                app:SmallItemContent=""
                 app:SmallItemContentWeight="5"
-                app:SmallItemTitle="備註:"
+                app:SmallItemTitle="備註"
                 app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
         </LinearLayout>
@@ -381,7 +395,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorBackground"
+            android:background="@drawable/layer_rim_line"
             android:orientation="vertical"
             android:padding="8dp">
 
@@ -412,17 +426,17 @@
             <com.centanet.hk.aplus.Widgets.SmallItemView
                 android:id="@+id/detail_txt_movein_date"
                 style="@style/smallitem_style"
-                app:SmallItemContent="2003-5"
+                app:SmallItemContent=""
                 app:SmallItemContentWeight="5"
-                app:SmallItemTitle="入伙日:"
+                app:SmallItemTitle="入伙日"
                 app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
             <com.centanet.hk.aplus.Widgets.SmallItemView
                 android:id="@+id/detail_txt_management_cost"
                 style="@style/smallitem_style"
-                app:SmallItemContent="0.00"
+                app:SmallItemContent=""
                 app:SmallItemContentWeight="5"
-                app:SmallItemTitle="管理費:"
+                app:SmallItemTitle="管理費"
                 app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
         </LinearLayout>
@@ -433,6 +447,5 @@
             android:background="@color/color_theme_item" />
 
     </LinearLayout>
-
 
 </ScrollView>

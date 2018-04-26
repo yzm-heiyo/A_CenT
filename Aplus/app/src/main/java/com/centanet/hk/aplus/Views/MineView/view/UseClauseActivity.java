@@ -1,5 +1,6 @@
 package com.centanet.hk.aplus.Views.MineView.view;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.webkit.WebView;
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Widgets.TitleBar;
+import com.githang.statusbar.StatusBarCompat;
 
 /**
  * Created by yangzm4 on 2018/3/20.
@@ -22,6 +24,7 @@ public class UseClauseActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        StatusBarCompat.setStatusBarColor(this, Color.parseColor("#BB2E2D"),false);
         setContentView(R.layout.activity_userclause);
         titleBar = findViewById(R.id.clause_titlebar);
         titleBar.setTitleContent(getString(R.string.app_use_clause));

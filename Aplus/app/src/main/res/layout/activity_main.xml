@@ -2,16 +2,20 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
-
-
+    <View android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_above="@id/main_navigationbar"
+        android:background="@drawable/shape_line_shade_down_to_up"/>
     <RadioGroup
-        android:paddingTop="4dp"
         android:id="@+id/main_navigationbar"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:paddingTop="8dp">
 
         <RadioButton
             android:id="@+id/activity_main_manager"
@@ -19,10 +23,11 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:button="@null"
+            android:checked="true"
             android:drawableTop="@drawable/selector_hse_mangmt"
             android:gravity="center"
-            android:checked="true"
             android:text="@string/main_premises_manager"
+            android:textColor="@color/textcolor"
             android:textSize="@dimen/themeSizesmall" />
 
         <RadioButton
@@ -34,6 +39,7 @@
             android:drawableTop="@drawable/selector_main_menu_bookmark"
             android:gravity="center"
             android:text="@string/main_mine_collect"
+            android:textColor="@color/textcolor"
             android:textSize="@dimen/themeSizesmall" />
 
         <RadioButton
@@ -45,6 +51,7 @@
             android:drawableTop="@drawable/selector_staff"
             android:gravity="center"
             android:text="@string/main_mine_account"
+            android:textColor="@color/textcolor"
             android:textSize="@dimen/themeSizesmall" />
     </RadioGroup>
 
@@ -53,7 +60,8 @@
         android:id="@+id/main_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/main_navigationbar">
-    </android.support.v4.view.ViewPager>
+        android:layout_above="@+id/main_navigationbar"
+        android:layout_marginBottom="2dp"
+        android:background="@color/color_theme_item"></android.support.v4.view.ViewPager>
 
 </RelativeLayout>

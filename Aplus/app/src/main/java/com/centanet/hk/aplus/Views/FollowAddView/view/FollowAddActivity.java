@@ -1,10 +1,15 @@
 package com.centanet.hk.aplus.Views.FollowAddView.view;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,22 +24,35 @@ import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.TimeLimitUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.Dialog.SimpleTipsDialog;
+import com.centanet.hk.aplus.Views.Dialog.voice.VoiceInputPanel;
 import com.centanet.hk.aplus.Views.FollowAddView.present.FollowAddPresent;
 import com.centanet.hk.aplus.Views.FollowAddView.present.IFollowAddPresent;
+import com.centanet.hk.aplus.Views.SearchView.view.SearchActivity;
 import com.centanet.hk.aplus.Views.basic.BasicActivty;
 import com.centanet.hk.aplus.Widgets.TitleBar;
-import com.centanet.hk.aplus.entity.detail.DetailHouse;
-import com.centanet.hk.aplus.entity.http.FollowAddDescription;
-import com.centanet.hk.aplus.entity.http.DetailsDescription;
-import com.centanet.hk.aplus.entity.http.AHeaderDescription;
+import com.centanet.hk.aplus.bean.auto_estate.PropertyParamHints;
+import com.centanet.hk.aplus.bean.detail.DetailAddress;
+import com.centanet.hk.aplus.bean.detail.DetailHouse;
+import com.centanet.hk.aplus.bean.http.FollowAddDescription;
+import com.centanet.hk.aplus.bean.http.DetailsDescription;
+import com.centanet.hk.aplus.bean.http.AHeaderDescription;
+import com.centanet.hk.aplus.eventbus.MessageEventBus;
+import com.githang.statusbar.StatusBarCompat;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 import static com.centanet.hk.aplus.Utils.net.HttpUtil.URL_FOLLOW_ADD;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_FOLLOW_SUCCESS;
 
 /**
  * Created by mzh1608258 on 2018/1/4.
  */
 
-public class FollowAddActivity extends BasicActivty implements View.OnClickListener, IFollowAddView {
+public class FollowAddActivity extends BasicActivty implements View.OnClickListener, IFollowAddView, VoiceInputPanel.EventListener {
 
     private String thiz = getClass().getSimpleName();
     private TitleBar titleBar;
@@ -47,19 +65,23 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
     private String keyId;
     private FollowAddDescription description;
     private AHeaderDescription headerDescription;
-    private View addressView;
+    private View addressView, mic;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_followadd);
+        StatusBarCompat.setStatusBarColor(this, Color.parseColor("#BB2E2D"), false);
         initViews();
+        EventBus.getDefault().register(this);
     }
 
     private void initViews() {
         Intent intent = getIntent();
         DetailHouse houseData = (DetailHouse) intent.getSerializableExtra("DetailData");
 
+        mic = findViewById(R.id.follow_img_mic);
+        mic.setOnClickListener(this);
         addressView = findViewById(R.id.feedback_view_address);
         titleBar = this.findViewById(R.id.activity_feedback_titlebar);
         titleBar.setOnClickListener(this);
@@ -90,18 +112,43 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
         iconSingle = findViewById(R.id.item_icon_medal);
         iconFavo = findViewById(R.id.item_icon_favo);
 
-        if(houseData.getUserIsShowAddressDetail())
-            addressTxt.setVisibility(View.VISIBLE);
+//        if (houseData.getUserIsShowAddressDetail())
+//            addressTxt.setVisibility(View.VISIBLE);
+
+        if (!houseData.isUserIsShowDetailFloor()) {
+            if (!houseData.getUserIsShowAddressDetail()) {
+                addressView.setVisibility(View.VISIBLE);
+                houseChNameTxt.setText(houseData.getDetailAddressChNoFoolrInfo());
+                houseEnNameTxt.setText(houseData.getDetailAddressEnNoFoolrInfo());
+            } else {
+                houseChNameTxt.setText(houseData.getDetailAddressChInfo());
+                houseEnNameTxt.setText(houseData.getDetailAddressEnInfo());
+                addressView.setVisibility(View.GONE);
+            }
+        } else {
+            addressView.setVisibility(View.GONE);
+            houseChNameTxt.setText(houseData.getDetailAddressChInfo());
+            houseEnNameTxt.setText(houseData.getDetailAddressEnInfo());
+        }
+
+//        if (!houseData.isUserIsShowDetailFloor()) {
+//            if (!houseData.getUserIsShowAddressDetail())
+//                addressView.setVisibility(View.VISIBLE);
+//            else addressView.setVisibility(View.GONE);
+//        } else {
+//            addressView.setVisibility(View.GONE);
+//        }
+
         iconSingle.setSelected(houseData.isHasOnlyTrust());
         iconFavo.setSelected(houseData.isFavorite());
         iconO.setSelected(houseData.isODish());
         iconKey.setImageLevel(houseData.getPropertyKeyType());
-        iconHot.setSelected(houseData.getHotList() == null ? false : true);
-        iconL.setSelected(houseData.isConfirmed());
-        iconD.setSelected(houseData.getDevelopmentEndCredits() == null ? false : true);
-        clineNameTxt.setText(houseData.getPropertyBuildingOwner() == "" ? getString(R.string.detail_no_owner) : houseData.getPropertyBuildingOwner());
-        houseChNameTxt.setText(houseData.getDetailAddressChNoFoolrInfo());
-        houseEnNameTxt.setText(houseData.getDetailAddressEnNoFoolrInfo());
+        iconHot.setSelected(houseData.getHotList() == null || houseData.getHotList().equals("") ? false : true);
+        iconL.setSelected(!houseData.isConfirmed());
+        iconD.setSelected(houseData.getDevelopmentEndCredits());
+        clineNameTxt.setText(houseData.getPropertyBuildingOwner().equals("") ? " " + getString(R.string.detail_no_owner) : " " + houseData.getPropertyBuildingOwner());
+//        houseChNameTxt.setText(!houseData.isUserIsShowDetailFloor() ? houseData.getDetailAddressChInfo() : houseData.getDetailAddressChNoFoolrInfo());
+//        houseEnNameTxt.setText(!houseData.isUserIsShowDetailFloor() ? houseData.getDetailAddressEnInfo() : houseData.getDetailAddressEnNoFoolrInfo());
         titleBar.setTitleContent(getString(R.string.house_umber) + ":" + houseData.getPropertyNo());
         setIconViewLevel(0, houseData.getPropertyStatus());
         if (houseData.getSSDType() != 0) {
@@ -129,9 +176,10 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
         description = new FollowAddDescription();
         keyId = intent.getStringExtra("keyId");
         description.setPropertyKeyId(keyId);
-        headerDescription = ((MyApplication)getApplicationContext()).getHeaderDescription();
+        headerDescription = ((MyApplication) getApplicationContext()).getHeaderDescription();
         setListeners();
     }
+
 
     private void setIconViewLevel(int level, String properties) {
         switch (properties.substring(0, 1)) {
@@ -154,6 +202,7 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
                 level = 3;
                 break;
         }
+        icoStatu.setImageResource(R.drawable.level_list_propertystatus);
         icoStatu.setImageLevel(level);
     }
 
@@ -184,20 +233,18 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
         if (isMargin) {
             if (oldString.length() >= position) {
                 newString = oldString.substring(0, startIndex) + oldString.substring(position + 1);
-                L.d(thiz, "A");
             } else {
                 newString = oldString.substring(0, startIndex);
-                L.d(thiz, "S");
             }
         } else if (isMiddle) {
             int endIndex = oldString.indexOf("】", position);
             newString = oldString.substring(0, startIndex) + oldString.substring(endIndex + 1);
-            L.d(thiz, "中間");
         }
         ((EditText) v).setText(newString);
         ((EditText) v).setSelection(newString.length());
         return true;
     }
+
 
     private void setListeners() {
         titleBar.setOnItemClickListener(new TitleBar.OnItemClickListener() {
@@ -207,17 +254,16 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
 
                 SimpleTipsDialog dialog = new SimpleTipsDialog();
                 final String follow = recordEdit.getText().toString();
-                L.d(thiz,follow);
-                    if (type == TitleBar.TYPE_BACK) {
-                        dialog.setContentString(getString(R.string.dialog_tips_back));
-                    } else if (type == TitleBar.TYPE_PUT) {
-                        if (follow.length()>0) {
-                            dialog.setContentString(getString(R.string.dialog_tips_put));
-                        }else {
-                            dialog.setContentString("跟進内容不能爲空");
-                            dialog.setLeftBtnVisibility(false);
-                        }
+                if (type == TitleBar.TYPE_BACK) {
+                    dialog.setContentString(getString(R.string.dialog_tips_back));
+                } else if (type == TitleBar.TYPE_PUT) {
+                    if (follow.length() > 0) {
+                        dialog.setContentString(getString(R.string.dialog_tips_put));
+                    } else {
+                        dialog.setContentString(getString(R.string.feedback_null));
+                        dialog.setLeftBtnVisibility(false);
                     }
+                }
 
                 dialog.setOnItemclickListener(new SimpleTipsDialog.OnItemClickListener() {
                     @Override
@@ -229,7 +275,7 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
                                     finish();
                                 break;
                             case TitleBar.TYPE_PUT:
-                                if(follow.length()<=0)return;
+                                if (follow.length() <= 0) return;
                                 if (dialogType == SimpleTipsDialog.DIALOG_YES)
                                     putFollowData();
                                 break;
@@ -249,12 +295,10 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
 //        if (follow != "") {
         description.setFollowContent(follow);
         present.doPost(URL_FOLLOW_ADD, headerDescription, description);
-        finish();
     }
 
 
     private void addContentLabel(String labelString) {
-        L.d(getClass().getSimpleName(), labelString);
         String contentString = recordEdit.getText().toString();
         int lastIndex = contentString.lastIndexOf("】");
         if (lastIndex != -1) {
@@ -286,12 +330,25 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
                 addContentLabel(getResources().getString(R.string.wrongnumb));
                 break;
             case R.id.feedback_txt_address:
-                addressView.setVisibility(View.GONE);
                 DetailsDescription description = new DetailsDescription();
                 description.setKeyId(keyId);
                 present.doPost(HttpUtil.URL_ADDRESS_DETAIL, headerDescription, description);
+
+                break;
+            case R.id.follow_img_mic:
+//                VoiceInputPanel.show(FollowAddActivity.this, false, FollowAddActivity.this);
+                showVoiceInputPanel();
                 break;
             default:
+                break;
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMoonEvent(MessageEventBus messageEvent) {
+        switch (messageEvent.getMsg()) {
+            case DETAIL_FOLLOW_SUCCESS:
+                finish();
                 break;
         }
     }
@@ -336,13 +393,46 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
         return false;
     }
 
+    public void showVoiceInputPanel() {
+        if (Build.VERSION.SDK_INT >= 23)
+            if (ContextCompat.checkSelfPermission(FollowAddActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                this.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
+                        1);
+            }
+        VoiceInputPanel.show(this, false, this);
+    }
+
+
     @Override
-    public void reFreshAddress(final String address) {
+    public void reFreshAddress(final DetailAddress address) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                houseChNameTxt.setText(address);
+                addressView.setVisibility(View.GONE);
+                houseChNameTxt.setText(address.getDetailAddressChInfo());
+                houseEnNameTxt.setText(address.getDetailAddressEnInfo());
+                Intent dbIntent = new Intent();
+                dbIntent.putExtra("DetailAddressChInfo", address.getDetailAddressChInfo());
+                dbIntent.putExtra("DetailAddressEnInfo", address.getDetailAddressEnInfo());
+                FollowAddActivity.this.setResult(2, dbIntent);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onConfirmClick(String msg) {
+        recordEdit.setText(recordEdit.getText() + msg);
+        recordEdit.setSelection(recordEdit.getText().toString().length());
+    }
+
+    @Override
+    public void onCancel() {
+
     }
 }

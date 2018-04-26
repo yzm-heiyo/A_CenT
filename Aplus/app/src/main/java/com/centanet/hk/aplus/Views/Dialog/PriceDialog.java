@@ -18,6 +18,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Views.basic.BaseDialog;
 import com.centanet.hk.aplus.Widgets.ProcessBarView;
 
 import java.util.HashMap;
@@ -53,7 +54,7 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
     private String[] salePrice = {"0", "200", "400", "600", "800", "1000", "2000", "3000"};
     private String[] rentPrice = {"0", "10000", "15000", "20000", "40000", "60000", "100000"};
     private String[][] rentPriceList = {{"0", "10000"}, {"10000", "15000"}, {"15000", "20000"}, {"20000", "40000"}, {"40000", "60000"}, {"60000", "100000"}, {"100000", "100000"}, {"", ""}};
-    private String[][] salePriceList = {{"0", "400"}, {"400", "600"}, {"600", "800"}, {"800", "1000"}, {"1000", "2000"}, {"2000", "3000"}, {"3000", "3000"}, {"", ""}};
+    private String[][] salePriceList = {{"0", "400"}, {"400", "600"}, {"600", "800"}, {"800", "1000"}, {"1000", "2000"}, {"2000", "3000"}, {"3000", ""}, {"", ""}};
     private String[] salePriceTxt = {"不限", "0 - 400萬", "400萬 - 600萬", "600萬 - 800萬", "800萬 - 1,000萬", "1,000萬 - 2,000萬", "2,000萬 - 3,000萬", "3,000萬以上", "萬"};
     private String[] rentPriceTxt = {"不限", "0 - 10,000", "10,000 - 15,000", "15,000 - 20,000", "20,000 - 40,000", "40,000 - 60,000", "60,000 - 100,000", "100,000以上", "千"};
     private boolean isFirstEnter = true;
@@ -63,6 +64,7 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
     private TextView editTxt;
     private int oldStartPrice = 0;
     private int oldEndPrice = SALE_MAX;
+    private boolean isFirst = true;
 
     public PriceDialog() {
     }
@@ -140,13 +142,24 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
         processBarView = priceLayout.findViewById(R.id.dialog_price_ratting);
         processBarView.setMax(3000);
 
-        Window window = dialog.getWindow();
+        final Window window = dialog.getWindow();
         window.setWindowAnimations(R.style.AnimBottom);
         lp = window.getAttributes();
         lp.gravity = Gravity.BOTTOM; // 紧贴底部
         lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
-        lp.height = getActivity().getWindowManager().getDefaultDisplay().getHeight() * 4 / 5;
-        window.setAttributes(lp);
+
+        priceLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if(isFirst) {
+                    lp.height = priceLayout.getHeight();
+                    window.setAttributes(lp);
+                    isFirst =!isFirst;
+                }
+            }
+        });
+
+
         window.setBackgroundDrawableResource(android.R.color.transparent);
 
         if (type == SALE) {
@@ -217,6 +230,9 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
                     value = value >= 10000 ? (value / 1000) * 1000 : (value / 100) * 100;
                     priceRightEdit.setText("" + (value >= 10000 ? value / 1000 : value / 100));
                 }
+            }
+            if(abovebtn.isChecked()){
+                priceRightEdit.setText(priceRightEdit.getText().toString()+" +");
             }
             price[1] = value + "";
         }
@@ -369,10 +385,16 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
             //todo 設置成正確狀態
             processBarView.setLeftValue(oldStartPrice);
             processBarView.setRightValue(oldEndPrice);
+            if(defaultBtn.isChecked()){
+                priceLeftEdit.setText(null);
+                priceRightEdit.setText(null);
+            }
         } else {
             priceGroup.check(R.id.dialog_radiobtn_default);
             processBarView.setLeftProcess(0);
             processBarView.setRightProcess(1);
+            priceLeftEdit.setText(null);
+            priceRightEdit.setText(null);
         }
     }
 

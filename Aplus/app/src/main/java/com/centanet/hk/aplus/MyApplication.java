@@ -1,20 +1,31 @@
 package com.centanet.hk.aplus;
 
 import android.app.Activity;
-import android.app.Application;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Context;
+import android.os.Build;
+import android.support.multidex.MultiDex;
 
-import com.centanet.hk.aplus.entity.http.AHeaderDescription;
-import com.centanet.hk.aplus.entity.http.SSOHeaderDescription;
-import com.centanet.hk.aplus.entity.login.Permisstions;
-import com.centanet.hk.aplus.entity.login.UserPermission;
-import com.centanet.hk.aplus.entity.params.Parameter;
-import com.centanet.hk.aplus.entity.params.SystemParam;
+import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Utils.LogPrintToLocalUtil;
+import com.centanet.hk.aplus.bean.complexSearch.Operation;
+import com.centanet.hk.aplus.bean.http.AHeaderDescription;
+import com.centanet.hk.aplus.bean.http.SSOHeaderDescription;
+import com.centanet.hk.aplus.bean.login.Permisstions;
+import com.centanet.hk.aplus.bean.params.Parameter;
+import com.centanet.hk.aplus.bean.params.SystemParam;
+import com.centanet.hk.aplus.helper.AppFrontBackHelper;
+import com.centanet.hk.aplus.service.PrefsessionService;
 
 import org.litepal.LitePalApplication;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by mzh1608258 on 2018/1/2.
@@ -46,11 +57,85 @@ public class MyApplication extends LitePalApplication {
 
     private SystemParam labelSystenParam;
 
+    private Map<String, String> statusParams;
+
+    private Map<String, String> statusCodes;
+
+    private Operation houseOperation = new Operation();
+
+    private Operation favoOperation = new Operation();
+
+    private boolean isOutTime = false;
+
+    private List<String> contactType;
+
+    private long onBackTime = System.currentTimeMillis();
+
+    private int updateType = 0;
+
+    private String updateUrl;
+
+    private int clientVer;
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(base);
+        LogPrintToLocalUtil.init(base);
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         isRelase = false;
+        contactType = new ArrayList<>();
         context = getApplicationContext();
+        AppFrontBackHelper helper = new AppFrontBackHelper();
+        helper.register(MyApplication.this, new AppFrontBackHelper.OnAppStatusListener() {
+            @Override
+            public void onFront() {
+                //应用切到前台处理
+                L.d(TAG, "onFront: ");
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    //取消上次任务时执行
+                    JobScheduler jobScheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+                    List<JobInfo> allPendingJobs = jobScheduler.getAllPendingJobs();
+                    if (allPendingJobs.size() > 0) {
+                        // Finish the last one
+                        int jobId = allPendingJobs.get(0).getId();
+                        if (jobId == 1)
+                            jobScheduler.cancel(jobId);
+                        L.d(TAG, "onFront: " + "cancel");
+                    }
+                } else {
+                    //todo
+                    if (System.currentTimeMillis() - onBackTime >= 30 * 1000 * 60) {
+                        isOutTime = true;
+                        L.d("application", "isOutTime");
+                    }
+                }
+            }
+
+            @Override
+            public void onBack() {
+                //应用切到后台处理
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    ComponentName jobService = new ComponentName(getBaseContext(), PrefsessionService.class);
+                    JobScheduler scheduler = (JobScheduler) getSystemService(Context.JOB_SCHEDULER_SERVICE);
+
+                    JobInfo.Builder builder = new JobInfo.Builder(1, jobService);
+                    JobInfo jobInfo = builder
+                            .setMinimumLatency(30 * 60 * 1000)
+                            .setOverrideDeadline(30 * 60 * 1000)
+                            .build();
+                    int state = scheduler.schedule(jobInfo);
+                } else {
+                    //todo
+                    onBackTime = System.currentTimeMillis();
+                }
+            }
+        });
     }
 
     public static Context getContext() {
@@ -69,6 +154,55 @@ public class MyApplication extends LitePalApplication {
         this.ssoHeaderDescription = ssoHeaderDescription;
     }
 
+
+    public int getUpdateType() {
+        return updateType;
+    }
+
+    public void setUpdateType(int updateType) {
+        this.updateType = updateType;
+    }
+
+    public String getUpdateUrl() {
+        return updateUrl;
+    }
+
+    public void setUpdateUrl(String updateUrl) {
+        this.updateUrl = updateUrl;
+    }
+
+    public void setOnBackTime(long onBackTime) {
+        this.onBackTime = onBackTime;
+    }
+
+    public long getOnBackTime() {
+        return onBackTime;
+    }
+
+    public void setHouseOperation(Operation houseOperation) {
+        this.houseOperation = houseOperation;
+    }
+
+    public void setStatusCodes(Map<String, String> statusCodes) {
+        this.statusCodes = statusCodes;
+    }
+
+    public Map<String, String> getStatusCodes() {
+        return statusCodes;
+    }
+
+    public void setFavoOperation(Operation favoOperation) {
+        this.favoOperation = favoOperation;
+    }
+
+    public Operation getHouseOperation() {
+        return houseOperation;
+    }
+
+    public Operation getFavoOperation() {
+        return favoOperation;
+    }
+
     public SystemParam getIntervalSystemParam() {
         return intervalSystemParam;
     }
@@ -81,6 +215,14 @@ public class MyApplication extends LitePalApplication {
         this.directionSystemParam = directionSystemParam;
     }
 
+    public List<String> getContactType() {
+        return contactType;
+    }
+
+    public void setContactType(List<String> contactType) {
+        this.contactType = contactType;
+    }
+
     public SystemParam getLabelSystenParam() {
         return labelSystenParam;
     }
@@ -89,8 +231,32 @@ public class MyApplication extends LitePalApplication {
         this.labelSystenParam = labelSystenParam;
     }
 
+    public void setClientVer(int clientVer) {
+        this.clientVer = clientVer;
+    }
+
+    public int getClientVer() {
+        return clientVer;
+    }
+
     public void setIntervalSystemParam(SystemParam intervalSystemParam) {
         this.intervalSystemParam = intervalSystemParam;
+    }
+
+    public void setStatusParams(Map<String, String> statusParams) {
+        this.statusParams = statusParams;
+    }
+
+    public boolean isOutTime() {
+        return isOutTime;
+    }
+
+    public void setOutTime(boolean outTime) {
+        isOutTime = outTime;
+    }
+
+    public Map<String, String> getStatusParams() {
+        return statusParams;
     }
 
     public SSOHeaderDescription getSsoHeaderDescription() {

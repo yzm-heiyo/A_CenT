@@ -31,8 +31,8 @@ public class Properties implements Serializable {
     private String RentPriceUnit;
     private String ActualRentPriceUnit;
     private boolean IsODish;
-    private String DevelopmentEndCredits;
-    private String IsConfirmed;
+    private boolean DevelopmentEndCredits;
+    private boolean IsConfirmed;
     private int SSDType;
     private boolean IsOnlyTrust;
     private String HotList;
@@ -42,7 +42,7 @@ public class Properties implements Serializable {
     public Properties() {
     }
 
-    public Properties(String propertyStatusKeyId, String squareFoot, String squareUseSourceNum, String houseDirection, String salePrice, String rentPrice, int propertyOnlyTrustType, String propertyNo, String propertyStatus, String propertyStatusCode, int trustType, String estateName, String buildingName, String houseNo, String propertyInterval, boolean favoriteFlag, int propertyStatusCategory, String salePriceUnit, String actualSalePriceUnit, String rentPriceUnit, String actualRentPriceUnit, boolean isODish, String developmentEndCredits, String isConfirmed, int SSDType, boolean isOnlyTrust, String hotList, int propertyKeyEnum, String prompt, String registerDate, String lastFollowDate, String keyId) {
+    public Properties(String propertyStatusKeyId, String squareFoot, String squareUseSourceNum, String houseDirection, String salePrice, String rentPrice, int propertyOnlyTrustType, String propertyNo, String propertyStatus, String propertyStatusCode, int trustType, String estateName, String buildingName, String houseNo, String propertyInterval, boolean favoriteFlag, int propertyStatusCategory, String salePriceUnit, String actualSalePriceUnit, String rentPriceUnit, String actualRentPriceUnit, boolean isODish, boolean developmentEndCredits, boolean isConfirmed, int SSDType, boolean isOnlyTrust, String hotList, int propertyKeyEnum, String prompt, String registerDate, String lastFollowDate, String keyId) {
         PropertyStatusKeyId = propertyStatusKeyId;
         SquareFoot = squareFoot;
         SquareUseSourceNum = squareUseSourceNum;
@@ -85,7 +85,7 @@ public class Properties implements Serializable {
         IsODish = ODish;
     }
 
-    public void setDevelopmentEndCredits(String developmentEndCredits) {
+    public void setDevelopmentEndCredits(boolean developmentEndCredits) {
         DevelopmentEndCredits = developmentEndCredits;
     }
 
@@ -97,11 +97,11 @@ public class Properties implements Serializable {
         SquareUseFoot = squareUseFoot;
     }
 
-    public void setConfirmed(String confirmed) {
+    public void setConfirmed(boolean confirmed) {
         IsConfirmed = confirmed;
     }
 
-    public String getIsConfirmed() {
+    public boolean getIsConfirmed() {
         return IsConfirmed;
     }
 
@@ -145,7 +145,7 @@ public class Properties implements Serializable {
         return IsODish;
     }
 
-    public String getDevelopmentEndCredits() {
+    public boolean getDevelopmentEndCredits() {
         return DevelopmentEndCredits;
     }
 

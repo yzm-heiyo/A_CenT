@@ -3,11 +3,13 @@ package com.centanet.hk.aplus.Views.HouseDetailView.model;
 import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
-import com.centanet.hk.aplus.entity.detail.DetailAddress;
-import com.centanet.hk.aplus.entity.detail.DetailFollow;
-import com.centanet.hk.aplus.entity.detail.DetailHouse;
-import com.centanet.hk.aplus.entity.detail.DetailTrustor;
-import com.centanet.hk.aplus.entity.http.AHeaderDescription;
+import com.centanet.hk.aplus.bean.detail.DetailAddress;
+import com.centanet.hk.aplus.bean.detail.DetailFollow;
+import com.centanet.hk.aplus.bean.detail.DetailHouse;
+import com.centanet.hk.aplus.bean.detail.DetailTrustor;
+import com.centanet.hk.aplus.bean.detail.VirtualPhone;
+import com.centanet.hk.aplus.bean.http.AHeaderDescription;
+import com.centanet.hk.aplus.eventbus.BUS_MESSAGE;
 import com.centanet.hk.aplus.eventbus.BaseClass;
 import com.centanet.hk.aplus.manager.PermissionManager;
 
@@ -17,14 +19,16 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.CALLHIDDEN_YES;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_ADDRESS;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_CLIENT_INFO;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_DETAILDATA;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_FOLLOW;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.CLIENTINFO_NO;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.FOLLOW_ADD;
-import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.FOLLOW_ADD_NO;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.SEARCH_ALL_NO;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.ReFreshDataState.DATA_END;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.VIRTUALPHONE;
 import static com.centanet.hk.aplus.manager.PermissionManager.FOLLOW_ALL;
 
 /**
@@ -55,42 +59,64 @@ public class DetailModel extends BaseClass implements IDetailModel {
         HttpUtil.doPost(address, bodys, headers, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                L.d(thiz + "-Response", e.toString());
+                notifyEmptyBusMessage(BUS_MESSAGE.NetWorkState.NETWORK_STATE_FAIL);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String dataBack = response.body().string().trim().toString();
-                L.d(thiz + "-Response", dataBack);
-                switch (address) {
-                    case HttpUtil.URL_ADDRESS_DETAIL:
-                        getAddressDetail(dataBack);
-                        break;
-                    case HttpUtil.URL_DETAIL:
-                        getDeatail(dataBack);
-                        break;
-                    case HttpUtil.URL_FOLLOWS:
-                        if (isEnd) {
-                            notifyEmptyBusMessage(DETAIL_FOLLOW);
-                            return;
-                        }
-                        getFollow(dataBack);
-                        break;
-                    case HttpUtil.URL_TRUSTOR:
-                        getTrustor(dataBack);
-                        break;
-                    default:
-                        break;
-                }
+
+                if (response.isSuccessful()) {
+                    String dataBack = response.body().string().trim().toString();
+                    L.d(thiz + "-Response", dataBack);
+                    switch (address) {
+                        case HttpUtil.URL_ADDRESS_DETAIL:
+                            getAddressDetail(dataBack);
+                            break;
+                        case HttpUtil.URL_DETAIL:
+                            getDeatail(dataBack);
+                            break;
+                        case HttpUtil.URL_FOLLOWS:
+                            if (isEnd) {
+                                notifyEmptyBusMessage(DATA_END);
+                                return;
+                            }
+                            getFollow(dataBack);
+                            break;
+                        case HttpUtil.URL_TRUSTOR:
+                            getTrustor(dataBack);
+                            break;
+                        case HttpUtil.URL_CALL_VIRTUAL_PHONE:
+                            getPhoneNumber(dataBack);
+                        default:
+                            break;
+                    }
+                } else notifyEmptyBusMessage(BUS_MESSAGE.NetWorkState.NETWORK_STATE_FAIL);
             }
         });
     }
 
+    private void getPhoneNumber(String dataBack) {
+
+        try {
+            VirtualPhone virtualPhone = GsonUtil.parseJson(dataBack, VirtualPhone.class);
+            notifyBusMessage(VIRTUALPHONE, virtualPhone);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     private void getTrustor(String dataBack) {
 
-        if (!verifyPermission(departmentPermission,PermissionManager.CLIENTINFO_ALL)) {
+        if (!verifyPermission(departmentPermission, PermissionManager.CLIENTINFO_ALL)) {
             notifyEmptyBusMessage(CLIENTINFO_NO);
             return;
+        }
+
+        if (verifyPermission(departmentPermission, PermissionManager.CALL_HIDDEN_PHONE)) {
+            notifyEmptyBusMessage(CALLHIDDEN_YES);
         }
 
         DetailTrustor detailTrustor;
@@ -108,20 +134,20 @@ public class DetailModel extends BaseClass implements IDetailModel {
     private boolean verifyPermission(String pers, String per) {
         boolean departPer = PermissionManager.verifyPermission(pers, per);
         boolean permission = PermissionManager.verifyPermission(per);
-        L.d("",departPer + " : " + permission);
+        L.d("", departPer + " : " + permission);
         if (!departPer || !permission) return false;
         return true;
     }
 
     private void getFollow(String dataBack) {
 
-        if (!verifyPermission(departmentPermission,PermissionManager.SEARCH_ALL)) {
+        if (!verifyPermission(departmentPermission, PermissionManager.SEARCH_ALL)) {
             notifyEmptyBusMessage(SEARCH_ALL_NO);
             notifyEmptyBusMessage(DETAIL_FOLLOW);
             return;
         }
 
-        if(verifyPermission(departmentPermission,FOLLOW_ALL)){
+        if (verifyPermission(departmentPermission, FOLLOW_ALL)) {
             notifyEmptyBusMessage(FOLLOW_ADD);
         }
 
@@ -146,7 +172,7 @@ public class DetailModel extends BaseClass implements IDetailModel {
         } catch (InstantiationException e) {
             e.printStackTrace();
         }
-        notifyBusMessage(DETAIL_ADDRESS, address.getDetailAddressChInfo());
+        notifyBusMessage(DETAIL_ADDRESS, address);
     }
 
     private void getDeatail(String dataBack) {

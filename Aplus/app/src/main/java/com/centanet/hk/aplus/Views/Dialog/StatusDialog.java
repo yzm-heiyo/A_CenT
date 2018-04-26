@@ -7,13 +7,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.L;
-import com.centanet.hk.aplus.Widgets.MyCheckBoxLayout;
+import com.centanet.hk.aplus.Views.basic.BaseDialog;
 import com.centanet.hk.aplus.Widgets.SmartCheckBoxLayout;
 
 import java.util.ArrayList;
@@ -33,6 +34,10 @@ public class StatusDialog extends BaseDialog implements View.OnClickListener {
     private SmartCheckBoxLayout checkBoxLayout;
     private Button yes;
     private onDialogOnclikeLisenter onDialogOnclikeLisenter;
+    private List<String> statusList;
+    private boolean isFirst = true;
+//    private boolean isSelectAll = false;
+
 
     public StatusDialog() {
     }
@@ -43,11 +48,20 @@ public class StatusDialog extends BaseDialog implements View.OnClickListener {
         this.checkBoxSelecterList = checkBoxSelecterList;
     }
 
+
+    @SuppressLint("ValidFragment")
+    public StatusDialog(List<String> status, List<Integer> checkBoxSelecterList) {
+        this.checkBoxSelecterList = checkBoxSelecterList;
+        statusList = status;
+    }
+
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         init();
     }
+
 
     @NonNull
     @Override
@@ -75,22 +89,38 @@ public class StatusDialog extends BaseDialog implements View.OnClickListener {
             }
         });
 
+//        checkBoxLayout.setItemText(statusList);
         checkBoxLayout.setSeletList(checkBoxSelecterList);
+//        if(checkBoxSelecterList==null||checkBoxSelecterList.isEmpty())checkBoxLayout.selectAllItem(true);
 
         yes = status.findViewById(R.id.dialog_status_confirm);
         yes.setOnClickListener(this);
 
-        Window window = dialog.getWindow();
+        final Window window = dialog.getWindow();
         window.setWindowAnimations(R.style.AnimBottom);
         lp = window.getAttributes();
         lp.gravity = Gravity.BOTTOM; // 紧贴底部
         lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
-        lp.height = getActivity().getWindowManager().getDefaultDisplay().getHeight() * 6 / 10;
-        window.setAttributes(lp);
-        window.setBackgroundDrawableResource(android.R.color.transparent);
+        status.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (isFirst) {
+                    lp.height = status.getHeight();
+                    L.d("statusHeight", status.getHeight() + "");
+                    window.setAttributes(lp);
+                    window.setBackgroundDrawableResource(android.R.color.transparent);
+                    isFirst = !isFirst;
+                }
+            }
+        });
+
         if (checkBoxSelecterList == null)
             checkBoxSelecterList = new ArrayList<>();
     }
+
+//    public void selectAllItem(boolean isSelectAll) {
+//        this.isSelectAll=isSelectAll;
+//    }
 
     @Override
     public void onClick(View v) {

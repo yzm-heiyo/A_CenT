@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
 
@@ -16,19 +17,21 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#ffffff"
-        android:gravity="center">
+        android:background="@android:color/white">
 
         <ImageView
-            android:layout_width="52dp"
-            android:layout_height="52dp"
+            android:id="@+id/mine_img_ico"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_weight="1"
-            android:src="@mipmap/ic_launcher_round" />
+            android:layout_marginTop="25dp"
+            android:src="@drawable/ico_user" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="6"
+            android:layout_gravity="center"
             android:orientation="vertical">
 
             <TextView
@@ -36,7 +39,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="歐陽大文"
                 android:textSize="@dimen/themeSizeplus"
                 android:textStyle="bold" />
 
@@ -45,7 +47,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="CHRISTROPHER AU YEUNG"
                 android:textSize="@dimen/themeSize" />
 
             <TextView
@@ -53,7 +54,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="E-123456"
                 android:textSize="@dimen/themeSize" />
 
             <TextView
@@ -62,7 +62,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:maxLines="1"
-                android:text="香港區區域經理"
                 android:textSize="@dimen/themeSizesmall" />
 
             <TextView
@@ -70,18 +69,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:maxLines="1"
-                android:text="西環&amp;西南區(西南區)"
                 android:textSize="@dimen/themeSizesmall" />
 
         </LinearLayout>
+
 
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="6dp"
-        android:background="@color/color_theme_item" />
+        android:layout_height="3dp"
+        android:background="@drawable/shape_line_shade_up_to_down"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:background="@color/translucent" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -101,25 +105,25 @@
 
                 <TextView
                     style="@style/fragment_mine_item_style"
-                    android:visibility="gone"
-                    android:text="@string/fragment_mine_installation" />
+                    android:text="@string/fragment_mine_installation"
+                    android:visibility="gone" />
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/colorline" />
+                    android:layout_height="1dp"
+                    android:background="@color/color_rim" />
 
 
                 <TextView
                     style="@style/fragment_mine_item_style"
-                    android:visibility="gone"
-                    android:text="@string/fragment_mine_staff" />
+                    android:text="@string/fragment_mine_staff"
+                    android:visibility="gone" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="6dp"
-                    android:visibility="gone"
-                    android:background="@color/color_theme_item" />
+                    android:background="@color/color_theme_item"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/mine_txt_about"
@@ -128,18 +132,30 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/colorline" />
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@color/line" />
 
                 <TextView
                     android:id="@+id/mine_txt_clause"
                     style="@style/fragment_mine_item_style"
                     android:text="@string/app_use_clause" />
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="20dp"
+                    android:background="@color/line" />
+
                 <TextView
                     android:id="@+id/fragment_mine_question"
                     style="@style/fragment_mine_item_style"
                     android:text="@string/fragment_mine_question" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/color_rim" />
 
                 <View
                     android:layout_width="match_parent"
@@ -149,6 +165,7 @@
                 <TextView
                     android:id="@+id/fragment_mine_logout"
                     style="@style/fragment_mine_item_style"
+                    android:background="@drawable/layer_button"
                     android:gravity="center"
                     android:text="@string/fragment_mine_logout"
                     android:textColor="@color/colortheme" />

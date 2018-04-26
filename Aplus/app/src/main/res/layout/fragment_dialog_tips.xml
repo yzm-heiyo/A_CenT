@@ -5,11 +5,10 @@
     android:layout_height="wrap_content"
     android:background="@drawable/shape_dialog_hint">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/tips_dialoa_contentview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/levelline"
         android:layout_alignParentTop="true"
         android:gravity="center_horizontal"
         android:paddingLeft="10dp"
@@ -19,26 +18,29 @@
         <TextView
             android:id="@+id/tips_dialog_tip_txt"
             android:layout_width="wrap_content"
-            android:layout_height="95dp"
+            android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
             android:gravity="center"
             android:textSize="17dp"
             android:textColor="@android:color/black"
             android:textStyle="bold"/>
-    </RelativeLayout>
+
+    </LinearLayout>
 
     <View
         android:id="@+id/levelline"
         android:layout_width="match_parent"
-        android:layout_height="2px"
-        android:layout_above="@id/dialog_bottom"
+        android:layout_height="1dp"
+        android:layout_below="@id/tips_dialoa_contentview"
         android:background="#efefef" />
 
     <LinearLayout
         android:id="@+id/dialog_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@id/levelline"
         android:orientation="horizontal">
 
         <Button
@@ -54,7 +56,7 @@
 
         <View
             android:id="@+id/dialog_tips_line"
-            android:layout_width="2px"
+            android:layout_width="1dp"
             android:layout_height="44dp"
             android:background="#efefef" />
 
@@ -71,6 +73,5 @@
             android:textColor="#bb2e2d"
             android:textStyle="bold" />
     </LinearLayout>
-
 
 </RelativeLayout>

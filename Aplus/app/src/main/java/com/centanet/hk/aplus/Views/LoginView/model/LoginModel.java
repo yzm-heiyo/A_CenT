@@ -9,12 +9,13 @@ import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.common.APSystemParameterType;
 import com.centanet.hk.aplus.common.CommandField;
 import com.centanet.hk.aplus.common.DataManager;
-import com.centanet.hk.aplus.entity.login.HomeConfig;
-import com.centanet.hk.aplus.entity.login.Login;
-import com.centanet.hk.aplus.entity.login.UserPermission;
-import com.centanet.hk.aplus.entity.params.Parameter;
-import com.centanet.hk.aplus.entity.params.SystemParam;
-import com.centanet.hk.aplus.entity.params.SystemParamItems;
+import com.centanet.hk.aplus.bean.login.HomeConfig;
+import com.centanet.hk.aplus.bean.login.Login;
+import com.centanet.hk.aplus.bean.login.UserPermission;
+import com.centanet.hk.aplus.bean.params.Parameter;
+import com.centanet.hk.aplus.bean.params.SystemParam;
+import com.centanet.hk.aplus.bean.params.SystemParamItems;
+import com.centanet.hk.aplus.bean.update.UpdateParams;
 import com.centanet.hk.aplus.manager.ApplicationManager;
 
 import java.io.BufferedOutputStream;
@@ -36,7 +37,6 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static com.centanet.hk.aplus.Utils.net.HttpUtil.URL_PARAMETER;
-import static com.centanet.hk.aplus.common.APSystemParameterType.houseDirection;
 
 /**
  * Created by yangzm4 on 2018/3/13.
@@ -54,26 +54,56 @@ public class LoginModel implements ILoginModel {
     }
 
     @Override
-    public void doGet(String address, Object header, Object params) {
+    public void doGet(final String address, Object header, Object params) {
         HttpUtil.doGet(address, header, params, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                L.d("onFailure", "onFailure");
+                if (listener != null) listener.onFailure();
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String dataBack = response.body().string().toString();
                 if (response.code() == 200) {
-                    try {
-                        HomeConfig config = GsonUtil.parseJson(dataBack, HomeConfig.class);
-                        if (listener != null) listener.OnGetConfig(config);
-                        L.d("Http_Config", config.toString());
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (InstantiationException e) {
-                        e.printStackTrace();
+                    L.d("doGet", dataBack);
+
+                    switch (address) {
+                        case HttpUtil.URL_HomeConfig:
+                            try {
+                                HomeConfig config = GsonUtil.parseJson(dataBack, HomeConfig.class);
+                                if (listener != null) listener.OnGetConfig(config);
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            } catch (InstantiationException e) {
+                                e.printStackTrace();
+                            }
+                            break;
+                        case HttpUtil.URL_UPDATE:
+
+                            try {
+                                UpdateParams updateParams = GsonUtil.parseJson(dataBack, UpdateParams.class);
+                                L.d("updateParams", updateParams.toString());
+                                if (updateParams.getResult() != null)
+                                    if (listener != null) {
+
+                                        ApplicationManager.getApplication().setUpdateType(1);
+                                        if (updateParams.getResult().getForceUpdate() == 1) {
+                                            ApplicationManager.getApplication().setUpdateType(2);
+                                        }
+                                        ApplicationManager.getApplication().setClientVer(updateParams.getResult().getClientVer());
+                                        ApplicationManager.getApplication().setUpdateUrl(updateParams.getResult().getUpdateUrl());
+                                    }
+                            } catch (IllegalAccessException e) {
+                                e.printStackTrace();
+                            } catch (InstantiationException e) {
+                                e.printStackTrace();
+                            }
+
+                            break;
                     }
-                }
+
+                } else if (listener != null) listener.onFailure();
             }
         });
     }
@@ -118,6 +148,7 @@ public class LoginModel implements ILoginModel {
         HttpUtil.doPost(address, body, header, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                if (listener != null) listener.onFailure();
             }
 
             @Override
@@ -141,7 +172,7 @@ public class LoginModel implements ILoginModel {
                             break;
                     }
 
-                }
+                } else if (listener != null) listener.onFailure();
             }
         });
     }
@@ -183,7 +214,6 @@ public class LoginModel implements ILoginModel {
             parameter = GsonUtil.parseJson(dataBack, Parameter.class);
 
             for (SystemParam p : parameter.getSystemParam()) {
-                L.d("params_system", p.toString());
                 switch (p.getParameterType()) {
                     case APSystemParameterType.house:
                         ApplicationManager.setIntervalSystemParam(p);
@@ -269,19 +299,67 @@ public class LoginModel implements ILoginModel {
         List<SystemParam> params = parameter.getSystemParam();
         for (int i = 0; i < size; i++) {
             if (params.get(i).getParameterType() == CommandField.ParamsType.propertyStatusCategory) {
-                List<SystemParamItems> paramsItem = params.get(i).getSystemParamItems();
+                List<SystemParamItems> houseStatuParams = params.get(i).getSystemParamItems();
 
-                for (int j = 0; j < paramsItem.size(); j++) {
-                    SystemParamItems systemParam = paramsItem.get(j);
+                Map<String, String> paramsKey = new HashMap<>();
+                Map<String, String> paramsCode = new HashMap<>();
+
+                for (int j = 0; j < houseStatuParams.size(); j++) {
+                    SystemParamItems systemParam = houseStatuParams.get(j);
                     Map<String, String> paramMap = new HashMap<>();
                     paramMap.put(systemParam.getItemText(), systemParam.getItemValue());
-                    L.d("login", systemParam.getItemText() + ":" + systemParam.getItemValue());
+                    paramsKey.put(systemParam.getItemText().substring(0, 1), systemParam.getItemValue());
+                    paramsCode.put(systemParam.getItemText().substring(0, 1), systemParam.getItemCode());
+                    L.d("login", systemParam.getItemText().substring(0, 1) + ":" + systemParam.getItemValue());
                     paramsList.add(paramMap);
                 }
+                ApplicationManager.setStatusCode(paramsCode);
+                ApplicationManager.setStatusParams(paramsKey);
+            }
+
+            if (params.get(i).getParameterType() == APSystemParameterType.propertyContactType) {
+                L.d("propertyContactType", params.get(i).toString());
+                List<SystemParamItems> contactParams = params.get(i).getSystemParamItems();
+                List<String> contactType = new ArrayList<>();
+                for (int j = 0; j < contactParams.size(); j++) {
+                    SystemParamItems systemParam = contactParams.get(j);
+                    switch (systemParam.getItemText()) {
+                        case "電話號碼":
+                        case "外地電話":
+                        case "國內手機":
+                            contactType.add(systemParam.getItemValue());
+                            break;
+                    }
+                }
+                ApplicationManager.setContactType(contactType);
             }
         }
         return paramsList;
     }
+
+//    private String getStatusText(String statu){
+//        switch (statu.substring(0, 1)) {
+//            case "N":
+//                level = 1;
+//                break;
+//            case "P":
+//                level = 2;
+//                break;
+//            case "S":
+//                level = 6;
+//                break;
+//            case "T":
+//                level = 4;
+//                break;
+//            case "G":
+//                level = 5;
+//                break;
+//            default:
+//                level = 3;
+//                break;
+//        }
+//        return statu;
+//    }
 
     public void setParams(List<Map<String, String>> params) {
         DataManager.parameter = params;
@@ -302,5 +380,9 @@ public class LoginModel implements ILoginModel {
         void OnLogin(Login login);
 
         void Onfinish();
+
+        void onFailure();
+
+        void isNeedUpdate(String updateUrl, boolean isForceUpdate);
     }
 }

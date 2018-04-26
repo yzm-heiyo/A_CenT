@@ -7,14 +7,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RadioGroup;
 
 import com.centanet.hk.aplus.R;
-
-import java.security.PublicKey;
-import java.util.Map;
+import com.centanet.hk.aplus.Views.basic.BaseDialog;
 
 /**
  * Created by yangzm4 on 2018/3/21.
@@ -35,6 +34,7 @@ public class OpenDataDialog extends BaseDialog implements RadioGroup.OnCheckedCh
     private View openData;
     private int defaultId;
     private RadioGroup dataRG;
+    private boolean isFirst = true;
 
     public OpenDataDialog() {
     }
@@ -66,13 +66,30 @@ public class OpenDataDialog extends BaseDialog implements RadioGroup.OnCheckedCh
         dataRG.check(defaultId == 0 ? R.id.dialog_opendate_rb_default : defaultId);
         dataRG.setOnCheckedChangeListener(this);
 
-        Window window = dialog.getWindow();
+        final Window window = dialog.getWindow();
         window.setWindowAnimations(R.style.AnimBottom);
         lp = window.getAttributes();
         lp.gravity = Gravity.BOTTOM; // 紧贴底部
         lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
-        lp.height = getActivity().getWindowManager().getDefaultDisplay().getHeight() * 14 / 25;
-        window.setAttributes(lp);
+//        openData.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                if(isFirst) {
+//                    lp.height = openData.getHeight();
+//                    window.setAttributes(lp);
+//                    isFirst = !isFirst;
+//                }
+//            }
+//        });
+
+        openData.getViewTreeObserver().addOnGlobalLayoutListener(()->{
+            if(isFirst) {
+                lp.height = openData.getHeight();
+                window.setAttributes(lp);
+                isFirst = !isFirst;
+            }
+        });
+
         window.setBackgroundDrawableResource(android.R.color.transparent);
     }
 

@@ -2,11 +2,11 @@
     <string name="app_name">Aplus</string>
 
     <string name="login_staff_account_hint">員工編號</string>
-    <string name="login_staff_password_hint">登入密碼</string>
+    <string name="login_staff_password_hint">密碼</string>
 
     <string name="login_login_btn">登入</string>
 
-    <string name="login_versioncode_btn">版本1.0.0</string>
+    <string name="login_versioncode_btn">v 1.1.0</string>
 
 
     <string name="main_premises_manager">樓盤管理</string>
@@ -30,9 +30,10 @@
 
     <string name="feedback_limit">最多輸入200字</string>
     <string name="feedback_put_limit">最多輸入140字</string>
-    <string name="feedback_hint">跟進內容...</string>
+    <string name="feedback_hint">請輸入...</string>
+    <string name="feedback_null">跟進内容不能爲空</string>
 
-    <string name="opendate">開盤日</string>
+    <string name="opendate">最後跟進日期</string>
 
     <string name="dialog_sort">預設排序</string>
     <string name="dialog_price">售價</string>
@@ -40,7 +41,7 @@
     <string name="dialog_saleableArea">實用面積</string>
     <string name="dialog_coveredArea">建築面積</string>
 
-    <string name="dialog_status_ALL">全部</string>
+    <string name="dialog_status_ALL">不限</string>
     <string name="dialog_status_N">N(Active)</string>
     <string name="dialog_status_WT">WT(With Tenancy)</string>
     <string name="dialog_status_P">P(Pending)</string>
@@ -83,7 +84,7 @@
     <string name="dialog_opendate_change_date">改盤日期</string>
 
 
-    <string name="search_search">搜索</string>
+    <string name="search_search">搜尋</string>
     <string name="search_confirm">確定</string>
 
 
@@ -102,7 +103,12 @@
     <string name="dialog_tips_remove">移除</string>
 
     <string name="loading_more">加載更多</string>
-    
+    <string name="pull_down_loading">下拉更新數據</string>
+    <string name="pull_down_release">放手即重新載入</string>
+    <string name="updateing">正在更新</string>
+    <string name="update_finish">更新完成</string>
+    <string name="pull_up_loading">上拉更新數據</string>
+
     <string name="search_floot">樓層</string>
     <string name="search_units">單位</string>
 
@@ -120,6 +126,9 @@
     <string name="feedback_put">提交</string>
     <string name="about_app">關於A+</string>
     <string name="app_version">軟件版本</string>
+    <string name="machine_version">機身型號</string>
+    <string name="sys_type">作業系統</string>
+    <string name="sys_version">系統版本</string>
     <string name="about_centa_tip"> \@2017-2018 中原地產代理有限公司 版權所有</string>
     <string name="app_use_clause">使用條款</string>
 
@@ -128,5 +137,27 @@
     <string name="dialog_tips_permission_follow_no_look">你沒有查看跟進權限，如有查詢請與系統管理員聯絡</string>
     <string name="dialog_tips_permission_follow_no_add">你沒有添加跟進權限，如有查詢請與系統管理員聯絡</string>
     <string name="dialog_tips_permission_clientinfo_no_look">你沒有查看「業主資料」權限，如有查詢請與系統管理員聯絡</string>
+    <string name="dialog_tips_permission_clientinfo_no">當前沒有業主信息</string>
+    <string name="dialog_tips_permission_follow_no">沒有找到相關數據</string>
+<<<<<<< HEAD
+    <string name="dialog_tips_input_acc_pass">請輸入帳號或密碼</string>
+    <string name="dialog_tips_detail_call">是否致電業主</string>
+    <string name="dialog_tips_time_out">長時間沒有使用A+，請重新登入。</string>
+    <string name="keyhouse">鎖匙號</string>
+=======
+    <string name="keyhouse">鑰匙號</string>
+>>>>>>> ab0d6ae12bcc9ca42cab7c1819956596600b75a2
+
+    <string name="more_title_moresearch">更多篩選</string>
+
+    <string name="download">下载</string>
+    <string name="network_unenable">網絡連接出現問題，請重新再試</string>
+    <string name="loading">加載中…</string>
+    <string name="load_error">网络出错</string>
+    <string name="hk_loading">載入中...</string>
+    <string name="no_more_data">已無更多數據</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

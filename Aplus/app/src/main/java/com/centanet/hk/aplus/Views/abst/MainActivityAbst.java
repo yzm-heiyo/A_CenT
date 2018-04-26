@@ -24,7 +24,7 @@ public abstract class MainActivityAbst extends BasicActivty {
 
     private ViewPager pager;
     private RadioGroup rg;
-    private Fragment[] fragments;
+    private List<Fragment> fragments;
     private FragmentPagerAdapter adapter;
     private List<RadioButton> rbs;
     private String thiz = getClass().getSimpleName();
@@ -56,7 +56,7 @@ public abstract class MainActivityAbst extends BasicActivty {
             //不可為空,判定個數是否一致
             if (fragments == null) {
                 throw new Exception("fragments are null!pls check");
-            } else if (rg.getChildCount() != fragments.length) {
+            } else if (rg.getChildCount() != fragments.size()) {
                 throw new Exception("fragments and RadioGroup size are not match!pls check");
             }
             setAdapter();
@@ -70,7 +70,6 @@ public abstract class MainActivityAbst extends BasicActivty {
                 for (int i = 0; i < rbs.size(); i++) {
                     if (checkedId == rbs.get(i).getId()) {
                         pager.setCurrentItem(i);
-                        L.d(getClass().getSimpleName(), rbs.get(i).isChecked() + "");
                         return;
                     }
                 }
@@ -103,13 +102,13 @@ public abstract class MainActivityAbst extends BasicActivty {
      *
      * @return
      */
-    protected abstract Fragment[] setFragments();
+    protected abstract List<Fragment> setFragments();
 
 
     private void setAdapter() {
         adapter = new PagerAdapter(getSupportFragmentManager(), fragments);
         pager.setAdapter(adapter);
-        pager.setOffscreenPageLimit(fragments.length);
+        pager.setOffscreenPageLimit(fragments.size());
     }
 
 }

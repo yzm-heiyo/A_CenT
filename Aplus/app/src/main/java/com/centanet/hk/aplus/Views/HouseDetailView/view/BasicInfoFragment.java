@@ -5,25 +5,31 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.R;
-import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.TextUtil;
+import com.centanet.hk.aplus.Views.Dialog.LoadingDialog;
 import com.centanet.hk.aplus.Widgets.LineBreakLayout;
 import com.centanet.hk.aplus.Widgets.SmallItemView;
-import com.centanet.hk.aplus.entity.detail.DetailHouse;
+import com.centanet.hk.aplus.bean.detail.DetailHouse;
 import com.centanet.hk.aplus.eventbus.MessageEventBus;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
+import static android.content.ContentValues.TAG;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_DETAILDATA;
 
 
@@ -33,6 +39,7 @@ import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAI
 
 public class BasicInfoFragment extends Fragment {
 
+    private static final String BASIC_INFO = "basicInfo";
     private View view;
     private LineBreakLayout tagLayout;
     private String thiz = getClass().getSimpleName();
@@ -43,7 +50,7 @@ public class BasicInfoFragment extends Fragment {
     private SmallItemView openDateTxt, houseTypeTxt, carPlaceTxt, intervalTxt, numberTxt, directionTxt, houseSumTxt, fromTxt;
     private SmallItemView searchTxt, attentionTxt, supplementTxt, customization_1_Txt, customization_2_Txt, customization_3_Txt;
     private SmallItemView remarkTxt, moveInDateTxt, managementPriceTxt;
-    private TextView tipTxt, salePriceTxt, rentPriceTxt;
+    private TextView tipTxt, salePriceTxt, rentPriceTxt, keyNumberTxt;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,8 +64,21 @@ public class BasicInfoFragment extends Fragment {
 
         view = inflater.inflate(R.layout.fragment_basicinfo, null);
         setViews();
-        initDATA();
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            setViewsData((DetailHouse) bundle.get(BASIC_INFO));
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
     private void setViews() {
@@ -103,6 +123,7 @@ public class BasicInfoFragment extends Fragment {
 
         salePriceTxt = view.findViewById(R.id.detail_txt_sale_price);
         rentPriceTxt = view.findViewById(R.id.detail_txt_rent_price);
+        keyNumberTxt = view.findViewById(R.id.detail_key_number);
 
     }
 
@@ -111,7 +132,23 @@ public class BasicInfoFragment extends Fragment {
         if (messageEvent.getMsg() == DETAIL_DETAILDATA) {
             detailHouseData = (DetailHouse) messageEvent.getObject();
             setViewsData(detailHouseData);
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(BASIC_INFO, detailHouseData);
+            this.setArguments(bundle);
         }
+    }
+
+    private String formatData(String data) {
+        if (data == null) return null;
+        data = data.replaceAll("[A-Z]+", " ").trim();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String formaData = null;
+        try {
+            formaData = sdf.format(sdf.parse(data));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return formaData;
     }
 
     private void setViewsData(DetailHouse detailHouseData) {
@@ -122,9 +159,11 @@ public class BasicInfoFragment extends Fragment {
         reallyRvgRentTxt.setContentName(detailHouseData.getRentPriceUnit());
         entrust_3_txt.setContentName(detailHouseData.getPowerOfAttorneyThree());
         entrust_5_txt.setContentName(detailHouseData.getPowerOfAttorneyFive());
-        conjectureDateTxt.setContentName(detailHouseData.getEstimatedDate());
-        rvdDateTxt.setContentName(detailHouseData.getProvideDate());
-        openDateTxt.setContentName(detailHouseData.getRegisterDate());
+
+        conjectureDateTxt.setContentName(formatData(detailHouseData.getEstimatedDate()));
+        rvdDateTxt.setContentName(formatData(detailHouseData.getProvideDate()));
+        openDateTxt.setContentName(formatData(detailHouseData.getRegisterDate()));
+
         usePercentTxt.setContentName(detailHouseData.getUtilityRatio());
         tipTxt.setText(detailHouseData.getPrompt());
         directionTxt.setContentName(detailHouseData.getHouseDirection());
@@ -134,22 +173,26 @@ public class BasicInfoFragment extends Fragment {
         carPlaceTxt.setContentName(detailHouseData.getParkingNumber());
         fromTxt.setContentName(detailHouseData.getPropertySource());
         supplementTxt.setContentName(detailHouseData.getSupply());
-        customization_1_Txt.setContentName(detailHouseData.getCustomField1Name());
-        customization_2_Txt.setContentName(detailHouseData.getCustomField2Name());
-        customization_3_Txt.setContentName(detailHouseData.getCustomField3Name());
+        customization_1_Txt.setContentName(detailHouseData.getCustomField1());
+        customization_2_Txt.setContentName(detailHouseData.getCustomField2());
+        customization_3_Txt.setContentName(detailHouseData.getCustomField3());
         remarkTxt.setContentName(detailHouseData.getRemark());
-        numberTxt.setContentName(detailHouseData.getRemark());
-        managementPriceTxt.setContentName(detailHouseData.getMgrFee());
+        numberTxt.setContentName(detailHouseData.getAccessementNo());
+        Log.e(TAG, "setViewsData: " + detailHouseData.getMgrFee());
+        managementPriceTxt.setContentName(detailHouseData.getMgrFee() == null ? null : ((int) Float.parseFloat(detailHouseData.getMgrFee())) + "");
+        keyNumberTxt.setText(getString(R.string.keyhouse) + " " + detailHouseData.getPropertyKeyNo());
 
         String squareUseFoot = detailHouseData.getSquareUseFoot();
-        String squareSource = detailHouseData.getSquareSource();
+        String squareSource = detailHouseData.getSquareUseSource();
         setUseSquare(squareUseFoot, squareSource);
 
-        reallyAreaTxt.setContentName(detailHouseData.getSquareFoot());
-        ssdTxt.setContentName(detailHouseData.getSSDInfo());
+        String reallyAreaSource = detailHouseData.getSquareSource() == null || detailHouseData.getSquareSource().equals("") ? null : "(" + detailHouseData.getSquareSource() + ")";
+        reallyAreaTxt.setContentName(detailHouseData.getSquareFoot() + (reallyAreaSource == null ? "" : reallyAreaSource));
+
+        ssdTxt.setContentName(detailHouseData.getSSDInfo() == null || detailHouseData.getSSDInfo().equals("") ? "未知" : detailHouseData.getSSDInfo());
         moveInDateTxt.setContentName(detailHouseData.getCompleteYear());
         attentionTxt.setContentName(detailHouseData.getPropertyNote());
-        searchTxt.setContentName(detailHouseData.getSearchDate());
+        searchTxt.setContentName(formatData(detailHouseData.getSearchDate()));
 
         setSalePriceTxt(detailHouseData.getSalePrice(), detailHouseData.getSaleFloorPriceFormate());
         setRentPriceTxt(detailHouseData.getRentPrice(), detailHouseData.getRentFloorPriceFormate());
@@ -159,11 +202,14 @@ public class BasicInfoFragment extends Fragment {
             for (String tag : tags)
                 tagLayout.addItem(tag);
         }
-
     }
 
     private void setRentPriceTxt(String rentPrice, String rentFloorPrice) {
-        String price = "租:" + rentPrice.split("\\.")[0];
+        NumberFormat currency = NumberFormat.getCurrencyInstance();
+        Log.e(TAG, "setRentPriceTxt: " + rentPrice);
+        rentPrice = ((int) Float.parseFloat(rentPrice)) + "";
+        Log.e(TAG, "setRentPrice: " + rentPrice);
+        String price = "租: " + currency.format(new BigDecimal(rentPrice)).split("\\.")[0];
         if (rentFloorPrice != "") {
             price = price + "(" + rentFloorPrice.split("\\.")[0] + ")";
         }
@@ -171,7 +217,7 @@ public class BasicInfoFragment extends Fragment {
     }
 
     private void setSalePriceTxt(String salePrice, String saleFloorPrice) {
-        String price = "售:" + salePrice + "萬";
+        String price = "售: $" + salePrice + "萬";
         if (saleFloorPrice != "") {
             price = price + "(" + saleFloorPrice + ")";
         }
@@ -181,19 +227,14 @@ public class BasicInfoFragment extends Fragment {
     private void setUseSquare(String squareUseFoot, String squareSource) {
         Spanned spanned = null;
         if (squareSource != null && squareSource != "") {
-            if (squareSource == "RVD" || squareSource == "rvd")
-                spanned = TextUtil.changeKeyWordColor(squareUseFoot + "{" + squareSource + "}", squareSource, Color.RED + "");
+            if (squareSource.equals("RVD") || squareSource.equals("rvd"))
+                spanned = TextUtil.changeKeyWordColor(squareUseFoot + " " + squareSource, squareSource, Color.RED + "");
             else
-                spanned = TextUtil.changeKeyWordColor(squareUseFoot + "{" + squareSource + "}", squareSource, Color.BLUE + "");
+                spanned = TextUtil.changeKeyWordColor(squareUseFoot + " " + squareSource, squareSource, Color.BLUE + "");
         } else {
             spanned = TextUtil.changeTextColor(squareUseFoot, Color.BLACK + "");
         }
         useAreaTxt.setContentName(spanned);
-
-    }
-
-
-    private void initDATA() {
     }
 
     @Override

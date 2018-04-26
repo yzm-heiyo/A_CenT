@@ -79,7 +79,6 @@ public class MyCheckBoxLayout extends LinearLayout implements CheckBox.OnClickLi
      * @param selectAll
      */
     public void selectAllItem(boolean selectAll) {
-        L.d(thiz, "method: selectAllItem");
         int count = this.getChildCount();
         for (int i = 0; i < count; i++) {
             View view = getChildAt(i);
@@ -94,7 +93,6 @@ public class MyCheckBoxLayout extends LinearLayout implements CheckBox.OnClickLi
      * 檢查是否已選中所有選項
      */
     public void isSelectAll() {
-        L.d(thiz, "method: isSelectAll");
         int count = this.getChildCount();
         for (int i = 0; i < count; i++) {
             View view = getChildAt(i);
@@ -145,7 +143,6 @@ public class MyCheckBoxLayout extends LinearLayout implements CheckBox.OnClickLi
             }
 
             if (!results.isEmpty()) {
-                L.d(thiz, "Method: ------> getCheckBoxContent");
                 return results.toArray(new String[results.size()]);
             }
         }
@@ -159,7 +156,6 @@ public class MyCheckBoxLayout extends LinearLayout implements CheckBox.OnClickLi
             case R.id.dialog_status_all:
                 isSelectAll = !isSelectAll;
                 selectAllItem(isSelectAll);
-                L.d(thiz, "status:all onclick   " + isSelectAll);
                 break;
             case R.id.dialog_status_N:
             case R.id.dialog_status_TP:

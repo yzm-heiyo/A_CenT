@@ -2,9 +2,9 @@ package com.centanet.hk.aplus.Views.FollowAddView.model;
 
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
-import com.centanet.hk.aplus.entity.detail.DetailAddFollowResponse;
-import com.centanet.hk.aplus.entity.detail.DetailAddress;
-import com.centanet.hk.aplus.entity.http.AHeaderDescription;
+import com.centanet.hk.aplus.bean.detail.DetailAddFollowResponse;
+import com.centanet.hk.aplus.bean.detail.DetailAddress;
+import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 import com.centanet.hk.aplus.eventbus.BaseClass;
 
 import java.io.IOException;
@@ -74,7 +74,6 @@ public class FollowAddModel extends BaseClass implements IFollowAddModel {
         }
     }
 
-
     public void setListener(OnReceiveListener listener) {
         this.listener = listener;
     }
@@ -82,6 +81,4 @@ public class FollowAddModel extends BaseClass implements IFollowAddModel {
     public interface OnReceiveListener {
         void onReceive(DetailAddress address);
     }
-
-
 }

@@ -4,9 +4,7 @@ import android.content.Context;
 
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.Utils.L;
-import com.centanet.hk.aplus.entity.login.Permisstions;
-
-import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.HOUSELIST;
+import com.centanet.hk.aplus.bean.login.Permisstions;
 
 /**
  * Created by yangzm4 on 2018/3/16.
@@ -19,6 +17,10 @@ public class PermissionManager {
     public static final String SEARCH_ALL = "Property.Follow.Search-All";
     public static final String FOLLOW_ALL = "Property.FollowInformation.Add";
     public static final String CLIENTINFO_ALL = "Property.ContactInformation.Search-All";
+    public static final String CALL_HIDDEN_PHONE = "Property.HidePhone.Call";
+    public static boolean seeFollowPermission = false;
+    public static boolean searchFollowPermission = false;
+    public static boolean seeDetailAddressPermission = false;
 
     private Context context;
 
@@ -32,7 +34,6 @@ public class PermissionManager {
         return application.getUserPermission();
     }
 
-
     public static boolean verifyPermission(String perName) {
         MyApplication application = (MyApplication) MyApplication.getContext().getApplicationContext();
         String right = application.getUserPermission().getRights();
@@ -45,16 +46,16 @@ public class PermissionManager {
     public static boolean verifyMeunPermission(String per) {
         MyApplication application = (MyApplication) MyApplication.getContext().getApplicationContext();
         String menu = application.getUserPermission().getMenuPermisstion();
-        L.d("menu",menu);
+        L.d("menu", menu);
         if (menu.indexOf(per) != -1)
             return true;
         return false;
     }
 
-    public static boolean verifyPermission(String pers,String per){
-        L.d("model_per",pers);
-        L.d("per_params",per);
-        if(pers.indexOf(per)!=-1)
+    public static boolean verifyPermission(String pers, String per) {
+        L.d("model_per", pers);
+        L.d("per_params", per);
+        if (pers.indexOf(per) != -1)
             return true;
         return false;
     }

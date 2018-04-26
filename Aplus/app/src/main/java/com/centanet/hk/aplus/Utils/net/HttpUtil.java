@@ -39,18 +39,22 @@ public class HttpUtil {
     public static final String URL_HomeConfig = "https://hkqasso.centanet.com/api/api/HomeConfig";
     public static final String URL_PERMISSION = "permission/user-permisstion";
     public static final String URL_USERINFO = "permission/user-info";
+    public static final String URL_UPDATE = "https://hkqasso.centanet.com/api/api/AppVersion";
     public static final String URL_SSO_FEEDBACK = "https://hkqasso.centanet.com/api/api/Feedback";
+    public static final String URL_CALL_VIRTUAL_PHONE = "center/call-virtual-phone";
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+    public static int READ_TIME_OUT = 10;
+    public static int CONNECT_TIME_OUT = 10;
 
     public static void doPost(String address, Object bodys, Object headers, okhttp3.Callback callback) {
 
         String url = address;
-        if (address != HttpUtil.URL_SSO && address != HttpUtil.URL_HomeConfig && address != URL_USERLAUSE && address != URL_SSO_FEEDBACK)
+        if (address != HttpUtil.URL_SSO && address != HttpUtil.URL_HomeConfig && address != URL_USERLAUSE && address != URL_SSO_FEEDBACK && address != URL_UPDATE)
             url = HttpUtil.URL + address;
         L.d("Http_Util", url);
 
-        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(20, TimeUnit.SECONDS).build();
+        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)
+                .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS).build();
 
         Request.Builder builder = null;
         String requestJson = null;
@@ -65,23 +69,26 @@ public class HttpUtil {
         RequestBody requestBody = RequestBody.create(JSON, requestJson);
         L.d("HttpUtil-Json", requestJson);
 
+        L.d("URL", url);
         Request request = builder.url(url).post(requestBody).build();
         client.newCall(request).enqueue(callback);
     }
 
     public static void doGet(String address, Object headers, Object param, okhttp3.Callback callback) {
-        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(10, TimeUnit.SECONDS)
-                .readTimeout(20, TimeUnit.SECONDS).build();
+        OkHttpClient client = new OkHttpClient.Builder().connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)
+                .readTimeout(READ_TIME_OUT, TimeUnit.SECONDS).build();
         Request.Builder builder = null;
         try {
             builder = addHedaer(headers);
-            address = address + "?" + addGetParams(param);
+            if (param != null)
+                address = address + "?" + addGetParams(param);
             L.d("Get", address);
         } catch (Exception e) {
             e.printStackTrace();
         }
         Request request = builder.url(address).build();
         client.newCall(request).enqueue(callback);
+
     }
 
     private static String addGetParams(Object params) throws Exception {
@@ -111,6 +118,11 @@ public class HttpUtil {
 
             field.setAccessible(true);
             if (field.get(model) != null) {
+
+                if (field.getName() == "serialVersionUID") {
+                    continue;
+                }
+
                 if (field.getName().equals("UserAgent")) {
                     builder.addHeader("User-Agent", "" + field.get(model));
                     continue;

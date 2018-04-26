@@ -78,7 +78,6 @@ public class MyRadioGroup extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-
         // checks the appropriate radio button as requested in the XML file
         if (mCheckedId != -1) {
             mProtectFromCheckedChange = true;
@@ -102,7 +101,6 @@ public class MyRadioGroup extends LinearLayout {
                 setCheckedId(button.getId());
             }
         }
-
 
         super.addView(child, index, params);
     }

@@ -13,15 +13,15 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="54dp"
+            android:background="@drawable/layer_rim_line">
 
             <ImageView
                 android:id="@+id/fragment_follow_img_data_clear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
                 android:layout_marginRight="9dp"
                 android:src="@drawable/ico_calender" />
 
@@ -36,7 +36,10 @@
                     android:id="@+id/fragment_follow_date_begin"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_margin="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/shape_detal_date"
                     android:gravity="center"
@@ -57,11 +60,13 @@
                     android:id="@+id/fragment_follow_date_end"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_margin="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/shape_detal_date"
                     android:gravity="center"
-                    android:layout_marginRight="19dp"
                     android:maxLines="1" />
 
             </LinearLayout>
@@ -71,39 +76,38 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:textColor="#CCCCCC"
                 android:layout_marginLeft="20dp"
                 android:layout_toRightOf="@+id/fragment_follow_img_data_clear"
                 android:text="@string/from"
-                />
+                android:textColor="#CCCCCC" />
 
         </RelativeLayout>
 
         <!--<RelativeLayout-->
-            <!--android:id="@+id/follow_label"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content">-->
+        <!--android:id="@+id/follow_label"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/follow_label_txt"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:text="搜尋"-->
-                <!--android:layout_marginLeft="14dp"-->
-                <!--android:textSize="14dp"/>-->
-            <!---->
-            <!--<com.centanet.hk.aplus.Widgets.LineBreakLayout-->
-                <!--android:id="@+id/follow_label_group"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="18dp"-->
-                <!--android:layout_marginRight="18dp"-->
-                <!--android:layout_centerVertical="true"-->
-                <!--android:layout_marginBottom="7dp"-->
-                <!--android:layout_toRightOf="@id/follow_label_txt">-->
-            <!--</com.centanet.hk.aplus.Widgets.LineBreakLayout>-->
-            <!---->
+        <!--<TextView-->
+        <!--android:id="@+id/follow_label_txt"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:text="搜尋"-->
+        <!--android:layout_marginLeft="14dp"-->
+        <!--android:textSize="14dp"/>-->
+        <!---->
+        <!--<com.centanet.hk.aplus.Widgets.LineBreakLayout-->
+        <!--android:id="@+id/follow_label_group"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="18dp"-->
+        <!--android:layout_marginRight="18dp"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_marginBottom="7dp"-->
+        <!--android:layout_toRightOf="@id/follow_label_txt">-->
+        <!--</com.centanet.hk.aplus.Widgets.LineBreakLayout>-->
+        <!---->
         <!--</RelativeLayout>-->
         <LinearLayout
             android:id="@+id/follow_label_view"
@@ -117,25 +121,26 @@
                 android:id="@+id/follow_label_txt"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:layout_marginTop="5dp"
-                android:text="搜尋"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="14dp"
-                android:textSize="14dp"/>
+                android:layout_weight="2"
+                android:text="搜尋"
+                android:textSize="14dp" />
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="13"
                 android:layout_marginRight="5dp"
+                android:layout_weight="13"
                 android:orientation="vertical">
 
                 <com.centanet.hk.aplus.Widgets.LineBreakLayout
                     android:id="@+id/follow_label_group"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center|left"
                     android:layout_marginBottom="7dp"
-                    android:layout_gravity="center|left"></com.centanet.hk.aplus.Widgets.LineBreakLayout>
+                    android:layout_marginTop="7dp"></com.centanet.hk.aplus.Widgets.LineBreakLayout>
             </LinearLayout>
 
 
@@ -155,6 +160,10 @@
             android:layout_height="6dp"
             android:background="@color/color_theme_item" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E7E7E7"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -165,27 +174,29 @@
                 android:id="@+id/follow_smartLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                app:srlPrimaryColor="@android:color/white"
                 app:srlAccentColor="#444444"
-                app:srlEnablePreviewInEditMode="true">
+                app:srlEnablePreviewInEditMode="true"
+                app:srlPrimaryColor="@android:color/white">
                 <!--srlAccentColor srlPrimaryColor 将会改变 Header 和 Footer 的主题颜色-->
                 <!--srlEnablePreviewInEditMode 可以开启和关闭预览功能-->
                 <com.scwang.smartrefresh.layout.header.ClassicsHeader
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+
                 <ListView
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
                     android:id="@+id/fragment_follow_listview"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"></ListView>
+                    android:layout_height="match_parent"
+                    android:footerDividersEnabled="false"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"></ListView>
+
                 <com.scwang.smartrefresh.layout.footer.ClassicsFooter
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingLeft="30dp"
-                    app:srlPrimaryColor="@android:color/white"
-                    app:srlAccentColor="#444444"/>
+                    app:srlAccentColor="#444444"
+                    app:srlPrimaryColor="@android:color/white" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
             <RelativeLayout
@@ -210,8 +221,7 @@
                     android:layout_alignParentRight="true"
                     android:paddingBottom="20dp"
                     android:paddingRight="20dp"
-                    android:src="@drawable/btn_create_followup_case"
-                    />
+                    android:src="@drawable/btn_create_followup_case" />
 
             </RelativeLayout>
 

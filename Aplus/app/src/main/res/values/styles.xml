@@ -9,6 +9,8 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="App_AllViewTheme" parent="AppTheme">
+    </style>
 
     <style name="fragment_same_text">
 
@@ -60,6 +62,7 @@
         <item name="android:paddingBottom">16dp</item>
         <item name="android:paddingTop">16dp</item>
         <item name="android:textColor">@color/color_itemt_detail_title</item>
+        <item name="android:background">@drawable/selector_item_them_bg</item>
         <item name="android:textSize">@dimen/themeSize</item>
 
     </style>

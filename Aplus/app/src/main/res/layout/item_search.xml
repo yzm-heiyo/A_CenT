@@ -26,7 +26,6 @@
             android:background="@drawable/seletor_click"
             android:button="@null"
             android:focusable="false" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -50,8 +49,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/shape_search_littlebackground"
-                android:padding="2dp"
-                android:text="MHV"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:textColor="@color/color_itemt_result_text"
                 android:textSize="@dimen/themeSize" />
 
@@ -62,7 +63,6 @@
                 android:layout_toRightOf="@id/item_search_acronym_txt"
                 android:maxLines="1"
                 android:padding="2dp"
-                android:text="奧運站 > TKT TAI KOK TSUI 大角咀"
                 android:textColor="@color/color_itemt_result_text"
                 android:textSize="@dimen/themeSize" />
 
@@ -73,7 +73,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="2dp"
-            android:text="METRO HARBOUR VIEW PHASE I TOWER 1"
             android:textColor="@color/color_itemt_detail_title" />
 
         <TextView
@@ -81,10 +80,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="2dp"
-            android:text="港灣豪庭 1期 1座"
             android:textColor="@color/color_itemt_detail_title" />
 
     </LinearLayout>
+
 
 
 </LinearLayout>

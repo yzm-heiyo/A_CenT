@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/item_search_edit" />
+
+        <include layout="@layout/item_search_option" />
+
+        <View android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/shape_line_shade_up_to_down"/>
+
+        <include layout="@layout/item_list" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/fragment_presmises_current_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="230dp"
+        android:background="@drawable/shape_pageindex"
+        android:gravity="center"
+        android:paddingBottom="2dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="2dp"
+        android:text="0/0"
+        android:visibility="gone"
+        android:textColor="@color/colorBackground" />
+
+</FrameLayout>

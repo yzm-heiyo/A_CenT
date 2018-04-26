@@ -1,6 +1,7 @@
 package com.centanet.hk.aplus.Views.MineView.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -16,9 +17,10 @@ import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.Dialog.SimpleTipsDialog;
 import com.centanet.hk.aplus.Widgets.TitleBar;
-import com.centanet.hk.aplus.entity.http.FeedBackDescription;
-import com.centanet.hk.aplus.entity.mine.FeedBack;
+import com.centanet.hk.aplus.bean.http.FeedBackDescription;
+import com.centanet.hk.aplus.bean.mine.FeedBack;
 import com.centanet.hk.aplus.manager.ApplicationManager;
+import com.githang.statusbar.StatusBarCompat;
 
 import java.io.IOException;
 
@@ -39,7 +41,7 @@ public class FeedBackActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        StatusBarCompat.setStatusBarColor(this, Color.parseColor("#BB2E2D"), false);
         setContentView(R.layout.activity_feedback);
         editText = findViewById(R.id.feedback_edit_record);
         titleBar = findViewById(R.id.feedback_titlebar);
@@ -48,7 +50,7 @@ public class FeedBackActivity extends AppCompatActivity {
         titleBar.setOnItemClickListener(new TitleBar.OnItemClickListener() {
             @Override
             public void onClick(View v, final int type) {
-                if(type == TitleBar.TYPE_BACK)
+                if (type == TitleBar.TYPE_BACK)
                     finish();
                 if (type == TitleBar.TYPE_PUT) {
                     //todo 傳參類型
@@ -79,28 +81,29 @@ public class FeedBackActivity extends AppCompatActivity {
                         private void putFollowData() {
                             FeedBackDescription description = new FeedBackDescription();
                             description.setContent(editText.getText().toString());
-                            L.d("SSoHeaer",ApplicationManager.getApplication().getSsoHeaderDescription().toString());
-                            HttpUtil.doPost(HttpUtil.URL_SSO_FEEDBACK, ApplicationManager.getApplication().getSsoHeaderDescription(), description, new Callback() {
+                            L.d("SSoHeaer", ApplicationManager.getApplication().getSsoHeaderDescription().toString());
+                            HttpUtil.doPost(HttpUtil.URL_SSO_FEEDBACK, description, ApplicationManager.getApplication().getSsoHeaderDescription(), new Callback() {
                                 @Override
                                 public void onFailure(Call call, IOException e) {
-                                    L.d("FeedBack_put",e.toString());
+                                    L.d("FeedBack_put", e.toString());
                                 }
 
                                 @Override
                                 public void onResponse(Call call, Response response) throws IOException {
                                     String net = response.body().string().toString();
-                                    L.d("FeedBack_put",net);
+                                    L.d("FeedBack_put", net);
                                     if (response.code() == 200) {
                                         FeedBack feedBack = null;
                                         try {
                                             feedBack = GsonUtil.parseJson(net, FeedBack.class);
                                             if (feedBack != null) {
                                                 SimpleTipsDialog dialog = new SimpleTipsDialog();
-                                                if (feedBack != null && feedBack.getResult()!=null && feedBack.getResult().equals(0)) {
+                                                if (feedBack != null && feedBack.getRCode().equals("200")) {
                                                     dialog.setContentString("提交成功");
-                                                }else dialog.setContentString("提交失敗");
+                                                    FeedBackActivity.this.finish();
+                                                } else dialog.setContentString("提交失敗");
                                                 dialog.setLeftBtnVisibility(false);
-                                                dialog.show(getSupportFragmentManager(),"");
+                                                dialog.show(getSupportFragmentManager(), "");
                                             }
                                         } catch (IllegalAccessException e) {
                                             e.printStackTrace();
@@ -116,15 +119,13 @@ public class FeedBackActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (ev.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
             if (isShouldHideInput(v, ev)) {
-
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (imm != null) {
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);

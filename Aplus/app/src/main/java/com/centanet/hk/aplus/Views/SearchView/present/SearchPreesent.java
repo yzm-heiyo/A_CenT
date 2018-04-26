@@ -3,9 +3,9 @@ package com.centanet.hk.aplus.Views.SearchView.present;
 import com.centanet.hk.aplus.Views.SearchView.model.ISearchModel;
 import com.centanet.hk.aplus.Views.SearchView.model.SearchModel;
 import com.centanet.hk.aplus.Views.SearchView.view.ISearchView;
-import com.centanet.hk.aplus.entity.auto_estate.PropertyParamHints;
-import com.centanet.hk.aplus.entity.http.AutoSearchDescription;
-import com.centanet.hk.aplus.entity.http.AHeaderDescription;
+import com.centanet.hk.aplus.bean.auto_estate.PropertyParamHints;
+import com.centanet.hk.aplus.bean.http.AutoSearchDescription;
+import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 
 import java.util.List;
 
@@ -25,8 +25,8 @@ public class SearchPreesent implements ISearchPresent {
         this.searchView = searchView;
     }
 
-    public void doPost(String urlAutosearch, AHeaderDescription AHeaderDescription, AutoSearchDescription autoSearchDescription){
-        searchModel.doPost(urlAutosearch, AHeaderDescription,autoSearchDescription);
+    public void doPost(String urlAutosearch, AHeaderDescription AHeaderDescription, AutoSearchDescription autoSearchDescription) {
+        searchModel.doPost(urlAutosearch, AHeaderDescription, autoSearchDescription);
     }
 
     @Override
@@ -47,6 +47,7 @@ public class SearchPreesent implements ISearchPresent {
 
     @Override
     public void recoverLabelHistiry(List<String> history) {
+        if (history == null || history.isEmpty()) return;
         List<PropertyParamHints> data = searchModel.searchLabelHistory(history);
         searchView.recoverNewHistory(data);
         searchView.recoverHistoryLabelView(searchModel.changeToLabelData(data));

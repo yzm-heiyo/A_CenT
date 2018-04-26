@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
+    android:background="@drawable/layer_rim_line"
     android:orientation="vertical"
     android:paddingLeft="20dp"
+    android:paddingBottom="1dp"
     android:paddingTop="20dp">
 
     <LinearLayout
@@ -30,7 +31,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:text="備注"
+                android:text="備註"
                 android:textColor="@color/color_itemt_result_text"
                 android:textSize="14dp" />
         </LinearLayout>

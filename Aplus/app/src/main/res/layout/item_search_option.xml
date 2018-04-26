@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="36dp"
+    android:background="@android:color/white"
+    android:orientation="horizontal">
+
+    <!-- 狀態 -->
+    <RelativeLayout
+        android:id="@+id/fragment_presmises_status"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/statuc"
+            style="@style/fragment_same_text"
+            android:text="@string/fragment_status" />
+
+        <ImageView
+            android:id="@+id/fragment_img_status_down"
+            style="@style/fragment_same_image"
+            android:layout_toRightOf="@+id/statuc"
+            android:visibility="visible"
+            android:src="@drawable/ico_arrow_dropdown" />
+
+        <com.centanet.hk.aplus.Widgets.CircleTipsView
+            android:id="@+id/list_status_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="7dp"
+            android:layout_toRightOf="@id/statuc"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#D1D1D1" />
+
+    <!-- 價格 -->
+    <RelativeLayout
+        android:id="@+id/fragment_presmises_price"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/price"
+            style="@style/fragment_same_text"
+            android:text="@string/fragment_price" />
+
+        <ImageView
+            style="@style/fragment_same_image"
+            android:layout_toRightOf="@+id/price"
+            android:src="@drawable/ico_arrow_dropdown" />
+
+    </RelativeLayout>
+
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:background="#D1D1D1" />
+
+    <!-- 更多 -->
+    <RelativeLayout
+        android:id="@+id/fragment_presmises_more"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <TextView
+            android:id="@+id/more"
+            style="@style/fragment_same_text"
+            android:text="@string/fragment_more" />
+
+        <ImageView
+            android:id="@+id/fragment_img_complex_down"
+            style="@style/fragment_same_image"
+            android:layout_toRightOf="@+id/more"
+            android:src="@drawable/ico_filtering"
+            android:visibility="visible" />
+
+        <com.centanet.hk.aplus.Widgets.CircleTipsView
+            android:id="@+id/list_complex_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="7dp"
+            android:layout_marginTop="7dp"
+            android:layout_toRightOf="@id/more"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+
+</LinearLayout>

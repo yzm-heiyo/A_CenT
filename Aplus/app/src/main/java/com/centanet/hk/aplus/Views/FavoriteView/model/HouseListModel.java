@@ -6,6 +6,7 @@ import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.common.CommandField;
 import com.centanet.hk.aplus.common.DataManager;
+import com.centanet.hk.aplus.entity.favo.FavoResponse;
 import com.centanet.hk.aplus.entity.house.HouseData;
 import com.centanet.hk.aplus.entity.house.Properties;
 import com.centanet.hk.aplus.entity.http.AHeaderDescription;
@@ -33,15 +34,19 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.centanet.hk.aplus.Utils.net.HttpUtil.URL_CANCELFAVO;
 import static com.centanet.hk.aplus.Utils.net.HttpUtil.URL_FAVORITE;
 import static com.centanet.hk.aplus.Utils.net.HttpUtil.URL_PARAMETER;
 import static com.centanet.hk.aplus.Utils.net.HttpUtil.URL_PATH;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.FavoState.FAVO_NO;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.HouseListDataCount.FAVOLIST_COUNT;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.HouseListDataCount.HOUSELIST_COUNT;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.NetWorkState.NETWORK_STATE_FAIL;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.NetWorkState.NETWORK_STATE_SUCCESS;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.HOUSELIST;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.HOUSELIST_NO;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.ReFreshDataState.DATA_END;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.ReFreshDataState.DATA_FAVO_END;
 
 
 /**
@@ -64,10 +69,6 @@ public class HouseListModel extends BaseClass implements IHouseListModel {
     @Override
     public void doPost(final String address, AHeaderDescription headers, Object bodys) {
 
-        if (isEnd) {
-            notifyEmptyBusMessage(NETWORK_STATE_SUCCESS);
-            return;
-        }
 
         final boolean isNeedVerify = isFileExist();
 
@@ -80,25 +81,42 @@ public class HouseListModel extends BaseClass implements IHouseListModel {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String dataBack = response.body().string().trim().toString();
-                L.d(thiz + "-Response", dataBack);
-                switch (address) {
-                    case URL_PARAMETER:
-                        getParams(dataBack, isNeedVerify);
-                        setParams(openFile());
-                        break;
-                    case URL_PATH:
-                        getHouseList(dataBack);
-                        break;
-                    case URL_FAVORITE:
-                        L.d(thiz, "net_favo: " + dataBack);
-                        break;
-                    default:
-                        break;
-                }
-                notifyEmptyBusMessage(NETWORK_STATE_SUCCESS);
+                if (response.code() == 200) {
+                    String dataBack = response.body().string().trim().toString();
+                    L.d(thiz + "-Response", dataBack);
+                    switch (address) {
+                        case URL_PARAMETER:
+                            getParams(dataBack, isNeedVerify);
+                            setParams(openFile());
+                            break;
+                        case URL_PATH:
+                            if (isEnd) {
+                                notifyEmptyBusMessage(DATA_FAVO_END);
+                                return;
+                            }
+                            getHouseList(dataBack);
+                            break;
+                        case URL_CANCELFAVO:
+                            parseFavo(dataBack);
+                            break;
+                        default:
+                            break;
+                    }
+                    notifyEmptyBusMessage(NETWORK_STATE_SUCCESS);
+                }else notifyEmptyBusMessage(NETWORK_STATE_FAIL);
             }
         });
+    }
+
+    private void parseFavo(String dataBack) {
+        try {
+            FavoResponse response1=GsonUtil.parseJson(dataBack, FavoResponse.class);
+            if(response1.isFlag())notifyEmptyBusMessage(FAVO_NO);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean isFileExist() {
@@ -110,6 +128,7 @@ public class HouseListModel extends BaseClass implements IHouseListModel {
         HouseData centaData = null;
         try {
             centaData = GsonUtil.parseJson(dataBack, HouseData.class);
+            notifyBusMessage(FAVOLIST_COUNT, centaData.getRecordCount() + "");
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -124,7 +143,6 @@ public class HouseListModel extends BaseClass implements IHouseListModel {
             receiveListener.onReceiveHouseData(data);
             isEnd = data.size() < 15 ? true : false;
         }
-        notifyBusMessage(FAVOLIST_COUNT, centaData.getRecordCount() + "");
     }
 
     public void verifyAndSavePermission(Permisstions per) {

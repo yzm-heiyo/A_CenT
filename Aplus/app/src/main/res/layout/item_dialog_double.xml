@@ -25,5 +25,6 @@
         android:text="@string/dialog_tips_remove_favorite"
         android:textColor="#222222"
         android:textSize="13dp"
+        android:paddingBottom="15dp"
         android:textStyle="bold" />
 </LinearLayout>

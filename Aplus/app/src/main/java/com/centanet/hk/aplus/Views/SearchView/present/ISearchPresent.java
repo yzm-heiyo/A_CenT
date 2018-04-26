@@ -1,8 +1,8 @@
 package com.centanet.hk.aplus.Views.SearchView.present;
 
-import com.centanet.hk.aplus.entity.auto_estate.PropertyParamHints;
-import com.centanet.hk.aplus.entity.http.AutoSearchDescription;
-import com.centanet.hk.aplus.entity.http.AHeaderDescription;
+import com.centanet.hk.aplus.bean.auto_estate.PropertyParamHints;
+import com.centanet.hk.aplus.bean.http.AutoSearchDescription;
+import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 
 import java.util.List;
 

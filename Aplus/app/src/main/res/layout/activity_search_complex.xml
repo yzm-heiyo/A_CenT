@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <com.centanet.hk.aplus.Widgets.TitleBar
@@ -10,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        app:titlebarText="更多選擇"></com.centanet.hk.aplus.Widgets.TitleBar>
+        app:titlebarText="@string/more_title_moresearch"></com.centanet.hk.aplus.Widgets.TitleBar>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -18,11 +19,14 @@
         android:layout_above="@+id/activity_more_endbar"
         android:layout_below="@+id/activity_more_titlebar"
         android:layout_marginTop="1px"
+        android:background="@android:color/white"
         android:padding="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@android:color/white"
             android:orientation="vertical">
             <!-- 面積 -->
             <LinearLayout
@@ -66,6 +70,7 @@
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/dialog_price_confirm"
                     android:layout_marginTop="10dp"
+                    android:background="@android:color/white"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="10dp">
@@ -74,14 +79,17 @@
                         android:id="@+id/complex_edit_area_left"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/shape_detal_date"
-                        android:gravity="center"
-                        android:singleLine="true"
-                        android:paddingBottom="5dp"
                         android:digits="1234567890"
+                        android:gravity="center"
+                        android:hint="@string/dialog_price_unlimit"
                         android:imeOptions="actionDone"
-                        android:paddingTop="5dp" />
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:singleLine="true"
+                        android:textSize="16dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -99,30 +107,28 @@
                         android:background="@drawable/shape_detal_date"
                         android:digits="1234567890"
                         android:gravity="center"
+                        android:hint="@string/dialog_price_unlimit"
                         android:imeOptions="actionDone"
                         android:inputType="number"
                         android:paddingBottom="5dp"
                         android:paddingTop="5dp"
-                        android:singleLine="true" />
+                        android:singleLine="true"
+                        android:textSize="16dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
                         android:gravity="center"
                         android:paddingLeft="5dp"
                         android:paddingRight="5dp"
-                        android:text="萬" />
+                        android:text="呎" />
 
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="20dp"
-                android:background="@color/colorline" />
 
             <!-- 價格 -->
             <LinearLayout
@@ -199,14 +205,17 @@
                         android:id="@+id/complex_edit_price_left"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/shape_detal_date"
-                        android:gravity="center"
-                        android:singleLine="true"
-                        android:paddingBottom="5dp"
                         android:digits="1234567890"
+                        android:gravity="center"
+                        android:hint="@string/dialog_price_unlimit"
                         android:imeOptions="actionDone"
-                        android:paddingTop="5dp" />
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:singleLine="true"
+                        android:textSize="16dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -222,21 +231,24 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:background="@drawable/shape_detal_date"
-                        android:gravity="center"
-                        android:paddingBottom="5dp"
-                        android:singleLine="true"
-                        android:inputType="number"
                         android:digits="1234567890"
+                        android:gravity="center"
+                        android:hint="@string/dialog_price_unlimit"
                         android:imeOptions="actionDone"
-                        android:paddingTop="5dp" />
+                        android:inputType="number"
+                        android:paddingBottom="5dp"
+                        android:paddingTop="5dp"
+                        android:singleLine="true"
+                        android:textSize="16dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
                         android:gravity="center"
                         android:paddingLeft="5dp"
                         android:paddingRight="5dp"
-                        android:text="萬" />
+                        android:text="元" />
 
 
                 </LinearLayout>
@@ -244,37 +256,36 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="20dp"
-                android:background="@color/colorline" />
 
             <!-- 業主 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:orientation="horizontal"
                 android:padding="8dp">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:gravity="center|left"
-                    android:text="業主:"
+                    android:text="業主"
                     android:textColor="@color/color_itemt_detail_title" />
 
                 <EditText
-
+                    android:id="@+id/complex_edit_owner"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
                     android:layout_weight="3"
-                    android:singleLine="true"
-                    android:imeOptions="actionDone"
                     android:background="@drawable/shape_detal_date"
-                    android:padding="5dp" />
+                    android:imeOptions="actionDone"
+                    android:padding="5dp"
+                    android:singleLine="true" />
 
             </LinearLayout>
 
@@ -283,44 +294,46 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:orientation="horizontal"
                 android:padding="8dp">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:gravity="center|left"
-                    android:text="電話:"
+                    android:text="電話"
                     android:textColor="@color/color_itemt_detail_title" />
 
                 <EditText
+                    android:id="@+id/complex_edit_phone"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginRight="10dp"
                     android:layout_weight="3"
                     android:background="@drawable/shape_detal_date"
-                    android:singleLine="true"
                     android:imeOptions="actionDone"
-                    android:padding="5dp" />
+                    android:padding="5dp"
+                    android:singleLine="true" />
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="20dp"
-                android:background="@color/colorline" />
 
             <!-- 落成年份 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:text="落成年份"
                     android:textColor="@color/color_itemt_detail_title" />
 
@@ -340,9 +353,10 @@
                         android:layout_weight="1"
                         android:background="@drawable/shape_detal_date"
                         android:gravity="center"
-                        android:hint="不限"
+                        android:hint="@string/dialog_price_unlimit"
                         android:paddingBottom="8dp"
-                        android:paddingTop="8dp" />
+                        android:paddingTop="8dp"
+                        android:textSize="16dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -359,19 +373,15 @@
                         android:layout_weight="1"
                         android:background="@drawable/shape_detal_date"
                         android:gravity="center"
-                        android:hint="不限"
+                        android:hint="@string/dialog_price_unlimit"
                         android:paddingBottom="8dp"
-                        android:paddingTop="8dp" />
+                        android:paddingTop="8dp"
+                        android:textSize="16dp" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="20dp"
-                android:background="@color/colorline" />
 
             <!-- 開盤日期 -->
             <LinearLayout
@@ -383,6 +393,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center|left"
                     android:onClick="openDate"
                     android:orientation="horizontal">
@@ -425,9 +437,10 @@
                         android:layout_weight="1"
                         android:background="@drawable/shape_detal_date"
                         android:gravity="center"
-                        android:hint="不限"
+                        android:hint="@string/dialog_price_unlimit"
                         android:paddingBottom="8dp"
-                        android:paddingTop="8dp" />
+                        android:paddingTop="8dp"
+                        android:textSize="16dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -444,31 +457,29 @@
                         android:layout_weight="1"
                         android:background="@drawable/shape_detal_date"
                         android:gravity="center"
-                        android:hint="不限"
+                        android:hint="@string/dialog_price_unlimit"
                         android:paddingBottom="8dp"
-                        android:paddingTop="8dp" />
+                        android:paddingTop="8dp"
+                        android:textSize="16dp" />
 
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="20dp"
-                android:background="@color/colorline" />
-
             <!-- 狀態 -->
             <LinearLayout
+                android:id="@+id/complex_ll_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:text="狀態"
                     android:textColor="@color/color_itemt_detail_title" />
 
@@ -496,8 +507,11 @@
                             android:id="@+id/activity_more_status_start"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="15dp"
                             android:gravity="center"
-                            android:text="全部" />
+                            android:singleLine="true"
+                            android:text="不限" />
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -531,8 +545,11 @@
                             android:id="@+id/activity_more_status_end"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginRight="15dp"
                             android:gravity="center"
-                            android:text="全部" />
+                            android:singleLine="true"
+                            android:text="不限" />
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -548,23 +565,19 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="20dp"
-                android:background="@color/colorline" />
-
 
             <!-- SSD -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:text="SSD"
                     android:textColor="@color/color_itemt_detail_title" />
 
@@ -581,18 +594,24 @@
                         android:orientation="horizontal">
 
                         <!--<RadioButton-->
-                            <!--style="@style/more_item_style"-->
-                            <!--android:checked="true"-->
-                            <!--android:text="不限" />-->
+                        <!--style="@style/more_item_style"-->
+                        <!--android:checked="true"-->
+                        <!--android:text="不限" />-->
 
                         <RadioButton
+                            android:id="@+id/complex_ssd_0"
                             style="@style/more_item_style"
                             android:text="0%" />
 
                         <RadioButton
+                            android:id="@+id/complex_ssd_10"
                             style="@style/more_item_style"
                             android:text="10%" />
 
+                        <RadioButton
+                            android:id="@+id/complex_ssd_15"
+                            style="@style/more_item_style"
+                            android:text="15%" />
 
                     </LinearLayout>
 
@@ -603,114 +622,57 @@
                         android:layout_marginTop="10dp"
                         android:orientation="horizontal">
 
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="15%" />
 
                         <RadioButton
+                            android:id="@+id/complex_ssd_20"
                             style="@style/more_item_style"
                             android:text="20%" />
 
                         <RadioButton
+                            android:id="@+id/complex_ssd_unknow"
                             style="@style/more_item_style"
                             android:text="未知" />
 
+                        <RadioButton
+                            style="@style/more_item_style"
+                            android:visibility="invisible" />
                     </LinearLayout>
-
-
                 </com.centanet.hk.aplus.Widgets.MyRadioGroup>
-
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="20dp"
-                android:background="@color/colorline" />
 
             <!-- 間隔 -->
             <LinearLayout
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:text="間隔"
                     android:textColor="@color/color_itemt_detail_title" />
 
-                <com.centanet.hk.aplus.Widgets.MyRadioGroup
-                    android:id="@+id/activity_more_interval_radiogroup"
+                <com.centanet.hk.aplus.Widgets.CheckBoxLayout
+                    android:id="@+id/complex_cb_interval"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <!--<RadioButton-->
-                            <!--style="@style/more_item_style"-->
-                            <!--android:checked="true"-->
-                            <!--android:text="不限" />-->
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="0房" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="1房" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="2房" />
-
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="3房" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="4房" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="4房以上" />
-
-                    </LinearLayout>
-
-
-                </com.centanet.hk.aplus.Widgets.MyRadioGroup>
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"></com.centanet.hk.aplus.Widgets.CheckBoxLayout>
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="20dp"
-                android:background="@color/colorline" />
 
             <!-- 座向 -->
             <LinearLayout
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical"
                 android:padding="8dp"
                 android:textColor="@color/color_itemt_detail_title">
@@ -718,113 +680,20 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:text="座向"
                     android:textColor="@color/color_itemt_detail_title" />
 
-                <com.centanet.hk.aplus.Widgets.MyRadioGroup
-                    android:id="@+id/activity_more_direction_radiogroup"
+                <com.centanet.hk.aplus.Widgets.CheckBoxLayout
+                    android:id="@+id/complex_cb_direction"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:orientation="vertical">
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"></com.centanet.hk.aplus.Widgets.CheckBoxLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <!--<RadioButton-->
-                            <!--style="@style/more_item_style"-->
-                            <!--android:checked="true"-->
-                            <!--android:text="不限" />-->
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="未知" />
-
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="東" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="南" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="西" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="北" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="東北" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="東南" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="西南" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="西北" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="三面單邊" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="東西" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="南北" />
-
-
-                    </LinearLayout>
-
-
-                </com.centanet.hk.aplus.Widgets.MyRadioGroup>
 
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="20dp"
-                android:background="@color/colorline" />
 
 
             <!-- 標籤 -->
@@ -832,152 +701,83 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical"
                 android:padding="8dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:text="標籤"
                     android:textColor="@color/color_itemt_detail_title" />
 
-                <com.centanet.hk.aplus.Widgets.MyRadioGroup
-                    android:id="@+id/activity_more_tag_radiogroup"
+                <com.centanet.hk.aplus.Widgets.CheckBoxLayout
+                    android:id="@+id/complex_cb_tag"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:orientation="vertical">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:checked="true"
-                            android:text="海景" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="山景" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="露台" />
-
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="池景" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="公司轉讓" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="工人套房" />
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="儲物室" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="相連單位" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="園景" />
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:orientation="horizontal">
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="三面單邊" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="東西" />
-
-                        <RadioButton
-                            style="@style/more_item_style"
-                            android:text="南北" />
-
-
-                    </LinearLayout>
-
-
-                </com.centanet.hk.aplus.Widgets.MyRadioGroup>
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="10dp"></com.centanet.hk.aplus.Widgets.CheckBoxLayout>
 
             </LinearLayout>
 
         </LinearLayout>
     </ScrollView>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_above="@+id/activity_more_endbar"
-        android:background="@color/colorline" />
 
     <LinearLayout
         android:id="@+id/activity_more_endbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-
-        <TextView
-            android:onClick="resetParams"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="重設"
-            android:textColor="@color/color_itemt_detail_title" />
+        android:orientation="vertical"
+        android:visibility="visible">
 
         <View
-            android:layout_width="1px"
-            android:layout_height="match_parent"
-            android:background="@color/colorline" />
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@drawable/shape_line_shade_down_to_up" />
 
-        <TextView
-            android:onClick="search"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="搜尋"
-            android:textColor="@color/colortheme" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/complex_txt_reset"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:onClick="resetParams"
+                android:padding="10dp"
+                android:text="重設"
+                android:textColor="@color/color_itemt_detail_title"
+                android:textSize="16dp" />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:background="#D1D1D1" />
+
+            <TextView
+                android:id="@+id/complex_txt_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:onClick="search"
+                android:padding="10dp"
+                android:text="搜尋"
+                android:textColor="@color/colortheme"
+                android:textSize="16dp" />
+
+        </LinearLayout>
+
 
     </LinearLayout>
 

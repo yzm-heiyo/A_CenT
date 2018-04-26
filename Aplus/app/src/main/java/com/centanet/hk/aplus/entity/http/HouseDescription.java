@@ -1,16 +1,17 @@
 package com.centanet.hk.aplus.entity.http;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by yangzm4 on 2018/3/13.
  */
 
-public class HouseDescription {
+public class HouseDescription implements Serializable{
 
     private String UpdatePermisstionsTime = "2010-01-01T00:00:00";
     private int PropertyType = 1;
-    private String SortField = "";
+    private String SortField;
     private String TrustType = "";
     private int PageSize = 15;
     private int PageIndex = 1;
@@ -35,7 +36,7 @@ public class HouseDescription {
     private String SelectKeyId;
     private String Scope;
     private String HasPropertyKey;
-    private boolean IsOnlyTrust;
+    private String IsOnlyTrust;
     private boolean Ascending = false;
     private boolean IsMobileRequest = true;
     private String PriceUnitType;
@@ -160,7 +161,7 @@ public class HouseDescription {
     }
 
     public void setOnlyTrust(boolean onlyTrust) {
-        IsOnlyTrust = onlyTrust;
+        IsOnlyTrust = ""+onlyTrust;
     }
 
     public void setAscending(boolean ascending) {
@@ -344,7 +345,7 @@ public class HouseDescription {
     }
 
     public boolean isOnlyTrust() {
-        return IsOnlyTrust;
+        return Boolean.parseBoolean(IsOnlyTrust);
     }
 
     public boolean isAscending() {

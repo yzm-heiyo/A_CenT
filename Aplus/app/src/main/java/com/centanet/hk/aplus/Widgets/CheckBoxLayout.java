@@ -125,9 +125,9 @@ public class CheckBoxLayout extends ViewGroup implements View.OnClickListener {
 //        L.d("tag", itemText);
         LayoutInflater inflater = LayoutInflater.from(getContext());
         if (!TextUtils.isEmpty(itemText)) {
-            final View view = inflater.inflate(contentLayoutID, null);
-            view.setOnClickListener(this);
-            final CheckBox cb = view.findViewById(R.id.item_label_text);
+            final CheckBox cb = (CheckBox) inflater.inflate(contentLayoutID, null);
+//            view.setOnClickListener(this);
+//            final CheckBox cb = view.findViewById(R.id.item_label_text);
             cb.setText(itemText);
             cb.setTag(itemText);
             if (defaultSelect != null && !defaultSelect.isEmpty()) {
@@ -138,19 +138,19 @@ public class CheckBoxLayout extends ViewGroup implements View.OnClickListener {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (onItemViewCheckChangerListener != null)
-                        onItemViewCheckChangerListener.onItemClick(buttonView, isChecked);
+                        onItemViewCheckChangerListener.onItemClick(CheckBoxLayout.this, buttonView, isChecked);
                 }
             });
 
-            view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            cb.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
 
                     int viewWidth = (getWidth() - 2 * LEFT_RIGHT_SPACE) / 3;
 
-                    int index = CheckBoxLayout.this.indexOfChild(view);
+                    int index = CheckBoxLayout.this.indexOfChild(cb);
                     if (index != 1) {
-                        if (view.getLeft() > 0) {
+                        if (cb.getLeft() > 0) {
                             int width = CheckBoxLayout.this.getChildAt(index - 1).getWidth();
                             if (width > viewWidth)
                                 viewWidth = (getWidth() - LEFT_RIGHT_SPACE) / 2;
@@ -159,38 +159,43 @@ public class CheckBoxLayout extends ViewGroup implements View.OnClickListener {
 
                     if (itemText.length() > 4) {
                         viewWidth = (getWidth() - LEFT_RIGHT_SPACE) / 2;
-                        if (view.getLeft() == 0) {
-//                            viewWidth = (getWidth() - LEFT_RIGHT_SPACE) / 2;
-                            getPositon(view);
+                        if (cb.getLeft() == 0) {
+                            getPositon(cb);
                         } else {
-//                            viewWidth = (getWidth() - LEFT_RIGHT_SPACE) / 2;
                             View lastView = CheckBoxLayout.this.getChildAt(index - 1);
                             lastView.setLayoutParams(new LinearLayout.LayoutParams(viewWidth, LinearLayout.LayoutParams.WRAP_CONTENT));
                             final CheckBox cb = lastView.findViewById(R.id.item_label_text);
                             cb.setLayoutParams(new LinearLayout.LayoutParams(viewWidth, LinearLayout.LayoutParams.WRAP_CONTENT));
                         }
-                        view.setLayoutParams(new LinearLayout.LayoutParams(viewWidth, LinearLayout.LayoutParams.WRAP_CONTENT));
+//                        view.setLayoutParams(new LinearLayout.LayoutParams(viewWidth, LinearLayout.LayoutParams.WRAP_CONTENT));
                         cb.setLayoutParams(new LinearLayout.LayoutParams(viewWidth, LinearLayout.LayoutParams.WRAP_CONTENT));
                     } else {
                         LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(viewWidth, LinearLayout.LayoutParams.WRAP_CONTENT);
                         cb.setLayoutParams(p);
-                        view.setLayoutParams(new LinearLayout.LayoutParams(viewWidth, LinearLayout.LayoutParams.WRAP_CONTENT));
+//                        view.setLayoutParams(new LinearLayout.LayoutParams(viewWidth, LinearLayout.LayoutParams.WRAP_CONTENT));
                     }
 
                     if (itemText.length() <= 4 && insertPosion != 0) {
-                        L.d("insertPosition",insertPosion+"");
-                        CheckBoxLayout.this.removeView(view);
-                        CheckBoxLayout.this.addView(view, insertPosion);
+                        L.d("insertPosition", insertPosion + "");
+                        CheckBoxLayout.this.removeView(cb);
+                        CheckBoxLayout.this.addView(cb, insertPosion);
                         insertPosion = 0;
                     }
 
                 }
             });
 
-            this.addView(view);
+            this.addView(cb);
         }
     }
 
+    /**
+     * 文字太多以1：2的形式顯示
+     *
+     * @param itemText
+     * @param view
+     * @param cb
+     */
     private void addView(String itemText, View view, CheckBox cb) {
 
         int viewWidth = (getWidth() - 2 * LEFT_RIGHT_SPACE) / 3;
@@ -223,7 +228,7 @@ public class CheckBoxLayout extends ViewGroup implements View.OnClickListener {
         int position = CheckBoxLayout.this.indexOfChild(view);
         if (position != 0) {
             int right = CheckBoxLayout.this.getChildAt(position - 1).getRight();
-            if (right < getWidth() - 10) {
+            if (right < getWidth() - 10) {//10是測量偏差修正不是定值
                 insertPosion = position;
             }
         }
@@ -238,6 +243,17 @@ public class CheckBoxLayout extends ViewGroup implements View.OnClickListener {
         if (!itemList.isEmpty()) {
             for (int i = 0; i < itemList.size(); i++) {
                 addItem(itemList.get(i), defaultSelect);
+            }
+        }
+    }
+
+    public void resetView() {
+        int childCount = getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View view = getChildAt(i);
+            if(view instanceof CheckBox){
+                L.d("checkBox","");
+                ((CheckBox)view).setChecked(false);
             }
         }
     }
@@ -338,7 +354,7 @@ public class CheckBoxLayout extends ViewGroup implements View.OnClickListener {
     }
 
     public interface OnItemViewCheckChangerListener {
-        void onItemClick(View view, boolean isCheck);
+        void onItemClick(ViewGroup contentView, View view, boolean isCheck);
     }
 
 

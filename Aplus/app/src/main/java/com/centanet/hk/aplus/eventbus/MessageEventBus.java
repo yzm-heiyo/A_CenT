@@ -8,6 +8,14 @@ public class MessageEventBus {
     private int msg;
     private Object object;
 
+    public MessageEventBus() {
+    }
+
+    public MessageEventBus(int msg, Object object) {
+        this.msg = msg;
+        this.object = object;
+    }
+
     public int getMsg() {
         return msg;
     }

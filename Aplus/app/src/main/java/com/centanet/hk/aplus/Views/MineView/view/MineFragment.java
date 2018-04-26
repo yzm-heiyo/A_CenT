@@ -2,6 +2,7 @@ package com.centanet.hk.aplus.Views.MineView.view;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -9,24 +10,20 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
-import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.Dialog.DialogFactory;
 import com.centanet.hk.aplus.Views.LoginView.view.LoginActivity;
 import com.centanet.hk.aplus.Views.MineView.present.FeedBackPresent;
 import com.centanet.hk.aplus.Views.MineView.present.IFeedBackPresent;
-import com.centanet.hk.aplus.Views.MineView.view.AboutActivity;
-import com.centanet.hk.aplus.Views.MineView.view.FeedBackActivity;
-import com.centanet.hk.aplus.Views.MineView.view.IMineView;
-import com.centanet.hk.aplus.Views.MineView.view.UseClauseActivity;
-import com.centanet.hk.aplus.entity.mine.Infomation;
+import com.centanet.hk.aplus.bean.mine.Infomation;
 import com.centanet.hk.aplus.manager.ApplicationManager;
-
-import retrofit2.http.HTTP;
+import com.githang.statusbar.StatusBarCompat;
 
 import static com.centanet.hk.aplus.common.CommandField.DialogType.LOGOUT;
 
@@ -41,7 +38,14 @@ public class MineFragment extends Fragment implements IMineView, View.OnClickLis
     private View about, clause;
     private IFeedBackPresent present;
     private TextView name, fullname, position, departname, number;
+    private ImageView icoView;
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        StatusBarCompat.setStatusBarColor(getActivity(), Color.parseColor("#BB2E2D"), false);
+    }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -59,6 +63,7 @@ public class MineFragment extends Fragment implements IMineView, View.OnClickLis
         number = view.findViewById(R.id.mine_txt_number);
         position = view.findViewById(R.id.mine_txt_position);
         departname = view.findViewById(R.id.mine_txt_departname);
+        icoView = view.findViewById(R.id.mine_img_ico);
         return view;
     }
 
@@ -104,14 +109,15 @@ public class MineFragment extends Fragment implements IMineView, View.OnClickLis
 
     @Override
     public void refreshView(final Infomation infomation) {
-        L.d("InfoMation","!!!");
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 name.setText(infomation.getEmployeeName());
-                number.setText(infomation.getEmployeeNo());
+                number.setText(infomation.getLicense());
+                fullname.setText(infomation.getFullName());
                 departname.setText(infomation.getDepartmentName());
                 position.setText(infomation.getPosition());
+                if(!infomation.getPhotoPath().equals("")) Glide.with(getActivity()).load(infomation.getPhotoPath()).into(icoView);
             }
         });
     }

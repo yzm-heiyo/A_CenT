@@ -13,6 +13,7 @@ import com.centanet.hk.aplus.common.DataManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by yangzm4 on 2018/1/19.
@@ -29,6 +30,8 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
     private OnItemClick onItemClick;
 
     private List<Integer> seletList;
+
+    private List<String> itemText;
 
     public SmartCheckBoxLayout(Context context) {
         this(context, (AttributeSet) null);
@@ -94,6 +97,33 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
         }
     }
 
+    //清除底部
+    public void clearOtherItem(boolean selectAll) {
+        L.d(thiz, "method: selectAllItem");
+        int count = this.getChildCount();
+
+
+        for (int i = 0; i < count; i++) {
+            View view = getChildAt(i);
+            if (view instanceof CheckBox) {
+                if (((CheckBox) view).getText().toString().equals("不限"))
+                    ((CheckBox) view).setChecked(false);
+            }
+        }
+    }
+
+    //清楚不限
+    public void cleanDown(boolean selectAll) {
+        L.d(thiz, "method: selectAllItem");
+        int count = this.getChildCount();
+        for (int i = 1; i < count; i++) {
+            View view = getChildAt(i);
+            if (view instanceof CheckBox) {
+                ((CheckBox) view).setChecked(selectAll);
+            }
+        }
+    }
+
 
     /**
      * 檢查是否已選中所有選項
@@ -139,7 +169,8 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
 
             for (int i = 0; i < viewChechBoxes.size(); i++) {
                 if (viewChechBoxes.get(i).isChecked()) {
-                    results.add(viewChechBoxes.get(i).getText().toString());
+                    if (viewChechBoxes.get(i).getId() != R.id.dialog_status_all)
+                        results.add(viewChechBoxes.get(i).getText().toString().substring(0, 1));
                 }
             }
 
@@ -156,8 +187,8 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.dialog_status_all:
-                isSelectAll = !isSelectAll;
-                selectAllItem(isSelectAll);
+//                isSelectAll = !isSelectAll;
+                cleanDown(false);
                 getCheck(view);
                 L.d(thiz, "status:all onclick   " + isSelectAll);
                 break;
@@ -165,11 +196,14 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
             case R.id.dialog_status_TP:
             case R.id.dialog_status_P:
             case R.id.dialog_status_WT:
-            case R.id.dialog_status_search:
             case R.id.dialog_status_G:
-                if (((CheckBox) view).isChecked())
-                    isSelectAll();
+//                isSelectAll();
+                clearOtherItem(true);
                 getCheck(view);
+                break;
+
+            case R.id.dialog_status_search:
+                if (onItemClick != null) onItemClick.onClick(view, view.getId(), seletList, -1);
                 break;
             default:
                 break;
@@ -183,9 +217,17 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
         for (CheckBox b : viewChechBoxes) {
             if (b.isChecked()) seletList.add(b.getId());
         }
-
-        if (onItemClick != null) onItemClick.onClick(view, view.getId(), seletList, -1);
     }
+
+    public void setItemText(List<String> itemText) {
+        this.itemText = itemText;
+        if (itemText != null)
+            for (int i = 0; i < viewChechBoxes.size(); i++) {
+                if (viewChechBoxes.get(i).getText().toString().equals("不限")) continue;
+                viewChechBoxes.get(i).setText(itemText.get(itemText.size() - i));
+            }
+    }
+
 
     public interface OnItemClick {
         void onClick(View v, int viewId, List<Integer> selectList, int position);

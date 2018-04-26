@@ -13,8 +13,9 @@ import com.centanet.hk.aplus.Views.basic.BasicActivty;
  * Created by mzh1608258 on 2018/1/2.
  */
 
-public abstract class LoginActivityAbst extends BasicActivty {
+public abstract class LoginActivityAbst extends AppCompatActivity{
 
+    //todo 如果后台要返回login extebds baseActivity
     private EditText account;
     private EditText password;
 
@@ -55,7 +56,6 @@ public abstract class LoginActivityAbst extends BasicActivty {
         } else {
             manager.login(v, account.getText().toString(), password.getText().toString());
         }
-
     }
 
 

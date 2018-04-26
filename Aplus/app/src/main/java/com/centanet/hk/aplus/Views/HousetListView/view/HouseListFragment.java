@@ -1,7 +1,6 @@
 package com.centanet.hk.aplus.Views.HousetListView.view;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -9,42 +8,42 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.centanet.hk.aplus.MyApplication;
+import com.centanet.hk.aplus.Utils.ItemCountUtil;
 import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Views.ComplexSearchView.ComplexActivity;
+import com.centanet.hk.aplus.Views.Dialog.StatusDialog;
+import com.centanet.hk.aplus.Views.HouseFragment.BaseHouseFragment;
 import com.centanet.hk.aplus.Views.LoginView.view.LoginActivity;
-import com.centanet.hk.aplus.common.DataManager;
-import com.centanet.hk.aplus.Utils.TextUtil;
+import com.centanet.hk.aplus.Widgets.CircleTipsView;
 import com.centanet.hk.aplus.Views.HousetListView.present.IHouseListPresenter;
 import com.centanet.hk.aplus.Views.HousetListView.present.HouseListPresenter;
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.SearchView.view.SearchActivity;
 import com.centanet.hk.aplus.Views.HouseDetailView.view.DetailActicity;
-import com.centanet.hk.aplus.Views.Dialog.DialogFactory;
 import com.centanet.hk.aplus.Views.Dialog.PriceDialog;
 import com.centanet.hk.aplus.Views.Dialog.SimpleTipsDialog;
 import com.centanet.hk.aplus.Views.Dialog.SortDialog;
-import com.centanet.hk.aplus.Views.ComplexSearchView.ComplexSearchActivity;
-import com.centanet.hk.aplus.entity.http.FavoriteDescription;
-import com.centanet.hk.aplus.entity.http.AHeaderDescription;
-import com.centanet.hk.aplus.entity.http.HouseDescription;
-import com.centanet.hk.aplus.entity.http.ParameterDescription;
-import com.centanet.hk.aplus.entity.house.Properties;
+import com.centanet.hk.aplus.bean.complexSearch.Operation;
+import com.centanet.hk.aplus.bean.http.FavoriteDescription;
+import com.centanet.hk.aplus.bean.http.AHeaderDescription;
+import com.centanet.hk.aplus.bean.http.HouseDescription;
+import com.centanet.hk.aplus.bean.house.Properties;
 import com.centanet.hk.aplus.eventbus.MessageEventBus;
+import com.centanet.hk.aplus.manager.ApplicationManager;
+import com.githang.statusbar.StatusBarCompat;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
-import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -55,7 +54,6 @@ import java.util.List;
 import java.util.Map;
 
 
-import static com.centanet.hk.aplus.common.CommandField.DialogType.STATUS;
 import static com.centanet.hk.aplus.common.CommandField.PriceType.SALE;
 import static com.centanet.hk.aplus.Utils.net.HttpUtil.URL_CANCELFAVO;
 import static com.centanet.hk.aplus.Utils.net.HttpUtil.URL_FAVORITE;
@@ -63,11 +61,15 @@ import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SE
 import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SEARCH_HISTORY_SAVE;
 import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SEARCH_LABEL;
 import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SEARCH_UNIT;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.FavoState.HOUSE_FAVO;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.FavoState.HOUSE_FAVO_CANCEL;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.HouseListDataCount.HOUSELIST_COUNT;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.HouseListRemove.HOUSE_CANCE_FAVO;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.NetWorkState.NETWORK_STATE_FAIL;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.NetWorkState.NETWORK_STATE_SUCCESS;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.HOUSELIST;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.Permission.HOUSELIST_NO;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.ReFreshDataState.DATA_END;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.RefreshView.VIEW_LOAD_START;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.RefreshView.VIEW_REFRESH_START;
 
@@ -76,55 +78,49 @@ import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.RefreshView.VIEW_REFRES
  * Created by mzh1608258 on 2018/1/2.
  */
 
-public class HouseListFragment extends Fragment implements IHouseListFragment, View.OnClickListener {
+public class HouseListFragment extends BaseHouseFragment implements IHouseListFragment, View.OnClickListener {
 
     private final String thiz = getClass().getSimpleName();
     private View view;
     private ListView lv;
     private ItemAdapter adapter;
-    private View status, price, more, sort;
-    private TextView search, currentPosition;
-    private static List<Properties> listData;
+    private View status, price, more, sort, mic;
+    private TextView search, currentPosition, reset;
+    private List<Properties> listData;
     private List<String> searchHistory;
     private IHouseListPresenter presenter;
     private RefreshLayout refreshLayout;
     private AHeaderDescription aHeaderDescription;
     private HouseDescription bodyDescription;
     private String houseCount = "0";
-    private boolean isFavorite = false;
-
-//    public static HouseListFragment newInstance(int pageType, String parentCategory) {
-//        HouseListFragment f = new HouseListFragment();
-//        Bundle b = new Bundle();
-//        b.putInt("pageType", pageType);
-//        b.putSerializable("parentCategory", parentCategory);
-//        f.setArguments(b);
-//        return f;
-//    }
-
+    private List<Integer> staSelectList;
+    public static String[] priceInterval;
+    private int priceType = SALE;
+    private int priceDialogSeletedId;
+    private int sortDialogSelectId;
+    private int refreshType = 0;
+    private CircleTipsView statusCircleTipsView;
+    private CircleTipsView complexTipsView;
+    private View complexDown;
+    private View statusDown;
+    private int position;
+    private boolean isFirst = true;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle args = getArguments();
-        if (args != null) {
-            isFavorite = args.getBoolean("isFavorite");
-        }
+        StatusBarCompat.setStatusBarColor(getActivity(), Color.parseColor("#BB2E2D"), false);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_productlist, null, false);
+        view = inflater.inflate(R.layout.fragment_houselist, null, false);
         if (view != null) {
             initViews();
             init();
             initListeners();
-            if (isFavorite) {
-                bodyDescription.setPropertyType(5);
-                openFreshView();
-            }
         }
         return view;
     }
@@ -137,7 +133,14 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
         sort = view.findViewById(R.id.fragment_presmises_sort);
         search = view.findViewById(R.id.fragment_presmises_search);
         currentPosition = view.findViewById(R.id.fragment_presmises_current_position);
+        statusCircleTipsView = view.findViewById(R.id.list_status_tip);
+        statusDown = view.findViewById(R.id.fragment_img_status_down);
+        complexTipsView = view.findViewById(R.id.list_complex_tip);
+        complexDown = view.findViewById(R.id.fragment_img_complex_down);
         refreshLayout = view.findViewById(R.id.smartLayout);
+        reset = view.findViewById(R.id.fragment_list_txt_reset);
+        mic = view.findViewById(R.id.houselist_img_mic);
+        refreshLayout.setEnableLoadmore(false);
     }
 
     private void init() {
@@ -145,19 +148,37 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
         aHeaderDescription = application.getHeaderDescription();
         bodyDescription = new HouseDescription();
         listData = new ArrayList<>();
+        staSelectList = new ArrayList<>();
         searchHistory = new ArrayList<>();
+        priceInterval = new String[2];
         adapter = new ItemAdapter(getActivity(), listData);
         adapter.setOnItemClickListener(new ItemAdapter.OnItemClickListener() {
             @Override
             public void onClick(View v, int position) {
+                HouseListFragment.this.position = position;
                 showFavoriteDialog(v, position);
             }
         });
         lv.setAdapter(adapter);
         presenter = new HouseListPresenter(this);
-        EventBus.getDefault().register(this);
+//        statusCircleTipsView.setText(6);
+//        statusCircleTipsView.setVisibility(View.VISIBLE);
         ClassicsFooter.REFRESH_FOOTER_LOADING = getString(R.string.loading_more);
-//        presenter.doPost(HttpUtil.URL_PARAMETER, aHeaderDescription, new ParameterDescription());
+        ClassicsHeader.REFRESH_HEADER_PULLDOWN = getString(R.string.pull_down_loading);
+        ClassicsHeader.REFRESH_HEADER_RELEASE = getString(R.string.pull_down_release);
+        ClassicsHeader.REFRESH_HEADER_REFRESHING = getString(R.string.updateing);
+        ClassicsHeader.REFRESH_HEADER_FINISH = getString(R.string.update_finish);
+        ClassicsFooter.REFRESH_FOOTER_PULLUP = getString(R.string.pull_up_loading);
+        ClassicsFooter.REFRESH_FOOTER_RELEASE = getString(R.string.pull_down_release);
+        ClassicsFooter.REFRESH_FOOTER_REFRESHING = getString(R.string.updateing);
+        ClassicsFooter.REFRESH_FOOTER_LOADING = getString(R.string.updateing);
+        ClassicsFooter.REFRESH_FOOTER_FINISH = getString(R.string.update_finish);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus.getDefault().register(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -168,42 +189,50 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
         sort.setOnClickListener(this);
         more.setOnClickListener(this);
         search.setOnClickListener(this);
+        reset.setOnClickListener(this);
+        mic.setOnClickListener(this);
 
-        lv.setOnScrollChangeListener(new View.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (houseCount.equals("0")) {
-                    currentPosition.setText("0/0");
-                } else {
-                    currentPosition.setText(lv.getFirstVisiblePosition() + 1 + "/" + houseCount);
-                }
+        lv.getViewTreeObserver().addOnScrollChangedListener(() -> {
+            if (houseCount.equals("0")) {
+                currentPosition.setText("0/0");
+            } else {
+                currentPosition.setText(lv.getFirstVisiblePosition() + 1 + "/" + houseCount);
             }
         });
 
-        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(RefreshLayout refreshlayout) {
-                listData.clear();
-                presenter.clearFlag();
-                presenter.doPost(HttpUtil.URL_PATH, aHeaderDescription, bodyDescription);
-            }
+        refreshLayout.setOnRefreshListener((refreshlayout) -> {
+            presenter.clearFlag();
+            refreshType = 0;
+            bodyDescription.setPageIndex(1);
+            presenter.doPost(HttpUtil.URL_PATH, aHeaderDescription, bodyDescription);
+            refreshlayout.setEnableLoadmore(true);
         });
-        refreshLayout.setOnLoadmoreListener(new OnLoadmoreListener() {
-            @Override
-            public void onLoadmore(RefreshLayout refreshlayout) {
-                bodyDescription.setPageIndex(listData.size() / 15 + 1);
-                presenter.doPost(HttpUtil.URL_PATH, aHeaderDescription, bodyDescription);
+
+        refreshLayout.setOnLoadmoreListener((refreshlayout) -> {
+            if (listData.size() == Integer.parseInt(houseCount)) {
+                refreshLayout.setEnableLoadmore(false);
+                refreshlayout.finishLoadmore(2000);
+                showEndTips();
+                return;
             }
+            refreshType = 1;
+            bodyDescription.setPageIndex(listData.size() / 15 + 1);
+            presenter.doPost(HttpUtil.URL_PATH, aHeaderDescription, bodyDescription);
         });
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if (refreshLayout.isRefreshing() || refreshLayout.isLoading()) return;
                 Intent intent = new Intent(getActivity(), DetailActicity.class);
                 intent.putExtra("keyId", listData.get(position).getKeyId());
                 startActivity(intent);
             }
         });
+    }
+
+    private void showEndTips() {
+        Toast.makeText(getActivity(), getString(R.string.no_more_data), Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -219,8 +248,13 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
                 startActivityForResult(intent, 0);
                 break;
             case R.id.fragment_presmises_more:
-                startActivity(new Intent(getContext(), ComplexSearchActivity.class));
+                Intent in = new Intent(getContext(), ComplexActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("operation", ApplicationManager.getHouseOperation());
+                in.putExtras(bundle);
+                startActivityForResult(in, 0);
                 break;
+
             case R.id.fragment_presmises_sort:
                 showSortDialog();
                 break;
@@ -230,42 +264,76 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
             case R.id.fragment_presmises_status:
                 showStatusDialog();
                 break;
+            case R.id.fragment_list_txt_reset:
+                reset();
+                break;
+            case R.id.houselist_img_mic:
+                Intent micIntent = new Intent(getContext(), SearchActivity.class);
+                micIntent.putExtra("mic", true);
+                if (!searchHistory.isEmpty()) {
+                    Bundle micBundle = new Bundle();
+                    micBundle.putStringArrayList(VIEW_SEARCH_HISTORY_SAVE, (ArrayList<String>) searchHistory);
+                    micIntent.putExtras(micBundle);
+                }
+                startActivityForResult(micIntent, 0);
+                break;
         }
     }
 
-    private void showStatusDialog() {
-        DialogFragment statusDialog = DialogFactory.newInstance(STATUS, new DialogFactory.IGetClickItem() {
-            @Override
-            public void getClickItem(DialogFragment dialog, String... items) {
-                dialog.dismiss();
-                List<String> statuList = new ArrayList<>();
-                for (int i = 0; i < DataManager.checkBoxSelecterList.size(); i++) {
-                    int index = DataManager.checkBoxSelecterList.get(i) - 1;//數據矯正
-                    index = index == -1 ? 0 : index;
-                    for (Map.Entry<String, String> entry : DataManager.parameter.get(index).entrySet()) {
-                        statuList.add(entry.getValue());
-                    }
-                }
-                bodyDescription.setPropertyStatus(statuList);
-                listData.clear();
-                openFreshView();
-            }
-        });
-        statusDialog.show(getFragmentManager(), "");
+    private void reset() {
+
+        complexTipsView.setVisibility(View.GONE);
+        complexDown.setVisibility(View.VISIBLE);
+        sortDialogSelectId = R.id.sort_rb_default;
+        priceDialogSeletedId = R.id.dialog_radiobtn_default;
+        staSelectList.clear();
+        statusDown.setVisibility(View.VISIBLE);
+        statusCircleTipsView.setVisibility(View.GONE);
+        ApplicationManager.setHouseOperation(new Operation());
+        search.setText(null);
+        priceInterval = new String[2];
+        searchHistory.clear();
+        bodyDescription = new HouseDescription();
+        openFreshView();
     }
 
+    private void showStatusDialog() {
+
+        StatusDialog statusEndDialog = new StatusDialog(ApplicationManager.getStatusText(), staSelectList);
+        statusEndDialog.setOnDialogOnclikeLisenter((v, viewID, viewList, content) -> {
+            v.dismiss();
+            staSelectList = viewList;
+            statusCircleTipsView.setText(viewList.size());
+            if (content == null) {
+//                statusCircleTipsView.setText(6);
+                statusDown.setVisibility(View.VISIBLE);
+                statusCircleTipsView.setVisibility(View.GONE);
+//                statusCircleTipsView.setVisibility(View.VISIBLE);
+            } else {
+                statusCircleTipsView.setVisibility(View.VISIBLE);
+                statusDown.setVisibility(View.GONE);
+            }
+            bodyDescription.setPropertyStatus(ApplicationManager.getStatusValue(content));
+            openFreshView();
+        });
+//        statusEndDialog.selectAllItem(true);
+        statusEndDialog.show(getFragmentManager(), "");
+    }
+
+
     private void showPriceDialog() {
-        PriceDialog priceDialog = new PriceDialog(DataManager.priceType, DataManager.priceDialogSeletedId, DataManager.priceInterval);
+        PriceDialog priceDialog = new PriceDialog(priceType, priceDialogSeletedId, priceInterval);
+
         priceDialog.setOnDialogClikeLisenter(new PriceDialog.onDialogOnclikeLisenter() {
 
             @Override
             public void onClike(Dialog dialog, int viewID, Map<String, Object> params) {
                 dialog.dismiss();
                 int type = (int) params.get(PriceDialog.PARAMS_TYPE);
-                DataManager.priceType = type;
-                DataManager.priceDialogSeletedId = (int) params.get(PriceDialog.PARAMS_SELECTID);
+                priceType = type;
+                priceDialogSeletedId = (int) params.get(PriceDialog.PARAMS_SELECTID);
                 String[] items = (String[]) params.get(PriceDialog.PARAMS_PRICE);
-                bodyDescription.setPageIndex(1);
+//                bodyDescription.setPageIndex(1);
                 if (items != null) {
                     if (type == SALE) {
                         bodyDescription.setSalePriceFrom(items[0] == "" ? null : items[0]);
@@ -278,9 +346,8 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
                         bodyDescription.setSalePriceFrom(null);
                         bodyDescription.setSalePriceTo(null);
                     }
-
-                    DataManager.priceInterval[0] = items[0];
-                    DataManager.priceInterval[1] = items[1];
+                    priceInterval[0] = items[0];
+                    priceInterval[1] = items[1];
                 }
                 openFreshView();
             }
@@ -289,13 +356,13 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
     }
 
     private void showSortDialog() {
-        SortDialog sortDialog = new SortDialog(DataManager.sortDialogSelectId);
+        SortDialog sortDialog = new SortDialog(sortDialogSelectId);
         sortDialog.setOnDialogClikeLisenter(new SortDialog.onDialogOnclikeLisenter() {
             @Override
             public void onClike(Dialog dialog, int viewID, Map<String, Object> params) {
                 dialog.dismiss();
-                bodyDescription.setPageIndex(1);
-                DataManager.sortDialogSelectId = (int) params.get(SortDialog.PARAMS_SELECTID);
+//                bodyDescription.setPageIndex(1);
+                sortDialogSelectId = (int) params.get(SortDialog.PARAMS_SELECTID);
                 bodyDescription.setAscending((Boolean) params.get(SortDialog.PARAMS_ASCENDING));
                 String sort = params.get(SortDialog.PARAMS_SORTFIELD) != null ? (String) params.get(SortDialog.PARAMS_SORTFIELD) : null;
                 bodyDescription.setSortField(sort);
@@ -313,16 +380,13 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
         final Properties data = listData.get(position);
         final FavoriteDescription favoriteDescription = new FavoriteDescription();
         final String address = data.isFavoriteFlag() == true ? URL_CANCELFAVO : URL_FAVORITE;
-        if (!data.isFavoriteFlag()) dialog.setTipString("收藏");
+        if (!data.isFavoriteFlag()) dialog.setTipString("加入收藏");
         favoriteDescription.setKeyId(data.getKeyId());
         dialog.setOnItemclickListener(new SimpleTipsDialog.OnItemClickListener() {
             @Override
             public void onClick(DialogFragment dialog, int type) {
                 if (type == SimpleTipsDialog.DIALOG_YES) {
                     presenter.doPost(address, aHeaderDescription, favoriteDescription);
-                    listData.get(position).setFavoriteFlag(!data.isFavoriteFlag());
-                    adapter.updateView(position, lv);
-//                    PermissionManager.set();
                 }
             }
         });
@@ -334,14 +398,15 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
     public void refreshListView() {
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadmore();
+        adapter.notifyDataSetChanged();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMoonEvent(MessageEventBus messageEvent) {
-        L.d(thiz, messageEvent.getMsg() + "");
         switch (messageEvent.getMsg()) {
             case NETWORK_STATE_FAIL:
-                //todo 失敗彈出提示框
+                closeRefresh();
+                onFailure();
                 break;
             case NETWORK_STATE_SUCCESS:
                 refreshListView();
@@ -361,14 +426,37 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
             case HOUSELIST_NO:
                 showNoPermissionDialog();
                 break;
+            case DATA_END:
+                refreshLayout.setEnableLoadmore(false);
+                showEndTips();
+                break;
+            case HOUSE_CANCE_FAVO:
+                String key = (String) messageEvent.getObject();
+                int index = isExise(key);
+                if (index != -1)
+                    adapter.updateView(index, lv, false);
+                break;
         }
         closeRefresh();
     }
 
+    private int isExise(String s) {
+        if (listData != null && !listData.isEmpty()) {
+            for (int i = 0; i < listData.size(); i++) {
+                if (listData.get(i).getKeyId().equals(s))
+                    return i;
+            }
+        }
+        return -1;
+    }
+
     private void setCountTxt(MessageEventBus messageEvent) {
         houseCount = (String) messageEvent.getObject();
-        if (houseCount.equals("0")) return;
-//        currentPosition.setText("1" + "/" + houseCount);
+        if (houseCount.equals("0")) {
+            currentPosition.setVisibility(View.GONE);
+            return;
+        }
+        currentPosition.setVisibility(View.VISIBLE);
     }
 
     private void closeRefresh() {
@@ -377,23 +465,30 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
-        EventBus.getDefault().unregister(this);
         if (listData != null) listData.clear();
         listData = null;
     }
 
     @Override
     public void refreshListData(List<Properties> properties) {
+        if (refreshType == 0) listData.clear();
         listData.addAll(properties);
-//        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void openFreshView() {
         if (refreshLayout.isRefreshing()) return;
         if (refreshLayout.isLoading()) return;
+        if (!listData.isEmpty()) lv.post(() -> lv.setSelection(0));
+        //todo 修改listView定位
         refreshLayout.autoRefresh();
     }
 
@@ -401,6 +496,34 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
     public void openLoadView() {
         if (refreshLayout.isLoading()) return;
         refreshLayout.autoLoadmore();
+    }
+
+    @Override
+    public void onFailure() {
+        if (!isVisible) return;
+        SimpleTipsDialog tipsDialog = new SimpleTipsDialog();
+        tipsDialog.setContentString(getString(R.string.network_unenable));
+        tipsDialog.setLeftBtnVisibility(false);
+        tipsDialog.show(getFragmentManager(), "");
+    }
+
+    @Override
+    public void setCancelFavo() {
+        changeFavoStatu(false);
+        Properties house = listData.get(position);
+        EventBus.getDefault().post(new MessageEventBus(HOUSE_FAVO_CANCEL, house.getKeyId()));
+        listData.get(position).setFavoriteFlag(false);
+    }
+
+    @Override
+    public void setFavo() {
+        changeFavoStatu(true);
+        EventBus.getDefault().post(new MessageEventBus(HOUSE_FAVO, listData.get(position)));
+        listData.get(position).setFavoriteFlag(true);
+    }
+
+    private void changeFavoStatu(final boolean b) {
+        getActivity().runOnUiThread(() -> adapter.updateView(position, lv, b));
     }
 
     @Override
@@ -413,219 +536,78 @@ public class HouseListFragment extends Fragment implements IHouseListFragment, V
         SimpleTipsDialog simpleTipsDialog = new SimpleTipsDialog();
         simpleTipsDialog.setContentString(getString(R.string.dialog_tips_permission_no_houselist));
         simpleTipsDialog.setLeftBtnVisibility(false);
-        simpleTipsDialog.show(getFragmentManager(), "");
         closeRefresh();
+        if (!isVisible) return;
+        simpleTipsDialog.show(getFragmentManager(), "");
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == 1) {
-            if (data != null) {
-                Bundle bundle = data.getExtras();
-                List<String> addressList = new ArrayList<>();
-                String condition = bundle.getString(SearchActivity.VIEW_SEARCH_KEY_TYPE);
-                if (condition != null) {
-                    searchHistory.clear();
-                    for (String address : condition.split("/")) {
-                        searchHistory.add(address.split(":")[1]);
-                        addressList.add(address);
+        switch (resultCode) {
+            case 1:
+                if (data != null) {
+                    Bundle bundle = data.getExtras();
+                    List<String> addressList = new ArrayList<>();
+                    String condition = bundle.getString(SearchActivity.VIEW_SEARCH_KEY_TYPE);
+                    if (condition != null) {
+                        searchHistory.clear();
+                        for (String address : condition.split("/")) {
+                            searchHistory.add(address.split(":")[1]);
+                            addressList.add(address);
+                        }
+                        bodyDescription.setSearcherAddress(addressList);
                     }
-                    bodyDescription.setSearcherAddress(addressList);
+                    String label = bundle.getString(VIEW_SEARCH_LABEL);
+                    if (label != null) search.setText(label);
+                    bodyDescription.setFloors(bundle.getString(VIEW_SEARCH_FLOOT));
+                    bodyDescription.setUnits(bundle.getString(VIEW_SEARCH_UNIT));
+                    openFreshView();
+                } else {
+                    search.setText(null);
+                    searchHistory.clear();
+                    bodyDescription.setSearcherAddress(null);
+                    bodyDescription.setFloors(null);
+                    bodyDescription.setUnits(null);
+                    openFreshView();
                 }
-                String label = bundle.getString(VIEW_SEARCH_LABEL);
-                if (label != null) search.setText(label);
-                bodyDescription.setFloors(bundle.getString(VIEW_SEARCH_FLOOT));
-                bodyDescription.setUnits(bundle.getString(VIEW_SEARCH_UNIT));
-                openFreshView();
-            } else {
-                search.setText(null);
-                searchHistory.clear();
-                bodyDescription.setSearcherAddress(null);
-                bodyDescription.setFloors(null);
-                bodyDescription.setUnits(null);
-                openFreshView();
-            }
-        }
-    }
+                break;
 
-    private static class ItemAdapter extends BaseAdapter implements View.OnClickListener {
-
-        private Context context;
-        private OnItemClickListener mOnItemClickListener;
-        private int mPosition;
-//        private List<Properties> dataList;
-
-        ItemAdapter(Context context, List<Properties> data) {
-            //todo 存在一個問題 爲何使用EventBus會導致listData指向不一致
-            this.context = context;
-//            dataList = data;
-        }
-
-        @Override
-        public int getCount() {
-            if (listData.size() != 0) return listData.size();
-            return 0;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            return initView(position, convertView, parent);
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (mOnItemClickListener != null) mOnItemClickListener.onClick(v, (int) v.getTag());
-        }
-
-        public View initView(int position, View convertView, ViewGroup parent) {
-            View view;
-            final ViewHolder viewHolder;
-            if (convertView == null) {
-                view = LayoutInflater.from(context).inflate(R.layout.item_resultitem, parent, false);
-                viewHolder = new ViewHolder();
-                viewHolder.iconView = view.findViewById(R.id.item_resultitem_heart_img);
-                viewHolder.iconView.setOnClickListener(this);
-                viewHolder.iconView.setTag(position);
-                viewHolder.resultView = view.findViewById(R.id.item_result_ico);
-                viewHolder.buildTxt = view.findViewById(R.id.item_result_name);
-                viewHolder.tipsTxt = view.findViewById(R.id.item_tips_txt);
-                viewHolder.rentTxt = view.findViewById(R.id.item_result_rent);
-                viewHolder.dateTxt = view.findViewById(R.id.item_sell_date_txt);
-                viewHolder.ssdTxt = view.findViewById(R.id.item_icon_ssd);
-
-                viewHolder.priceTxt = view.findViewById(R.id.item_result_price);
-                viewHolder.codeTxt = view.findViewById(R.id.item_result_code);
-                viewHolder.placeTxt = view.findViewById(R.id.item_peace_txt);
-                viewHolder.useTxt = view.findViewById(R.id.item_user_txt);
-                viewHolder.useRveSaleTxt = view.findViewById(R.id.item_user_rev_sale_txt);
-                viewHolder.useRveRentTxt = view.findViewById(R.id.item_user_rev_rent_txt);
-                viewHolder.directionTxt = view.findViewById(R.id.item_HouseDirection_txt);
-                viewHolder.reallyTxt = view.findViewById(R.id.item_really_txt);
-                viewHolder.reallyRveRentTxt = view.findViewById(R.id.item_really_rev_rent_txt);
-                viewHolder.reallyRveSaleTxt = view.findViewById(R.id.item_really_rev_sale_txt);
-
-                viewHolder.iconHot = view.findViewById(R.id.item_icon_hot);
-                viewHolder.iconKey = view.findViewById(R.id.item_icon_key);
-                viewHolder.iconO = view.findViewById(R.id.item_icon_o);
-                viewHolder.iconL = view.findViewById(R.id.item_icon_l);
-                viewHolder.iconD = view.findViewById(R.id.item_icon_d);
-                viewHolder.iconSingle = view.findViewById(R.id.item_icon_medal);
-                viewHolder.iconFavo = view.findViewById(R.id.item_icon_favo);
-
-                view.setTag(viewHolder);
-            } else {
-                view = convertView;
-                viewHolder = (ViewHolder) view.getTag();
-                viewHolder.iconView.setTag(position);
-            }
-            if (!listData.isEmpty()) {
-                Properties properties = listData.get(position);
-                viewHolder.codeTxt.setText(properties.getPropertyNo());
-                viewHolder.buildTxt.setText(properties.getBuildingName());
-                viewHolder.tipsTxt.setText(properties.getPrompt());
-                viewHolder.rentTxt.setText(properties.getRentPrice());
-                viewHolder.priceTxt.setText(properties.getSalePrice());
-                viewHolder.dateTxt.setText(properties.getRegisterDate());
-                viewHolder.placeTxt.setText(properties.getPropertyInterval());
-                viewHolder.reallyTxt.setText(properties.getSquareFoot());
-                viewHolder.useRveSaleTxt.setText(properties.getActualSalePriceUnit());
-                viewHolder.useRveRentTxt.setText(properties.getActualRentPriceUnit());
-                viewHolder.directionTxt.setText(properties.getHouseDirection());
-                viewHolder.reallyRveSaleTxt.setText(properties.getSalePriceUnit());
-                viewHolder.reallyRveRentTxt.setText(properties.getRentPriceUnit());
-                viewHolder.useRveRentTxt.setText(properties.getRentPriceUnit());
-                String useSquare = properties.getSquareUseFoot();
-                String useSquareNum = properties.getSquareUseSourceNum();
-                if (useSquareNum != null && useSquareNum.equals("10"))
-                    viewHolder.useTxt.setText(TextUtil.changeTextColor(useSquare, Color.BLUE + ""));
-                else if (useSquareNum == null || !useSquareNum.equals("10"))
-                    viewHolder.useTxt.setText(useSquare);
-
-                viewHolder.iconSingle.setSelected(properties.isOnlyTrust());
-                viewHolder.iconFavo.setSelected(properties.isFavoriteFlag());
-                viewHolder.iconView.setSelected(properties.isFavoriteFlag());
-                viewHolder.iconO.setSelected(properties.isODish());
-                viewHolder.iconKey.setImageLevel(properties.getPropertyKeyEnum());
-
-                viewHolder.iconHot.setSelected(properties.getHotList() == null ? false : true);
-                viewHolder.iconL.setSelected(properties.getIsConfirmed() == null ? false : true);
-                viewHolder.iconD.setSelected(properties.getDevelopmentEndCredits() == null ? false : true);
-                if (properties.getSSDType() != 0) {
-                    viewHolder.ssdTxt.setVisibility(View.VISIBLE);
-                    int per = 5 * properties.getSSDType();
-                    if (properties.getSSDType() == 1) per = 0;
-                    viewHolder.ssdTxt.setText(per + "%");
+            case 2:
+                Bundle bundle = data.getExtras();
+                HouseDescription description = (HouseDescription) bundle.get("body");
+                int count = 0;
+                if (description != null) {
+                    try {
+                        count = ItemCountUtil.count(description);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (count == 0 || count == -1) {
+                        complexTipsView.setVisibility(View.GONE);
+                        complexDown.setVisibility(View.VISIBLE);
+                    } else {
+                        complexTipsView.setVisibility(View.VISIBLE);
+                        complexTipsView.setText(count);
+                        complexDown.setVisibility(View.GONE);
+                    }
+                    description.setPropertyStatus(bodyDescription.getPropertyStatus());
+                    description.setRentPriceFrom(bodyDescription.getRentPriceFrom());
+                    description.setRentPriceTo(bodyDescription.getRentPriceTo());
+                    description.setSalePriceFrom(bodyDescription.getSalePriceFrom());
+                    description.setSalePriceTo(bodyDescription.getSalePriceTo());
+                    bodyDescription = description;
+                    openFreshView();
                 }
-                int level = 1;
-                setIconViewLevel(level, viewHolder, properties.getPropertyStatus());
-            }
-            return view;
-        }
+                Operation operation = (Operation) bundle.get("operation");
+                ApplicationManager.setHouseOperation(operation);
+                break;
 
-        private void setIconViewLevel(int level, ViewHolder viewHolder, String properties) {
-            switch (properties.substring(0, 1)) {
-                case "N":
-                    level = 1;
-                    break;
-                case "P":
-                    level = 2;
-                    break;
-                case "S":
-                    level = 6;
-                    break;
-                case "T":
-                    level = 4;
-                    break;
-                case "G":
-                    level = 5;
-                    break;
-                default:
-                    level = 3;
-                    break;
-            }
-            viewHolder.resultView.setImageLevel(level);
-        }
-
-
-        public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
-            this.mOnItemClickListener = mOnItemClickListener;
-        }
-
-        private class ViewHolder {
-            ImageView iconView, resultView;
-            TextView buildTxt, placeTxt, codeTxt, priceTxt, rentTxt, tipsTxt, dateTxt, ssdTxt;
-            TextView directionTxt, useTxt, useRveSaleTxt, useRveRentTxt, reallyTxt, reallyRveSaleTxt, reallyRveRentTxt;
-            ImageView iconHot, iconKey, iconO, iconL, iconD, iconSingle, iconFavo;
-        }
-
-        public void updateView(int position, ListView listView) {
-            int visibleFirstPosi = listView.getFirstVisiblePosition();
-            int visibleLastPosi = listView.getLastVisiblePosition();
-            if (position >= visibleFirstPosi && position <= visibleLastPosi) {
-                View view = listView.getChildAt(position - visibleFirstPosi);
-                ViewHolder holder = (ViewHolder) view.getTag();
-                holder.iconView.setSelected(!holder.iconView.isSelected());
-            }
-        }
-
-        @Override
-        public void notifyDataSetChanged() {
-            super.notifyDataSetChanged();
-        }
-
-        public interface OnItemClickListener {
-            void onClick(View v, int position);
+            case 3:
+                complexTipsView.setVisibility(View.GONE);
+                complexDown.setVisibility(View.VISIBLE);
+                ApplicationManager.setHouseOperation(new Operation());
+                break;
         }
     }
 }

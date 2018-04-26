@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <com.centanet.hk.aplus.Widgets.TitleBar
@@ -15,14 +16,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@android:color/white"
         android:orientation="horizontal"
         android:padding="13dp">
 
         <ImageView
             android:id="@+id/feedback_icon_statu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ico_active" />
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -35,7 +36,6 @@
                 android:id="@+id/feedback_txt_ch_housename"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="海灣豪庭1期1座A座"
                 android:maxLines="2"
                 android:textColor="@color/color_itemt_detail_title"
                 android:textSize="@dimen/themeSizeplus"
@@ -46,7 +46,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
-                android:text="METRO HARBOUR VIEW PHASE 1 TOWER 1"
                 android:textColor="@color/color_itemt_result_text"
                 android:textSize="@dimen/themeSize" />
         </LinearLayout>
@@ -70,7 +69,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingTop="2dp"
-                android:visibility="invisible"
+                android:visibility="visible"
                 android:text="地址詳情"
                 android:textColor="@color/colorBackground"
                 android:textSize="@dimen/themeSizesmall" />
@@ -81,6 +80,7 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@android:color/white"
         android:layout_marginBottom="40dp">
 
         <ImageView
@@ -176,7 +176,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginRight="17dp"
             android:layout_marginTop="11dp"
-            android:text="暫無樓主" />
+            android:text="" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -190,6 +190,10 @@
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="@drawable/shape_line_shade_up_to_down"/>
 
     <View
         android:layout_width="match_parent"
@@ -200,13 +204,13 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
+        android:background="@drawable/layer_rim_line"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="2"
-            android:background="@color/colorBackground"
             android:orientation="vertical">
 
             <TextView
@@ -241,8 +245,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFFFFF">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/feedback_text_no_listen"
@@ -326,6 +329,7 @@
                 android:textSize="@dimen/themeSizesmall"/>
 
             <ImageView
+                android:id="@+id/follow_img_mic"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_alignParentRight="true"
@@ -340,5 +344,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/color_theme_item"
         android:layout_weight="3"></LinearLayout>
     </LinearLayout>

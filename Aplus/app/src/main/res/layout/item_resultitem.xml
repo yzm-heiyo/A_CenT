@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
+    android:background="@drawable/layer_rim_line"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -26,8 +26,9 @@
             android:layout_toRightOf="@+id/item_result_ico"
             android:ellipsize="end"
             android:paddingLeft="10dp"
+            android:layout_toLeftOf="@id/item_resultitem_heart_img"
             android:singleLine="true"
-            android:text="柏景灣1期A座"
+            android:text=""
             android:textSize="@dimen/themeSizeplus"
             android:textStyle="bold" />
 
@@ -55,7 +56,7 @@
             android:background="@drawable/shape_item_search_btn"
             android:paddingLeft="6dp"
             android:paddingRight="6dp"
-            android:text="SWO530"
+            android:text=""
             android:textColor="@color/colorBackground"
             android:textSize="@dimen/themeSize" />
 
@@ -74,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/item_result_wan"
-            android:text="600"
+            android:text=""
             android:textColor="#BB2E2D"
             android:textSize="14dp" />
 
@@ -95,14 +96,14 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="90dp"
             android:text="租"
-            android:textColor="#BB2E2D" />
+            android:textColor="#bb842d" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toLeftOf="@id/item_result_rent"
             android:text="$"
-            android:textColor="#BB2E2D"
+            android:textColor="#bb842d"
             android:textSize="14dp" />
 
         <TextView
@@ -111,8 +112,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"
-            android:text="15000"
-            android:textColor="#BB2E2D"
+            android:text=""
+            android:textColor="#bb842d"
             android:textSize="14dp" />
 
     </RelativeLayout>
@@ -161,7 +162,6 @@
             android:layout_marginLeft="2dp"
             android:layout_marginTop="7dp"
             android:layout_toRightOf="@id/item_question"
-            android:text="101010101"
             android:textSize="12dp" />
 
         <TextView
@@ -180,7 +180,7 @@
             android:layout_marginLeft="2dp"
             android:layout_marginTop="7dp"
             android:layout_toRightOf="@id/item_user"
-            android:text="320呎"
+            android:text=""
             android:textSize="12dp" />
 
         <TextView
@@ -208,7 +208,7 @@
             android:layout_marginRight="2dp"
             android:layout_marginTop="7dp"
             android:layout_toLeftOf="@id/item_use_rent_chi"
-            android:text="88"
+            android:text=""
             android:textSize="12dp" />
 
         <TextView
@@ -238,7 +238,6 @@
             android:layout_marginRight="2dp"
             android:layout_marginTop="7dp"
             android:layout_toLeftOf="@id/item_user_rev_sale_chi"
-            android:text="18,750"
             android:textSize="12dp" />
 
         <TextView
@@ -282,7 +281,7 @@
             android:layout_marginLeft="2dp"
             android:layout_marginTop="2dp"
             android:layout_toRightOf="@id/item_really"
-            android:text="477呎"
+            android:text=""
             android:textSize="12dp" />
 
         <TextView
@@ -311,7 +310,7 @@
             android:layout_marginRight="2dp"
             android:layout_marginTop="2dp"
             android:layout_toLeftOf="@id/item_really_rev_sale_chi"
-            android:text="18,750"
+            android:text=""
             android:textSize="12dp" />
 
         <TextView
@@ -340,7 +339,7 @@
             android:layout_marginRight="2dp"
             android:layout_marginTop="2dp"
             android:layout_toLeftOf="@id/item_really_rev_rent_chi"
-            android:text="44"
+            android:text=""
             android:textSize="12dp" />
 
         <TextView
@@ -461,15 +460,15 @@
             android:layout_marginBottom="8dp"
             android:layout_marginRight="17dp"
             android:layout_marginTop="11dp"
-            android:text="2017-11-11"
             android:textColor="#7EC5BC" />
     </RelativeLayout>
 
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/colorline" />
+        android:layout_height="1dp"
+        android:layout_marginLeft="11dp"
+        android:background="#EFEFEF" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -482,7 +481,7 @@
             android:layout_marginBottom="11dp"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="5dp"
-            android:text="提示:"
+            android:text="提示"
             android:textColor="@color/colortheme" />
 
         <TextView
@@ -493,7 +492,6 @@
             android:layout_marginTop="5dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="業主方便睇樓時間 19:00-23:00"
             android:textColor="@color/color_itemt_result_text" />
 
 

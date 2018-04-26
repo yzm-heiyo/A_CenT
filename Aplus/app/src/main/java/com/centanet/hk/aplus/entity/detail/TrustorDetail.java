@@ -20,6 +20,11 @@ public class TrustorDetail {
     private String DetailsCreator;
     private String DetailsUpdateTime;
     private String DetailsUpdator;
+    private String KeyId;
+
+    public void setKeyId(String keyId) {
+        KeyId = keyId;
+    }
 
     public void setPropertyKeyId(String propertyKeyId) {
         PropertyKeyId = propertyKeyId;
@@ -79,6 +84,10 @@ public class TrustorDetail {
 
     public String getPropertyKeyId() {
         return PropertyKeyId;
+    }
+
+    public String getKeyId() {
+        return KeyId;
     }
 
     public String getTrustorKeyId() {

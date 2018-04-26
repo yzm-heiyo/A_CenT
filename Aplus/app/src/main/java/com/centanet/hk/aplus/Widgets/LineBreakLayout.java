@@ -7,6 +7,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.R;
@@ -35,7 +37,6 @@ public class LineBreakLayout extends ViewGroup implements View.OnClickListener {
     //自定义属性
     private int LEFT_RIGHT_SPACE; //左右距离
     private int ROW_SPACE;//行间距
-
 
     public LineBreakLayout(Context context) {
         this(context, null);
@@ -69,7 +70,6 @@ public class LineBreakLayout extends ViewGroup implements View.OnClickListener {
     public void setItemOnclickListener(LineBreakLayout.onItemOnclickListener itemOnclickListener) {
         mOnClickListener = itemOnclickListener;
     }
-
 
     /**
      * 設置行間据
@@ -116,13 +116,40 @@ public class LineBreakLayout extends ViewGroup implements View.OnClickListener {
      * @param itemText
      */
     public void addItem(String itemText) {
-        L.d(thiz, "additem");
         LayoutInflater inflater = LayoutInflater.from(getContext());
         if (!TextUtils.isEmpty(itemText)) {
             View view = inflater.inflate(contentLayoutID, null);
             view.setOnClickListener(this);
             TextView tv = view.findViewById(R.id.item_label_text);
             tv.setText(itemText);
+
+            tv.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                private boolean isFirst = true;
+
+                @Override
+                public void onGlobalLayout() {
+                    if (isFirst) {
+                        if (tv.getWidth() > getWidth() ) {
+                            ViewGroup.LayoutParams layoutParams = new LinearLayout.LayoutParams(getWidth(), tv.getHeight());
+                            tv.setLayoutParams(layoutParams);
+                        }
+                        isFirst = false;
+                    }
+                }
+            });
+
+//            view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                @Override
+//                public void onGlobalLayout() {
+//                    L.d("search",view.getWidth()+"   "+getWidth());
+//                    if (view.getWidth() > getWidth() - 20) {
+//                        ViewGroup.LayoutParams layoutParams = new LinearLayout.LayoutParams(getWidth()-100, tv.getHeight());
+//                        view.setLayoutParams(layoutParams);
+//                        L.d("viewWidth",view.getWidth()+"");
+//                    }
+//                }
+//            });
+
             this.addView(view);
         }
     }
@@ -197,6 +224,7 @@ public class LineBreakLayout extends ViewGroup implements View.OnClickListener {
         int row = 0;
         int right = 0;   // 标签相对于布局的右侧位置
         int botom;       // 标签相对于布局的底部位置
+
         for (int i = 0; i < getChildCount(); i++) {
             View childView = getChildAt(i);
             int childW = childView.getMeasuredWidth();

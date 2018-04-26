@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="30dp"
     android:background="@drawable/selector_label_search">
@@ -9,22 +9,27 @@
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:background="@android:color/transparent"
-        android:gravity="center"
         android:paddingBottom="5dp"
         android:paddingLeft="13dp"
         android:paddingTop="5dp"
+        android:gravity="center"
         android:layout_alignParentTop="true"
         android:text="天台"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:textColor="#848484"
+        android:paddingRight="10dp"
+        android:drawablePadding="5dp"
+        android:drawableRight="@drawable/btn_clear_search_citeria"
         android:textSize="14dp"></TextView>
 
-    <ImageView
-        android:layout_toRightOf="@id/item_label_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="9dp"
-        android:layout_marginRight="11dp"
-        android:layout_centerVertical="true"
-        android:background="@drawable/btn_clear_search_citeria"/>
+    <!--<ImageView-->
+        <!--android:id="@+id/item_label_del"-->
+        <!--android:layout_width="14dp"-->
+        <!--android:layout_height="14dp"-->
+        <!--android:layout_marginLeft="9dp"-->
+        <!--android:layout_marginRight="11dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:background="@drawable/btn_clear_search_citeria"/>-->
 
-</RelativeLayout>
+</LinearLayout>
