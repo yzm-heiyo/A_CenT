@@ -110,7 +110,7 @@ public class MyApplication extends LitePalApplication {
                     }
                 } else {
                     //todo
-                    if (System.currentTimeMillis() - onBackTime >= 30 * 1000 * 60) {
+                    if (System.currentTimeMillis() - onBackTime >= 15 * 1000 * 60) {
                         isOutTime = true;
                         L.d("application", "isOutTime");
                     }
@@ -126,8 +126,8 @@ public class MyApplication extends LitePalApplication {
 
                     JobInfo.Builder builder = new JobInfo.Builder(1, jobService);
                     JobInfo jobInfo = builder
-                            .setMinimumLatency(30 * 60 * 1000)
-                            .setOverrideDeadline(30 * 60 * 1000)
+                            .setMinimumLatency(15 * 60 * 1000)
+                            .setOverrideDeadline(15 * 60 * 1000)
                             .build();
                     int state = scheduler.schedule(jobInfo);
                 } else {

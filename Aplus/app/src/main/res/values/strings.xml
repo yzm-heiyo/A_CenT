@@ -139,14 +139,10 @@
     <string name="dialog_tips_permission_clientinfo_no_look">你沒有查看「業主資料」權限，如有查詢請與系統管理員聯絡</string>
     <string name="dialog_tips_permission_clientinfo_no">當前沒有業主信息</string>
     <string name="dialog_tips_permission_follow_no">沒有找到相關數據</string>
-<<<<<<< HEAD
     <string name="dialog_tips_input_acc_pass">請輸入帳號或密碼</string>
     <string name="dialog_tips_detail_call">是否致電業主</string>
     <string name="dialog_tips_time_out">長時間沒有使用A+，請重新登入。</string>
     <string name="keyhouse">鎖匙號</string>
-=======
-    <string name="keyhouse">鑰匙號</string>
->>>>>>> ab0d6ae12bcc9ca42cab7c1819956596600b75a2
 
     <string name="more_title_moresearch">更多篩選</string>
 

@@ -76,7 +76,11 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
     }
 
     public void setSeletList(List<Integer> seletList) {
-        if (seletList == null && !seletList.isEmpty()) return;
+        L.d("statusSelect", seletList.size() + "");
+        if (seletList == null || seletList.isEmpty()) {
+            ((CheckBox) findViewById(R.id.dialog_status_all)).setChecked(true);
+            return;
+        }
         this.seletList = seletList;
         setSaveStatus();
     }
@@ -98,8 +102,8 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
     }
 
     //清除底部
-    public void clearOtherItem(boolean selectAll) {
-        L.d(thiz, "method: selectAllItem");
+    public void clearTop(boolean selectAll) {
+        L.d(thiz, "method: clearTop");
         int count = this.getChildCount();
 
 
@@ -114,7 +118,7 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
 
     //清楚不限
     public void cleanDown(boolean selectAll) {
-        L.d(thiz, "method: selectAllItem");
+        L.d(thiz, "method: cleanDown");
         int count = this.getChildCount();
         for (int i = 1; i < count; i++) {
             View view = getChildAt(i);
@@ -197,14 +201,14 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
             case R.id.dialog_status_P:
             case R.id.dialog_status_WT:
             case R.id.dialog_status_G:
-//                isSelectAll();
-                clearOtherItem(true);
-                getCheck(view);
-                break;
-
             case R.id.dialog_status_search:
+
+//                isSelectAll();
+                clearTop(true);
+                getCheck(view);
                 if (onItemClick != null) onItemClick.onClick(view, view.getId(), seletList, -1);
                 break;
+
             default:
                 break;
         }

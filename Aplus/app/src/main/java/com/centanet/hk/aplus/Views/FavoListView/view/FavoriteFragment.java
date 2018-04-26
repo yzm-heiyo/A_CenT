@@ -276,7 +276,7 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
         searchHistory.clear();
         bodyDescription = new HouseDescription();
         bodyDescription.setPropertyType(5);
-        openFreshView();
+//        openFreshView();
     }
 
     private void showStatusDialog() {

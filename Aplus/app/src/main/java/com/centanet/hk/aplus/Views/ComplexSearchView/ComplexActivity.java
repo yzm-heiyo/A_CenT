@@ -249,7 +249,6 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
                 if (key.equals(entry.getKey())) values.add(entry.getValue());
             }
         }
-
         return values;
     }
 

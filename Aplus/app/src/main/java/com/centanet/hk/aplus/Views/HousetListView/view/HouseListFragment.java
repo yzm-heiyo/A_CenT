@@ -21,6 +21,7 @@ import com.centanet.hk.aplus.Utils.ItemCountUtil;
 import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Views.ComplexSearchView.ComplexActivity;
 import com.centanet.hk.aplus.Views.Dialog.StatusDialog;
+import com.centanet.hk.aplus.Views.GooglevoiView;
 import com.centanet.hk.aplus.Views.HouseFragment.BaseHouseFragment;
 import com.centanet.hk.aplus.Views.LoginView.view.LoginActivity;
 import com.centanet.hk.aplus.Widgets.CircleTipsView;
@@ -268,7 +269,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
                 reset();
                 break;
             case R.id.houselist_img_mic:
-                Intent micIntent = new Intent(getContext(), SearchActivity.class);
+                Intent micIntent = new Intent(getContext(), GooglevoiView.class);
                 micIntent.putExtra("mic", true);
                 if (!searchHistory.isEmpty()) {
                     Bundle micBundle = new Bundle();
@@ -294,7 +295,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
         priceInterval = new String[2];
         searchHistory.clear();
         bodyDescription = new HouseDescription();
-        openFreshView();
+//        openFreshView();
     }
 
     private void showStatusDialog() {
@@ -302,6 +303,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
         StatusDialog statusEndDialog = new StatusDialog(ApplicationManager.getStatusText(), staSelectList);
         statusEndDialog.setOnDialogOnclikeLisenter((v, viewID, viewList, content) -> {
             v.dismiss();
+            L.d("statusClick","");
             staSelectList = viewList;
             statusCircleTipsView.setText(viewList.size());
             if (content == null) {

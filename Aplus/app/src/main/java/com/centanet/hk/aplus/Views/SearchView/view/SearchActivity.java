@@ -270,12 +270,13 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
     }
 
     public void showVoiceInputPanel() {
-        if (Build.VERSION.SDK_INT >= 23)
+        VoiceInputPanel.show(this, false, this);
+        if (Build.VERSION.SDK_INT >= 23) {
             if (ContextCompat.checkSelfPermission(SearchActivity.this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
                 this.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
                         1);
             }
-        VoiceInputPanel.show(this, false, this);
+        }
     }
 
     private void showSelectCondition() {
