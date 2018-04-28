@@ -57,6 +57,7 @@ public class MyApplication extends LitePalApplication {
 
     private SystemParam labelSystenParam;
 
+
     private Map<String, String> statusParams;
 
     private Map<String, String> statusCodes;
@@ -153,7 +154,6 @@ public class MyApplication extends LitePalApplication {
     public void setSsoHeaderDescription(SSOHeaderDescription ssoHeaderDescription) {
         this.ssoHeaderDescription = ssoHeaderDescription;
     }
-
 
     public int getUpdateType() {
         return updateType;

@@ -105,7 +105,7 @@ public class LoginPresent implements ILoginPresent {
 
         @Override
         public void isNeedUpdate(String updateUrl, boolean isForceUpdate) {
-            loginView.setUpdateUrl(updateUrl,isForceUpdate);
+            loginView.setUpdateUrl(updateUrl, isForceUpdate);
         }
     };
 
@@ -126,5 +126,10 @@ public class LoginPresent implements ILoginPresent {
     public void doGet(String address, Object header) {
 //        ((SSOHeaderDescription)header).setUdid(loginModel.getUniquePsuedoID());
 //        loginModel.doGet(address,header,null);
+    }
+
+    @Override
+    public void isRoot() {
+        loginView.isRoot(loginModel.isRoot());
     }
 }

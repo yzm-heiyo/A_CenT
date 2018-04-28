@@ -15,4 +15,11 @@ public interface ILoginModel {
      * @return
      */
     String getUniquePsuedoID();
+
+    /**
+     * 檢測手機是否已經Root
+     *
+     * @return
+     */
+    boolean isRoot();
 }

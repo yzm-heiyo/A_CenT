@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
@@ -45,10 +47,15 @@ public class LoginActivity extends LoginActivityAbst implements LoginActivityAbs
         intent = new Intent(this, MainActivity.class);
         present.doGet(HttpUtil.URL_UPDATE, new SSOHeaderDescription());
         if (Build.VERSION.SDK_INT < 23)
-            StatusBarCompat.setStatusBarColor(this, Color.parseColor("#BB2E2D"), true);
+            StatusBarCompat.setStatusBarColor(this, Color.parseColor("#BB2E2D"), false);
         else StatusBarCompat.setStatusBarColor(this, Color.WHITE, true);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        present.isRoot();
+    }
 
     @Override
     protected ILoginManager setLoginHelper() {
@@ -106,9 +113,28 @@ public class LoginActivity extends LoginActivityAbst implements LoginActivityAbs
     public void setUpdateUrl(String url, boolean isForceUpdate) {
     }
 
+    @Override
+    public void isRoot(boolean isRoot) {
+        if (isRoot) {
+//            finish();
+//            Toast.makeText(this, "手機已Root", Toast.LENGTH_SHORT).show();
+            SimpleTipsDialog dialog =DialogUtil.getSimpleDialog(getString(R.string.dialog_tips_root));
+            dialog.setDialogCancelOnTouchOutside(false);
+            dialog.ableToKeyBack(false);
+            dialog.setOnItemclickListener(new SimpleTipsDialog.OnItemClickListener() {
+                @Override
+                public void onClick(DialogFragment dialog, int type) {
+                    finish();
+                }
+            });
+            dialog.show(getSupportFragmentManager(), "");
+        } else Toast.makeText(this, "手機沒有Root", Toast.LENGTH_SHORT).show();
+    }
+
     private void saveAccount() {
         PreferenceUtils.addParams("account", account.trim());
     }
+
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {

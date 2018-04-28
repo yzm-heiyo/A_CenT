@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -79,6 +80,7 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
 
     private MyRadioGroup ssdRG;
     private RadioGroup priceRG, areaRG;
+    private CheckBox keyCb, greenTabCb;
 
     private Date completeDateStart, completeDateEnd, changeDateStart, changeDateEnd;
 
@@ -195,6 +197,9 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
 
         owner.setText(operation.getOwner());
         phone.setText(operation.getPhone());
+
+        greenTabCb.setChecked(operation.isGreenTabCheck());
+        keyCb.setChecked(operation.isKeyCheck());
     }
 
     //獲得類型參數選項内容
@@ -302,6 +307,9 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
         houseTag.setItemContentLayoutID(R.layout.item_complex_btn);
         houseTag.setLeftRightSpace(25);
         houseTag.setRowSpace(18);
+
+        greenTabCb = findViewById(R.id.complex_cb_green_tab_price);
+        keyCb = findViewById(R.id.complex_cb_key);
     }
 
 
@@ -553,6 +561,11 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
         if (!intervalList.isEmpty())
             description.setPropertyTypes(getValue(intervalValue, intervalList));
 
+        if (greenTabCb.isChecked())
+            description.setHasSalePricePremiumUnpaid(greenTabCb.isChecked());
+
+        if (keyCb.isChecked())
+            description.setHasPropertyKey(true);
 
         saveOperation();
 
@@ -567,6 +580,8 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
 
     private void saveOperation() {
         operation = new Operation();
+        operation.setGreenTabCheck(greenTabCb.isChecked());
+        operation.setKeyCheck(keyCb.isChecked());
         operation.setDirectionList(directionList);
         operation.setChangeDateStart(changeDateStart);
         operation.setChangeDateEnd(changeDateEnd);
@@ -622,6 +637,7 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
             public void onClick(Dialog v, int viewID, List<Integer> viewList, String[] content) {
                 v.dismiss();
                 staBeginSelectList = viewList;
+                L.d("statu",staBeginSelectList.toString());
                 statusBegin.setText(getSelectStatusText(content));
                 staValueBeginList = getStatusCodes(content);
             }
@@ -657,12 +673,12 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
         String statusStr = "";
         if (status != null && status.length != 0) {
             for (String str : status) {
-                if (str.equals("全部")) return "全部";
+                if (str.equals("不限")) return "不限";
                 statusStr = statusStr + str;
             }
             return statusStr;
         }
-        return "全部";
+        return "不限";
     }
 
     //設置日期

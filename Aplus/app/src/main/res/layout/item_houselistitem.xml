@@ -23,10 +23,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="11dp"
+            android:layout_toLeftOf="@id/item_resultitem_heart_img"
             android:layout_toRightOf="@+id/item_result_ico"
             android:ellipsize="end"
             android:paddingLeft="10dp"
-            android:layout_toLeftOf="@id/item_resultitem_heart_img"
             android:singleLine="true"
             android:text=""
             android:textSize="@dimen/themeSizeplus"
@@ -43,80 +43,83 @@
 
     </RelativeLayout>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="7dp">
+    <include layout="@layout/item_houselist_price"/>
 
-        <TextView
-            android:id="@+id/item_result_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/shape_item_search_btn"
-            android:paddingLeft="6dp"
-            android:paddingRight="6dp"
-            android:text=""
-            android:textColor="@color/colorBackground"
-            android:textSize="@dimen/themeSize" />
+    <!--<RelativeLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="7dp"-->
+        <!--android:visibility="visible">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/item_result_code"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginLeft="10dp"-->
+            <!--android:background="@drawable/shape_item_search_btn"-->
+            <!--android:paddingLeft="6dp"-->
+            <!--android:paddingRight="6dp"-->
+            <!--android:text=""-->
+            <!--android:textColor="@color/colorBackground"-->
+            <!--android:textSize="@dimen/themeSize" />-->
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="60dp"
-            android:layout_toLeftOf="@id/item_result_wan"
-            android:text="售"
-            android:textColor="#BB2E2D"
-            android:textSize="14dp" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginRight="60dp"-->
+            <!--android:layout_toLeftOf="@id/item_result_wan"-->
+            <!--android:text="售"-->
+            <!--android:textColor="#BB2E2D"-->
+            <!--android:textSize="14dp" />-->
 
-        <TextView
-            android:id="@+id/item_result_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/item_result_wan"
-            android:text=""
-            android:textColor="#BB2E2D"
-            android:textSize="14dp" />
+        <!--<TextView-->
+            <!--android:id="@+id/item_result_price"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_toLeftOf="@id/item_result_wan"-->
+            <!--android:text=""-->
+            <!--android:textColor="#BB2E2D"-->
+            <!--android:textSize="14dp" />-->
 
-        <TextView
-            android:id="@+id/item_result_wan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="21dp"
-            android:layout_toLeftOf="@id/item_rent"
-            android:text="萬"
-            android:textColor="#BB2E2D"
-            android:textSize="14dp" />
+        <!--<TextView-->
+            <!--android:id="@+id/item_result_wan"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginRight="21dp"-->
+            <!--android:layout_toLeftOf="@id/item_rent"-->
+            <!--android:text="萬"-->
+            <!--android:textColor="#BB2E2D"-->
+            <!--android:textSize="14dp" />-->
 
-        <TextView
-            android:id="@+id/item_rent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="90dp"
-            android:text="租"
-            android:textColor="#bb842d" />
+        <!--<TextView-->
+            <!--android:id="@+id/item_rent"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginRight="90dp"-->
+            <!--android:text="租"-->
+            <!--android:textColor="#bb842d" />-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/item_result_rent"
-            android:text="$"
-            android:textColor="#bb842d"
-            android:textSize="14dp" />
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_toLeftOf="@id/item_result_rent"-->
+            <!--android:text="$"-->
+            <!--android:textColor="#bb842d"-->
+            <!--android:textSize="14dp" />-->
 
-        <TextView
-            android:id="@+id/item_result_rent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"
-            android:text=""
-            android:textColor="#bb842d"
-            android:textSize="14dp" />
+        <!--<TextView-->
+            <!--android:id="@+id/item_result_rent"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_marginRight="15dp"-->
+            <!--android:text=""-->
+            <!--android:textColor="#bb842d"-->
+            <!--android:textSize="14dp" />-->
 
-    </RelativeLayout>
+    <!--</RelativeLayout>-->
 
 
     <LinearLayout
@@ -450,7 +453,7 @@
             android:layout_marginRight="95dp"
             android:layout_marginTop="11dp"
             android:text="@string/opendate"
-            android:textColor="#7EC5BC"/>
+            android:textColor="#7EC5BC" />
 
         <TextView
             android:id="@+id/item_sell_date_txt"

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.centanet.hk.aplus.MyApplication;
+import com.centanet.hk.aplus.Utils.DialogUtil;
 import com.centanet.hk.aplus.Utils.ItemCountUtil;
 import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Views.ComplexSearchView.ComplexActivity;
@@ -197,7 +198,12 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
             if (houseCount.equals("0")) {
                 currentPosition.setText("0/0");
             } else {
-                currentPosition.setText(lv.getFirstVisiblePosition() + 1 + "/" + houseCount);
+
+                int y = lv.getChildAt(0).getTop();
+                int item = lv.getFirstVisiblePosition() + 1;
+                if (y < -144) item++;
+                currentPosition.setText(item + "/" + houseCount);
+                L.d("height", y + "");
             }
         });
 
@@ -269,7 +275,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
                 reset();
                 break;
             case R.id.houselist_img_mic:
-                Intent micIntent = new Intent(getContext(), GooglevoiView.class);
+                Intent micIntent = new Intent(getContext(), SearchActivity.class);
                 micIntent.putExtra("mic", true);
                 if (!searchHistory.isEmpty()) {
                     Bundle micBundle = new Bundle();
@@ -288,6 +294,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
         sortDialogSelectId = R.id.sort_rb_default;
         priceDialogSeletedId = R.id.dialog_radiobtn_default;
         staSelectList.clear();
+//        adapter.setShowGreenTabView(false);
         statusDown.setVisibility(View.VISIBLE);
         statusCircleTipsView.setVisibility(View.GONE);
         ApplicationManager.setHouseOperation(new Operation());
@@ -303,7 +310,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
         StatusDialog statusEndDialog = new StatusDialog(ApplicationManager.getStatusText(), staSelectList);
         statusEndDialog.setOnDialogOnclikeLisenter((v, viewID, viewList, content) -> {
             v.dismiss();
-            L.d("statusClick","");
+            L.d("statusClick", "");
             staSelectList = viewList;
             statusCircleTipsView.setText(viewList.size());
             if (content == null) {
@@ -455,6 +462,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
     private void setCountTxt(MessageEventBus messageEvent) {
         houseCount = (String) messageEvent.getObject();
         if (houseCount.equals("0")) {
+            DialogUtil.getSimpleDialog(getString(R.string.house_no_find)).show(getFragmentManager(), "");
             currentPosition.setVisibility(View.GONE);
             return;
         }
@@ -491,6 +499,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
         if (refreshLayout.isLoading()) return;
         if (!listData.isEmpty()) lv.post(() -> lv.setSelection(0));
         //todo 修改listView定位
+        adapter.setShowGreenTabView(bodyDescription.getHasSalePricePremiumUnpaid());
         refreshLayout.autoRefresh();
     }
 
@@ -598,6 +607,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
                     description.setRentPriceTo(bodyDescription.getRentPriceTo());
                     description.setSalePriceFrom(bodyDescription.getSalePriceFrom());
                     description.setSalePriceTo(bodyDescription.getSalePriceTo());
+                    description.setSearcherAddress(bodyDescription.getSearcherAddress());
                     bodyDescription = description;
                     openFreshView();
                 }

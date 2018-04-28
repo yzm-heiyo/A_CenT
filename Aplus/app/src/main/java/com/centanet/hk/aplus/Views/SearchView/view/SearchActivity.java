@@ -79,7 +79,7 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
     private DataAdapter searchAdapter;
     private View mic;
 
-    private int viewType = VIEW_SEARCH;
+    private int viewType = VIEW_HISRORY;
     private String flootStr = "", unitsStr = "";
 
     AutoSearchDescription autoSearchDescription;

@@ -160,7 +160,7 @@ public class DetailModel extends BaseClass implements IDetailModel {
             e.printStackTrace();
         }
         if (follows.getPropertyFollows().size() < 5) isEnd = true;
-        delayNoticeBusMessage(DETAIL_FOLLOW, follows.getPropertyFollows());
+        notifyBusMessage(DETAIL_FOLLOW, follows.getPropertyFollows());
     }
 
     private void getAddressDetail(String dataBack) {

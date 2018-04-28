@@ -142,9 +142,12 @@
     <string name="dialog_tips_input_acc_pass">請輸入帳號或密碼</string>
     <string name="dialog_tips_detail_call">是否致電業主</string>
     <string name="dialog_tips_time_out">長時間沒有使用A+，請重新登入。</string>
+    <string name="dialog_tips_root">你不應在裝有盜版、破解版、僞造及／或未獲授權應用程式的流動設備或軟件保護被破解或已獲得流動設備的軟件作業系統最高權限的流動設備上（包括但不限於已「越獄 (jailbroken)」或「刷機 (rooted)」的流動設備）使用中原A+。</string>
     <string name="keyhouse">鎖匙號</string>
+    <string name="key">鎖匙</string>
 
     <string name="more_title_moresearch">更多篩選</string>
+    <string name="house_no_find">沒有找到相關數據</string>
 
     <string name="download">下载</string>
     <string name="network_unenable">網絡連接出現問題，請重新再試</string>

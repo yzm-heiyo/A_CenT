@@ -8,7 +8,7 @@ import java.util.List;
  * Created by yangzm4 on 2018/3/26.
  */
 
-public class Operation implements Serializable{
+public class Operation implements Serializable {
 
     private Date completeDateStart, completeDateEnd, changeDateStart, changeDateEnd;
     private int areaType = 2, priceType = 1;
@@ -34,6 +34,7 @@ public class Operation implements Serializable{
     private List<String> intervalList;
     private List<String> directionList;
     private List<String> houseTagList;
+    private boolean isGreenTabCheck, isKeyCheck;
     private int ssdSelectId;
 
     public void setCompleteDateStart(Date completeDateStart) {
@@ -191,6 +192,23 @@ public class Operation implements Serializable{
 
     public void setStaEndText(String staEndText) {
         this.staEndText = staEndText;
+    }
+
+    public void setGreenTabCheck(boolean greenTabCheck) {
+        isGreenTabCheck = greenTabCheck;
+    }
+
+    public void setKeyCheck(boolean keyCheck) {
+        isKeyCheck = keyCheck;
+    }
+
+    public boolean isGreenTabCheck() {
+
+        return isGreenTabCheck;
+    }
+
+    public boolean isKeyCheck() {
+        return isKeyCheck;
     }
 
     public String getStaBeginText() {

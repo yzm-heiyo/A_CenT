@@ -10,4 +10,5 @@ import com.centanet.hk.aplus.bean.http.SSOLoginDescription;
 public interface ILoginPresent {
     void login(SSOHeaderDescription ssoHeaderDescription,SSOLoginDescription ssoLoginDescription);
     void doGet(String address,Object header);
+    void isRoot();
 }

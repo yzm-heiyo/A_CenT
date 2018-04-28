@@ -25,6 +25,6 @@
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:layout_toRightOf="@id/google_voice_btn"
+        android:background="@drawable/layer_back"
         android:text= "dialog"/>
-
 </RelativeLayout>

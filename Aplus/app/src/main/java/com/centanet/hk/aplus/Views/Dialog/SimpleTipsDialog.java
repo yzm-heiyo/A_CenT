@@ -224,6 +224,7 @@ public class SimpleTipsDialog extends DialogFragment implements View.OnClickList
 //        getDialog().getWindow().setLayout((int) (width * dialogWidthPercent), (int) (height * dialogHeightPercent));
     }
 
+
     public void ableToKeyBack(boolean ableToKeyBack) {
         this.ableToKeyBack = ableToKeyBack;
     }

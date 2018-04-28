@@ -118,7 +118,7 @@ public class ApplicationManager {
         List<String> statuList = new ArrayList<>();
         for (String sta : status) {
             for (Map.Entry<String, String> entry : statusParams.entrySet()) {
-                if (entry.getKey().equals(sta)) {
+                if (entry.getKey().equals(sta.substring(0, 1))) {
                     statuList.add(entry.getValue());
                 }
             }

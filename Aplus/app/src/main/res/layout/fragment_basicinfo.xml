@@ -15,9 +15,9 @@
         android:orientation="vertical">
 
         <!--<View-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="6dp"-->
-            <!--android:background="@color/color_theme_item" />-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="6dp"-->
+        <!--android:background="@color/color_theme_item" />-->
 
         <!-- 租售信息 -->
         <LinearLayout
@@ -63,6 +63,18 @@
                         style="@style/smallitem_style"
                         app:SmallItemContent=""
                         app:SmallItemTitle="建均價"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+                    <TextView
+                        android:id="@+id/detail_txt_green_tab_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center|left"
+                        android:paddingBottom="2dp"
+                        android:paddingTop="5dp"
+                        android:text="綠: "
+                        android:visibility="gone"
+                        android:textColor="#008000"
+                        android:textSize="@dimen/themeSizeplus" />
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_entrust_3"
@@ -128,6 +140,15 @@
                         style="@style/smallitem_style"
                         app:SmallItemContent=""
                         app:SmallItemTitle="建均租"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+                    <TextView
+                        android:id="@+id/detail_txt_division"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center|left"
+                        android:paddingBottom="2dp"
+                        android:visibility="gone"
+                        android:textSize="@dimen/themeSizeplus" />
 
                     <com.centanet.hk.aplus.Widgets.SmallItemView
                         android:id="@+id/detail_txt_entrust_5"
@@ -223,9 +244,9 @@
                     android:layout_height="wrap_content"
                     android:gravity="left|center"
                     android:paddingLeft="8dp"
+                    android:text="@string/keyhouse"
                     android:textColor="@color/colortheme"
-                    android:textSize="@dimen/themeSize"
-                    android:text="@string/keyhouse"/>
+                    android:textSize="@dimen/themeSize" />
 
 
             </LinearLayout>

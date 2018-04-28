@@ -30,4 +30,7 @@ public interface ILoginView {
     void onFailure();
 
     void setUpdateUrl(String url, boolean isForceUpdate);
+
+
+    void isRoot(boolean isRoot);
 }

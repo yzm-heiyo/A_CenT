@@ -153,9 +153,9 @@ public class ClientInfoFragment extends Fragment implements View.OnClickListener
             isVisible = true;
             Bundle stateBundle = getArguments();
             if (stateBundle == null) {
-                    MessageEventBus eventBus = new MessageEventBus();
-                    eventBus.setMsg(DETAIL_REFRESH);
-                    EventBus.getDefault().post(eventBus);
+                MessageEventBus eventBus = new MessageEventBus();
+                eventBus.setMsg(DETAIL_REFRESH);
+                EventBus.getDefault().post(eventBus);
             } else {
                 isAbleToShowTrustor((DetailTrustor) stateBundle.get(CLIENT_DETAIL));
             }
@@ -280,6 +280,8 @@ public class ClientInfoFragment extends Fragment implements View.OnClickListener
     }
 
     public void callPhone(String phoneNum) {
+
+        L.d("callPhone", "callPhone");
 
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             //申请電話权限

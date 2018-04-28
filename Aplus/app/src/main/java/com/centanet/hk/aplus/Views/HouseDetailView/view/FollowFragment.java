@@ -78,6 +78,7 @@ public class FollowFragment extends Fragment implements View.OnClickListener {
     private boolean isEnd = false;
     private boolean isFirst = true;
     private boolean isVisible = false;
+    private int refreshType = 0;
 
 
     @Override
@@ -137,12 +138,14 @@ public class FollowFragment extends Fragment implements View.OnClickListener {
 
         refreshView.setOnLoadmoreListener(refreshlayout -> {
             description.setPageIndex(follows.size() / 5 + 1);
+            refreshType = 1;
             onUpdateListener.onRefresh(HttpUtil.URL_FOLLOWS, headerDescription, description);
         });
 
         refreshView.setOnRefreshListener(refreshlayout -> {
             description.setPageIndex(1);
-            follows.clear();
+//            follows.clear();
+            refreshType = 0;
             onUpdateListener.clearFlag();
             refreshlayout.setEnableLoadmore(true);
             onUpdateListener.onRefresh(HttpUtil.URL_FOLLOWS, headerDescription, description);
@@ -194,20 +197,26 @@ public class FollowFragment extends Fragment implements View.OnClickListener {
 
         switch (messageEvent.getMsg()) {
             case DETAIL_FOLLOW:
+                L.d("DETAIL_FOLLOW", "");
                 List<PropertyFollow> followList = (List<PropertyFollow>) messageEvent.getObject();
                 if (followList != null && !followList.isEmpty()) {
+                    if (refreshType == 0) follows.clear();
                     follows.addAll(followList);
+                    adapter.notifyDataSetChanged();
+                    L.d("followSize", follows.size() + "");
                 } else {
-                    if (follows.isEmpty()) {
-                        if (!isVisible) {
-                            closeRefresh();
-                            break;
-                        }
-                        SimpleTipsDialog dialog = DialogUtil.getSimpleDialog(getString(R.string.dialog_tips_permission_follow_no));
-                        dialog.show(getFragmentManager(), "");
+                    L.d("followSizeNo", follows.size() + "");
+//                    if (follows.isEmpty()) {
+                    if (!isVisible) {
+                        closeRefresh();
+                        break;
                     }
+                    follows.clear();
+                    adapter.notifyDataSetChanged();
+                    SimpleTipsDialog dialog = DialogUtil.getSimpleDialog(getString(R.string.dialog_tips_permission_follow_no));
+                    dialog.show(getFragmentManager(), "");
+//                    }
                 }
-                adapter.notifyDataSetChanged();
                 closeRefresh();
                 break;
             case DATA_END:
@@ -282,7 +291,7 @@ public class FollowFragment extends Fragment implements View.OnClickListener {
 
         if (ableToAddFollow)
             onUpdateListener.trunToActivity(new Intent(getActivity(), FollowAddActivity.class));
-        else{
+        else {
             if (!isVisible) return;
             SimpleTipsDialog simpleTipsDialog = new SimpleTipsDialog();
             simpleTipsDialog.setLeftBtnVisibility(false);
@@ -403,7 +412,7 @@ public class FollowFragment extends Fragment implements View.OnClickListener {
         TimePickerView pvTime = new TimePickerView.Builder(getContext(), new TimePickerView.OnTimeSelectListener() {
             @Override
             public void onTimeSelect(Date date, View v) {//选中事件回调
-
+                description.setPageIndex(1);
                 switch (clickView.getId()) {
                     case R.id.fragment_follow_date_begin:
                         dateBeginTxt.setText(getTime(date));

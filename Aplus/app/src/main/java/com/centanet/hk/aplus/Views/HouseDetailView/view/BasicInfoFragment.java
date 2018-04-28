@@ -40,7 +40,7 @@ import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAI
 public class BasicInfoFragment extends Fragment {
 
     private static final String BASIC_INFO = "basicInfo";
-    private View view;
+    private View view, divisionView;
     private LineBreakLayout tagLayout;
     private String thiz = getClass().getSimpleName();
     private List<String> labelList;
@@ -50,7 +50,7 @@ public class BasicInfoFragment extends Fragment {
     private SmallItemView openDateTxt, houseTypeTxt, carPlaceTxt, intervalTxt, numberTxt, directionTxt, houseSumTxt, fromTxt;
     private SmallItemView searchTxt, attentionTxt, supplementTxt, customization_1_Txt, customization_2_Txt, customization_3_Txt;
     private SmallItemView remarkTxt, moveInDateTxt, managementPriceTxt;
-    private TextView tipTxt, salePriceTxt, rentPriceTxt, keyNumberTxt;
+    private TextView tipTxt, salePriceTxt, rentPriceTxt, keyNumberTxt, greenTabPriceTxt;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -125,6 +125,10 @@ public class BasicInfoFragment extends Fragment {
         rentPriceTxt = view.findViewById(R.id.detail_txt_rent_price);
         keyNumberTxt = view.findViewById(R.id.detail_key_number);
 
+        divisionView = view.findViewById(R.id.detail_txt_division);
+
+        greenTabPriceTxt = view.findViewById(R.id.detail_txt_green_tab_price);
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -182,9 +186,15 @@ public class BasicInfoFragment extends Fragment {
         managementPriceTxt.setContentName(detailHouseData.getMgrFee() == null ? null : ((int) Float.parseFloat(detailHouseData.getMgrFee())) + "");
         keyNumberTxt.setText(getString(R.string.keyhouse) + " " + detailHouseData.getPropertyKeyNo());
 
+//        greenTabPriceTxt.setContentName();
+
         String squareUseFoot = detailHouseData.getSquareUseFoot();
         String squareSource = detailHouseData.getSquareUseSource();
         setUseSquare(squareUseFoot, squareSource);
+
+        int propertType = isShouldToShowType(detailHouseData.getBulidingPropertyUsage()) ? View.VISIBLE : View.GONE;
+        greenTabPriceTxt.setVisibility(propertType);
+        divisionView.setVisibility(propertType);
 
         String reallyAreaSource = detailHouseData.getSquareSource() == null || detailHouseData.getSquareSource().equals("") ? null : "(" + detailHouseData.getSquareSource() + ")";
         reallyAreaTxt.setContentName(detailHouseData.getSquareFoot() + (reallyAreaSource == null ? "" : reallyAreaSource));
@@ -193,6 +203,8 @@ public class BasicInfoFragment extends Fragment {
         moveInDateTxt.setContentName(detailHouseData.getCompleteYear());
         attentionTxt.setContentName(detailHouseData.getPropertyNote());
         searchTxt.setContentName(formatData(detailHouseData.getSearchDate()));
+
+        greenTabPriceTxt.setText("綠: $" + (detailHouseData.getSalePricePremiumUnpaid().equals("") ? 0 : detailHouseData.getSalePricePremiumUnpaid()) + "萬");
 
         setSalePriceTxt(detailHouseData.getSalePrice(), detailHouseData.getSaleFloorPriceFormate());
         setRentPriceTxt(detailHouseData.getRentPrice(), detailHouseData.getRentFloorPriceFormate());
@@ -204,12 +216,28 @@ public class BasicInfoFragment extends Fragment {
         }
     }
 
+    private boolean isShouldToShowType(String propertType) {
+        boolean show = false;
+        switch (propertType) {
+            case "資助房屋":
+            case "居屋":
+            case "公屋":
+                show = true;
+                break;
+        }
+        return show;
+    }
+
     private void setRentPriceTxt(String rentPrice, String rentFloorPrice) {
         NumberFormat currency = NumberFormat.getCurrencyInstance();
         Log.e(TAG, "setRentPriceTxt: " + rentPrice);
         rentPrice = ((int) Float.parseFloat(rentPrice)) + "";
         Log.e(TAG, "setRentPrice: " + rentPrice);
-        String price = "租: " + currency.format(new BigDecimal(rentPrice)).split("\\.")[0];
+        String price = null;
+        if (currency.format(new BigDecimal(rentPrice)).indexOf("$") != -1)
+            price = "租: $" + currency.format(new BigDecimal(rentPrice)).split("\\.")[0].split("\\$")[1];
+        else price = "租: " + currency.format(new BigDecimal(rentPrice)).split("\\.")[0];
+
         if (rentFloorPrice != "") {
             price = price + "(" + rentFloorPrice.split("\\.")[0] + ")";
         }

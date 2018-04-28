@@ -257,6 +257,46 @@
             </LinearLayout>
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center|left"
+                    android:text="篩選"
+                    android:textColor="@color/color_itemt_detail_title" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp">
+
+                    <CheckBox
+                        android:id="@+id/complex_cb_green_tab_price"
+                        style="@style/more_item_style"
+                        android:text="連綠表價" />
+
+                    <CheckBox
+                        android:id="@+id/complex_cb_key"
+                        style="@style/more_item_style"
+                        android:text="@string/key" />
+
+                    <CheckBox
+                        style="@style/more_item_style"
+                        android:visibility="invisible"
+                        android:text="15%" />
+
+                </LinearLayout>
+            </LinearLayout>
+
             <!-- 業主 -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -288,6 +328,8 @@
                     android:singleLine="true" />
 
             </LinearLayout>
+
+
 
 
             <!-- 電話 -->
@@ -736,7 +778,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="3dp"
+            android:layout_height="2dp"
             android:background="@drawable/shape_line_shade_down_to_up" />
 
         <LinearLayout

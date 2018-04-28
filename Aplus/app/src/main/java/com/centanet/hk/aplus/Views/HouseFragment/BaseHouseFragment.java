@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.bean.house.Properties;
 
@@ -44,6 +45,7 @@ public class BaseHouseFragment extends Fragment {
         private OnItemClickListener mOnItemClickListener;
         private int mPosition;
         private List<Properties> dataList;
+        private boolean showGreenTabView;
 
         public ItemAdapter(Context context, List<Properties> data) {
             //todo 存在一個問題 爲何使用EventBus會導致listData指向不一致
@@ -86,6 +88,7 @@ public class BaseHouseFragment extends Fragment {
                 viewHolder.iconView = view.findViewById(R.id.item_resultitem_heart_img);
                 viewHolder.iconView.setOnClickListener(this);
                 viewHolder.iconView.setTag(position);
+                viewHolder.greenTabView = view.findViewById(R.id.item_view_green_tab);
                 viewHolder.resultView = view.findViewById(R.id.item_result_ico);
                 viewHolder.buildTxt = view.findViewById(R.id.item_result_name);
                 viewHolder.tipsTxt = view.findViewById(R.id.item_tips_txt);
@@ -103,6 +106,7 @@ public class BaseHouseFragment extends Fragment {
                 viewHolder.reallyTxt = view.findViewById(R.id.item_really_txt);
                 viewHolder.reallyRveRentTxt = view.findViewById(R.id.item_really_rev_rent_txt);
                 viewHolder.reallyRveSaleTxt = view.findViewById(R.id.item_really_rev_sale_txt);
+                viewHolder.greenPriceTxt = view.findViewById(R.id.item_txt_green);
 
                 viewHolder.iconHot = view.findViewById(R.id.item_icon_hot);
                 viewHolder.iconKey = view.findViewById(R.id.item_icon_key);
@@ -123,11 +127,12 @@ public class BaseHouseFragment extends Fragment {
                 clearViewState(viewHolder);
 
                 Properties properties = dataList.get(position);
+                L.d("properties", properties.toString());
                 viewHolder.codeTxt.setText(properties.getPropertyNo());
                 String floor = properties.getFloor() == null || properties.getFloor().equals("") ? "" : properties.getFloor();
                 viewHolder.buildTxt.setText(properties.getEstateName() + " " + properties.getBuildingName() + " " + floor + " " + (properties.getHouseNo() == null ? "" : properties.getHouseNo() + "室"));
                 viewHolder.tipsTxt.setText(properties.getPrompt());
-                viewHolder.rentTxt.setText(properties.getRentPrice());
+                viewHolder.rentTxt.setText("$" + properties.getRentPrice());
                 viewHolder.priceTxt.setText("$" + properties.getSalePrice());
                 viewHolder.dateTxt.setText(properties.getLastFollowDate());
                 viewHolder.placeTxt.setText(properties.getPropertyInterval());
@@ -138,6 +143,10 @@ public class BaseHouseFragment extends Fragment {
                 viewHolder.directionTxt.setText(properties.getHouseDirection());
                 viewHolder.reallyRveSaleTxt.setText(properties.getSalePriceUnit());
                 viewHolder.reallyRveRentTxt.setText(properties.getRentPriceUnit());
+                String salePricePremiumUnpaid = properties.getSalePricePremiumUnpaid();
+                viewHolder.greenTabView.setVisibility(showGreenTabView && salePricePremiumUnpaid != null && !salePricePremiumUnpaid.equals("") ? View.VISIBLE : View.INVISIBLE);
+
+                viewHolder.greenPriceTxt.setText("$" + properties.getSalePricePremiumUnpaid());
 
                 String useSquare = properties.getSquareUseFoot();
                 String useSquareNum = properties.getSquareUseSourceNum();
@@ -147,7 +156,6 @@ public class BaseHouseFragment extends Fragment {
                     viewHolder.useTxt.setText(useSquare);
 
                 viewHolder.iconSingle.setSelected(properties.isOnlyTrust());
-
                 viewHolder.iconFavo.setSelected(properties.isFavoriteFlag());
                 viewHolder.iconView.setSelected(properties.isFavoriteFlag());
                 viewHolder.iconO.setSelected(properties.isODish());
@@ -231,9 +239,14 @@ public class BaseHouseFragment extends Fragment {
 
         private class ViewHolder {
             ImageView iconView, resultView;
+            View greenTabView;
             TextView buildTxt, placeTxt, codeTxt, priceTxt, rentTxt, tipsTxt, dateTxt, ssdTxt;
-            TextView directionTxt, useTxt, useRveSaleTxt, useRveRentTxt, reallyTxt, reallyRveSaleTxt, reallyRveRentTxt;
+            TextView directionTxt, useTxt, useRveSaleTxt, useRveRentTxt, reallyTxt, reallyRveSaleTxt, reallyRveRentTxt, greenPriceTxt;
             ImageView iconHot, iconKey, iconO, iconL, iconD, iconSingle, iconFavo;
+        }
+
+        public void setShowGreenTabView(boolean showGreenTabView) {
+            this.showGreenTabView = showGreenTabView;
         }
 
         public void updateView(int position, ListView listView, boolean b) {

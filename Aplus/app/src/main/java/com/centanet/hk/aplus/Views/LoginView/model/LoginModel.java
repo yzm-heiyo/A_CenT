@@ -36,6 +36,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static android.content.ContentValues.TAG;
 import static com.centanet.hk.aplus.Utils.net.HttpUtil.URL_PARAMETER;
 
 /**
@@ -214,6 +215,7 @@ public class LoginModel implements ILoginModel {
             parameter = GsonUtil.parseJson(dataBack, Parameter.class);
 
             for (SystemParam p : parameter.getSystemParam()) {
+                L.d("p", p.toString());
                 switch (p.getParameterType()) {
                     case APSystemParameterType.house:
                         ApplicationManager.setIntervalSystemParam(p);
@@ -224,6 +226,7 @@ public class LoginModel implements ILoginModel {
 
                     case APSystemParameterType.propertyTag:
                         ApplicationManager.setLabelSystemParam(p);
+//                        case
                 }
             }
         } catch (IllegalAccessException e) {
@@ -335,6 +338,44 @@ public class LoginModel implements ILoginModel {
             }
         }
         return paramsList;
+    }
+
+    /**
+     * 判断手机是否root，不弹出root请求框<br/>
+     */
+    @Override
+    public boolean isRoot() {
+        String binPath = "/system/bin/su";
+        String xBinPath = "/system/xbin/su";
+        if (new File(binPath).exists() && isExecutable(binPath))
+            return true;
+        if (new File(xBinPath).exists() && isExecutable(xBinPath))
+            return true;
+        return false;
+    }
+
+    private static boolean isExecutable(String filePath) {
+        Process p = null;
+        try {
+            p = Runtime.getRuntime().exec("ls -l " + filePath);
+            // 获取返回内容
+            BufferedReader in = new BufferedReader(new InputStreamReader(
+                    p.getInputStream()));
+            String str = in.readLine();
+            L.d("isRoot", str);
+            if (str != null && str.length() >= 4) {
+                char flag = str.charAt(3);
+                if (flag == 's' || flag == 'x')
+                    return true;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (p != null) {
+                p.destroy();
+            }
+        }
+        return false;
     }
 
 //    private String getStatusText(String statu){

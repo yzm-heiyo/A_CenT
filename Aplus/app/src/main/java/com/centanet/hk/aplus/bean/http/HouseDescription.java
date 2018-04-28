@@ -7,7 +7,7 @@ import java.util.List;
  * Created by yangzm4 on 2018/3/13.
  */
 
-public class HouseDescription implements Serializable{
+public class HouseDescription implements Serializable {
 
     private String UpdatePermisstionsTime = "2010-01-01T00:00:00";
     private int PropertyType = 1;
@@ -50,7 +50,11 @@ public class HouseDescription implements Serializable{
     private List<String> PropertyStatus;
     private List<String> PropertyTypes, IncludedPropertyStatusFrom, IncludedPropertyStatusTo, HouseDirection;
     private List<String> PropertyboolTag, KeywordType, SearcherAddress;
+    private String HasSalePricePremiumUnpaid;
 
+    public boolean getHasSalePricePremiumUnpaid() {
+        return Boolean.parseBoolean(HasSalePricePremiumUnpaid);
+    }
 
     public void setUpdatePermisstionsTime(String updatePermisstionsTime) {
         UpdatePermisstionsTime = updatePermisstionsTime;
@@ -156,12 +160,12 @@ public class HouseDescription implements Serializable{
         Scope = scope;
     }
 
-    public void setHasPropertyKey(String hasPropertyKey) {
-        HasPropertyKey = hasPropertyKey;
+    public void setHasPropertyKey(boolean hasPropertyKey) {
+        HasPropertyKey = hasPropertyKey + "";
     }
 
     public void setOnlyTrust(boolean onlyTrust) {
-        IsOnlyTrust = ""+onlyTrust;
+        IsOnlyTrust = "" + onlyTrust;
     }
 
     public void setAscending(boolean ascending) {
@@ -193,7 +197,7 @@ public class HouseDescription implements Serializable{
     }
 
     public void setPropertyDateType(int propertyDateType) {
-        PropertyDateType = propertyDateType+"";
+        PropertyDateType = propertyDateType + "";
     }
 
     public void setPropertyDateFrom(String propertyDateFrom) {
@@ -234,6 +238,14 @@ public class HouseDescription implements Serializable{
 
     public void setSearcherAddress(List<String> searcherAddress) {
         SearcherAddress = searcherAddress;
+    }
+
+    public void setHasSalePricePremiumUnpaid(boolean hasSalePricePremiumUnpaid) {
+        HasSalePricePremiumUnpaid = hasSalePricePremiumUnpaid + "";
+    }
+
+    public boolean isHasSalePricePremiumUnpaid() {
+        return Boolean.parseBoolean(HasSalePricePremiumUnpaid);
     }
 
     public String getUpdatePermisstionsTime() {

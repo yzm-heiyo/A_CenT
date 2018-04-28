@@ -174,7 +174,7 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
             for (int i = 0; i < viewChechBoxes.size(); i++) {
                 if (viewChechBoxes.get(i).isChecked()) {
                     if (viewChechBoxes.get(i).getId() != R.id.dialog_status_all)
-                        results.add(viewChechBoxes.get(i).getText().toString().substring(0, 1));
+                        results.add(viewChechBoxes.get(i).getText().toString());
                 }
             }
 

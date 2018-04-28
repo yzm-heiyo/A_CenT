@@ -33,6 +33,7 @@ public class Properties implements Serializable {
     private String ActualRentPriceUnit;
     private boolean IsODish;
     private boolean DevelopmentEndCredits;
+    private String SalePricePremiumUnpaid;
     private boolean IsConfirmed;
     private int SSDType;
     private boolean IsOnlyTrust;
@@ -273,6 +274,14 @@ public class Properties implements Serializable {
 
     public String getRentPriceUnit() {
         return RentPriceUnit;
+    }
+
+    public String getSalePricePremiumUnpaid() {
+        return SalePricePremiumUnpaid;
+    }
+
+    public void setSalePricePremiumUnpaid(String salePricePremiumUnpaid) {
+        SalePricePremiumUnpaid = salePricePremiumUnpaid;
     }
 
     public void setPropertyStatusKeyId(String propertyStatusKeyId) {

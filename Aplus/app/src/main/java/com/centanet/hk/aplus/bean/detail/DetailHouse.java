@@ -85,6 +85,8 @@ public class DetailHouse implements Serializable {
     private String ErrorMsg;
     private String RunTime;
     private boolean UserIsShowTrustor;
+    private String SalePricePremiumUnpaid;
+    private String BulidingPropertyUsage;
 
     public int getPropertyKeyType() {
         return PropertyKeyType;
@@ -400,6 +402,22 @@ public class DetailHouse implements Serializable {
 
     public boolean isUserIsShowDetailFloor() {
         return UserIsShowDetailFloor;
+    }
+
+    public String getSalePricePremiumUnpaid() {
+        return SalePricePremiumUnpaid;
+    }
+
+    public String getBulidingPropertyUsage() {
+        return BulidingPropertyUsage;
+    }
+
+    public void setBulidingPropertyUsage(String bulidingPropertyUsage) {
+        BulidingPropertyUsage = bulidingPropertyUsage;
+    }
+
+    public void setSalePricePremiumUnpaid(String salePricePremiumUnpaid) {
+        SalePricePremiumUnpaid = salePricePremiumUnpaid;
     }
 
     public void setUserIsShowDetailFloor(boolean userIsShowDetailFloor) {

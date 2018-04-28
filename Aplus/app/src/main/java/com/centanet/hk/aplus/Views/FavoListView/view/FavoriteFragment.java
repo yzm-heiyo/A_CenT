@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.DialogUtil;
 import com.centanet.hk.aplus.Utils.ItemCountUtil;
 import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
@@ -85,7 +86,7 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
     private View view;
     private ListView lv;
     private ItemAdapter adapter;
-    private View status, price, more, sort, reset;
+    private View status, price, more, sort, reset, mic;
     private TextView search, currentPosition;
     private List<Properties> listFavo;
     private List<String> searchHistory;
@@ -143,6 +144,8 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
         complexDown = view.findViewById(R.id.fragment_img_complex_down);
         refreshLayout = view.findViewById(R.id.smartLayout);
         reset = view.findViewById(R.id.fragment_list_txt_reset);
+        mic = view.findViewById(R.id.houselist_img_mic);
+        mic.setOnClickListener(this);
         refreshLayout.setEnableLoadmore(false);
     }
 
@@ -186,7 +189,11 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
                 if (houseCount.equals("0")) {
                     currentPosition.setText("0/0");
                 } else {
-                    currentPosition.setText(lv.getFirstVisiblePosition() + 1 + "/" + houseCount);
+//                    currentPosition.setText(lv.getFirstVisiblePosition() + 1 + "/" + houseCount);
+                    int y = lv.getChildAt(0).getTop();
+                    int item = lv.getFirstVisiblePosition() + 1;
+                    if (y < -144) item++;
+                    currentPosition.setText(item + "/" + houseCount);
                 }
             }
         });
@@ -258,6 +265,16 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
                 break;
             case R.id.fragment_list_txt_reset:
                 reset();
+                break;
+            case R.id.houselist_img_mic:
+                Intent micIntent = new Intent(getContext(), SearchActivity.class);
+                micIntent.putExtra("mic", true);
+                if (!searchHistory.isEmpty()) {
+                    Bundle micBundle = new Bundle();
+                    micBundle.putStringArrayList(VIEW_SEARCH_HISTORY_SAVE, (ArrayList<String>) searchHistory);
+                    micIntent.putExtras(micBundle);
+                }
+                startActivityForResult(micIntent, 0);
                 break;
         }
     }
@@ -484,6 +501,7 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
     private void setCountTxt(MessageEventBus messageEvent) {
         houseCount = (String) messageEvent.getObject();
         if (houseCount.equals("0")) {
+            DialogUtil.getSimpleDialog(getString(R.string.house_no_find)).show(getFragmentManager(), "");
             currentPosition.setVisibility(View.GONE);
             return;
         }
@@ -519,6 +537,7 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
                 lv.setSelection(0);
             }
         });
+        adapter.setShowGreenTabView(bodyDescription.getHasSalePricePremiumUnpaid());
         refreshLayout.autoRefresh();
     }
 
