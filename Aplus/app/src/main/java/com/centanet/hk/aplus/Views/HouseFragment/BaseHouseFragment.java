@@ -25,6 +25,8 @@ import java.util.List;
 public class BaseHouseFragment extends Fragment {
 
     protected boolean isVisible = false;
+    private String thiz = getClass().getSimpleName();
+    protected boolean isResume = false;
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -32,12 +34,25 @@ public class BaseHouseFragment extends Fragment {
         if (isVisibleToUser) {
 //            presenter.doPost(HttpUtil.URL_PATH, aHeaderDescription, bodyDescription);
             isVisible = true;
+            L.d(thiz, "setUserVisibleHint");
         } else {
             //相当于Fragment的onPause
             isVisible = false;
         }
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isResume = true;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isResume = false;
+    }
 
     protected static class ItemAdapter extends BaseAdapter implements View.OnClickListener {
 

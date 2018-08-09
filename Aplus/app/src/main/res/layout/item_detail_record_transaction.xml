@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/layer_rim_line"
+    android:orientation="vertical"
+    android:paddingTop="15dp">
+
+    <TextView
+        android:id="@+id/item_transaction_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:text="@string/record_transaction"
+        android:textColor="@android:color/black"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="5dp" />
+
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:paddingBottom="20dp"
+        android:paddingTop="10dp" />
+
+    <TextView
+        android:id="@+id/record_txt_nodata"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingBottom="70dp"
+        android:paddingTop="30dp"
+        android:text="@string/no_data"
+        android:textColor="@color/color_black"
+        android:textSize="16dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/trans_ly_trans"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+    <TextView
+        android:id="@+id/trans_txt_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingBottom="24dp"
+        android:paddingTop="16dp"
+        android:text="@string/see_all"
+        android:textColor="@color/textcolor_gray_red"
+        android:visibility="gone" />
+
+
+</LinearLayout>

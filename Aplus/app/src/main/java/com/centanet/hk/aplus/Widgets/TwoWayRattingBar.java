@@ -149,7 +149,6 @@ public class TwoWayRattingBar extends View {
         }
         this.rightProgress = progress;
 
-
         invalidate();
 
         float truthProgress = (rightX-leftProgressIcon.getWidth())/(viewWidth-leftProgressIcon.getWidth()*2);

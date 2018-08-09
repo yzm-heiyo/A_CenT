@@ -1,472 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <!-- 基本資料 -->
-
-
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        app:cardElevation="3dp">
 
-        <!--<View-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="6dp"-->
-        <!--android:background="@color/color_theme_item" />-->
+        <com.centanet.hk.aplus.Widgets.HorizontalView
+            android:id="@+id/detail_scroll_navigation_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.v7.widget.CardView>
 
-        <!-- 租售信息 -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorline" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/detail_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/layer_rim_line"
+            android:background="@color/color_theme_item"
             android:orientation="vertical">
 
-            <LinearLayout
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="1dp"
+                android:tag="0" />
+
+            <include layout="@layout/item_detail_price_sale_rent" />
+
+            <android.support.v4.widget.Space
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:padding="8dp">
+                android:layout_height="6dp" />
 
-                <!-- 售價 -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+            <include layout="@layout/item_detail_keyinfo" />
 
-                    <!-- 售價-價格 -->
-                    <TextView
-                        android:id="@+id/detail_txt_sale_price"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center|left"
-                        android:paddingBottom="2dp"
-                        android:paddingTop="2dp"
-                        android:text="售: "
-                        android:textColor="@color/colortheme"
-                        android:textSize="@dimen/themeSizeplus" />
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="6dp" />
 
-                    <!-- 售價-小項目 -->
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_use_rvg_price"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="實均價"></com.centanet.hk.aplus.Widgets.SmallItemView>
+            <include layout="@layout/item_detail_buildinfo" />
 
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_really_rvg_price"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="建均價"></com.centanet.hk.aplus.Widgets.SmallItemView>
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="6dp" />
 
-                    <TextView
-                        android:id="@+id/detail_txt_green_tab_price"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center|left"
-                        android:paddingBottom="2dp"
-                        android:paddingTop="5dp"
-                        android:text="綠: "
-                        android:visibility="gone"
-                        android:textColor="#008000"
-                        android:textSize="@dimen/themeSizeplus" />
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_entrust_3"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="委託書三"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_conjecture_data"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="估計日期"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_use_area"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="實用面積"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_really_area"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="建築面積"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_usepercent"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="實用率"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-
-                </LinearLayout>
-
-                <!-- 租價 -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <!-- 租-價格 -->
-                    <TextView
-                        android:id="@+id/detail_txt_rent_price"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center|left"
-                        android:paddingBottom="2dp"
-                        android:paddingTop="2dp"
-                        android:text="租: "
-                        android:textColor="#BB842D"
-                        android:textSize="@dimen/themeSizeplus" />
-
-                    <!-- 售價-小項目 -->
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_use_rvg_rent"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="實均租"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_really_rvg_rent"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="建均租"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                    <TextView
-                        android:id="@+id/detail_txt_division"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center|left"
-                        android:paddingBottom="2dp"
-                        android:visibility="gone"
-                        android:textSize="@dimen/themeSizeplus" />
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_entrust_5"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="委託書五"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_ssd"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="SSD"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_rvd_data"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="RVD日期"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_open_date"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="開盤日"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                </LinearLayout>
-
-
-            </LinearLayout>
+            <fragment
+                android:id="@+id/record_fra_followrecord"
+                android:name="com.centanet.hk.aplus.Views.HouseDetailView.view.fragment.FollowRecordFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tag="1" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginLeft="8dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/colorline" />
+                android:layout_height="6dp" />
 
-            <LinearLayout
+            <!--<com.centanet.hk.aplus.Widgets.PropertyDetail.PropertyTrustorInfoView-->
+            <!--android:id="@+id/detail_trustor"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical"-->
+            <!--android:tag="2" />-->
+            <fragment
+                android:id="@+id/record_fra_trustor"
+                android:name="com.centanet.hk.aplus.Views.HouseDetailView.view.fragment.TrustorFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp">
+                android:tag="2" />
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="left"
-                    android:layout_weight="1"
-                    android:text="提示"
-                    android:textSize="@dimen/themeSize" />
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="6dp" />
 
-                <TextView
-                    android:id="@+id/detail_txt_tips"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text=""
-                    android:textColor="@color/color_itemt_detail_title"
-                    android:textSize="@dimen/themeSize" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:background="@color/color_theme_item" />
-
-        <!-- 鑰匙信息 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/layer_rim_line"
-            android:orientation="vertical"
-            android:padding="8dp">
-
-            <LinearLayout
+            <fragment
+                android:id="@+id/record_fra_pricerecord"
+                android:name="com.centanet.hk.aplus.Views.HouseDetailView.view.fragment.PriceRecordFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ico_key_unit" />
-
-                <TextView
-                    android:id="@+id/detail_key_number"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left|center"
-                    android:paddingLeft="8dp"
-                    android:text="@string/keyhouse"
-                    android:textColor="@color/colortheme"
-                    android:textSize="@dimen/themeSize" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_house_type"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="物業類型"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_catplace"
-                        style="@style/smallitem_style"
-                        app:SmallItemTitle="車位"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_interval"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="間隔"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_number"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="差餉編號"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_search"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="土地查冊"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_direction"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="座向"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_housesum"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="樓層總數"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-                    <com.centanet.hk.aplus.Widgets.SmallItemView
-                        android:id="@+id/detail_txt_from"
-                        style="@style/smallitem_style"
-                        app:SmallItemContent=""
-                        app:SmallItemTitle="來源"></com.centanet.hk.aplus.Widgets.SmallItemView>
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal"
-                android:paddingTop="8dp">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="標籤"
-                    android:textSize="@dimen/themeSizesmall" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:orientation="vertical">
-
-                    <com.centanet.hk.aplus.Widgets.LineBreakLayout
-                        android:id="@+id/text_ll_taps_layout"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center|left"></com.centanet.hk.aplus.Widgets.LineBreakLayout>
-                </LinearLayout>
-
-
-            </LinearLayout>
-
-            <com.centanet.hk.aplus.Widgets.SmallItemView
-                android:id="@+id/detail_txt_attention"
-                style="@style/smallitem_style"
-                app:SmallItemContent=""
-                app:SmallItemContentWeight="5"
-                app:SmallItemTitle="關注事項"
-                app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-
-            <com.centanet.hk.aplus.Widgets.SmallItemView
-                android:id="@+id/detail_txt_supplement"
-                style="@style/smallitem_style"
-                app:SmallItemContent=""
-                app:SmallItemContentWeight="5"
-                app:SmallItemTitle="補充"
-                app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-
-            <com.centanet.hk.aplus.Widgets.SmallItemView
-                android:id="@+id/detail_txt_customization_1"
-                style="@style/smallitem_style"
-                app:SmallItemContent=""
-                app:SmallItemContentWeight="5"
-                app:SmallItemTitle="自訂一"
-                app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-            <com.centanet.hk.aplus.Widgets.SmallItemView
-                android:id="@+id/detail_txt_customization_2"
-                style="@style/smallitem_style"
-                app:SmallItemContentWeight="5"
-                app:SmallItemTitle="自訂二"
-                app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-            <com.centanet.hk.aplus.Widgets.SmallItemView
-                android:id="@+id/detail_txt_customization_3"
-                style="@style/smallitem_style"
-                app:SmallItemContent=""
-                app:SmallItemContentWeight="5"
-                app:SmallItemTitle="自訂三"
-                app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
+                android:tag="3" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginTop="10dp"
-                android:background="@color/colorline" />
+                android:layout_height="6dp" />
 
-            <com.centanet.hk.aplus.Widgets.SmallItemView
-                android:id="@+id/detail_txt_remark"
-                style="@style/smallitem_style"
-                app:SmallItemContent=""
-                app:SmallItemContentWeight="5"
-                app:SmallItemTitle="備註"
-                app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:background="@color/color_theme_item" />
-
-        <!-- 大廈備註 -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/layer_rim_line"
-            android:orientation="vertical"
-            android:padding="8dp">
-
-            <LinearLayout
+            <!--<com.centanet.hk.aplus.Widgets.PropertyDetail.PropertyTransactionRecordView-->
+            <!--android:id="@+id/detail_treansact"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical"-->
+            <!--android:tag="4" />-->
+            <fragment
+                android:id="@+id/record_fra_trans"
+                android:name="com.centanet.hk.aplus.Views.HouseDetailView.view.fragment.TransRecordFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="horizontal">
+                android:tag="4" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ico_buidling_rmk" />
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="6dp" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left|center"
-                    android:paddingLeft="8dp"
-                    android:text="大廈備註"
-                    android:textColor="@color/colortheme"
-                    android:textSize="@dimen/themeSize" />
+            <!--<include layout="@layout/item_detail_record_date_information"/>-->
+            <!--<com.centanet.hk.aplus.Widgets.PropertyDetail.PropertyDataInformationView-->
+            <!--android:id="@+id/detail_data_info"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="vertical"-->
+            <!--android:tag="5" />-->
+            <fragment
+                android:id="@+id/recprd_fra_datainfo"
+                android:name="com.centanet.hk.aplus.Views.HouseDetailView.view.fragment.DataInfoFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tag="5" />
 
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="6dp" />
 
-            </LinearLayout>
-
-            <com.centanet.hk.aplus.Widgets.SmallItemView
-                android:id="@+id/detail_txt_movein_date"
-                style="@style/smallitem_style"
-                app:SmallItemContent=""
-                app:SmallItemContentWeight="5"
-                app:SmallItemTitle="入伙日"
-                app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
-
-            <com.centanet.hk.aplus.Widgets.SmallItemView
-                android:id="@+id/detail_txt_management_cost"
-                style="@style/smallitem_style"
-                app:SmallItemContent=""
-                app:SmallItemContentWeight="5"
-                app:SmallItemTitle="管理費"
-                app:SmallItemTitleWeight="1"></com.centanet.hk.aplus.Widgets.SmallItemView>
+            <!--</LinearLayout>-->
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:background="@color/color_theme_item" />
+    </android.support.v4.widget.NestedScrollView>
 
-    </LinearLayout>
-
-</ScrollView>
+</LinearLayout>

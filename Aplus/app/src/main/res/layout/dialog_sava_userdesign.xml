@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_square_circle_grey_15"
+    android:orientation="vertical">
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="19dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="加入至自訂搜尋條件"
+        android:textColor="@color/color_black"
+        android:textSize="17dp"
+        android:textStyle="bold" />
+
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="18dp" />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="方便日後於 “首頁” 隨時翻查紀錄"
+        android:textColor="@color/color_black"
+        android:textSize="13dp"
+        android:textStyle="bold" />
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="22dp" />
+
+    <EditText
+        android:id="@+id/dialog_edit_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/shape_square_circle_white"
+        android:hint="請輸入自訂搜尋條件名稱"
+        android:padding="5dp"
+        android:textSize="13dp" />
+
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="12dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#3f3f3f" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/tips_dialog_left"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="17dp"
+            android:text="@string/cancel"
+            android:textColor="#007AFF"
+            android:paddingTop="11dp"
+            android:paddingBottom="11dp"
+            android:gravity="center"
+            android:background="@drawable/shape_square_circle_grey_left_bottom_15"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="#3f3f3f" />
+
+        <Button
+            android:id="@+id/tips_dialog_right"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textSize="17dp"
+            android:textStyle="bold"
+            android:text="@string/feedback_save"
+            android:textColor="#007AFF"
+            android:paddingTop="11dp"
+            android:paddingBottom="11dp"
+            android:gravity="center"
+            android:background="@drawable/shape_square_circle_grey_right_bottom_15"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+</LinearLayout>

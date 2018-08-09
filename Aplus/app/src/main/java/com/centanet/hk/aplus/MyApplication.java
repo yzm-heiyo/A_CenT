@@ -76,6 +76,10 @@ public class MyApplication extends LitePalApplication {
 
     private String updateUrl;
 
+    private boolean isCancelUpdate = false;
+
+    private String updateContent;
+
     private int clientVer;
 
     @Override
@@ -183,6 +187,14 @@ public class MyApplication extends LitePalApplication {
         this.houseOperation = houseOperation;
     }
 
+    public void setCancelUpdate(boolean cancelUpdate) {
+        isCancelUpdate = cancelUpdate;
+    }
+
+    public boolean isCancelUpdate() {
+        return isCancelUpdate;
+    }
+
     public void setStatusCodes(Map<String, String> statusCodes) {
         this.statusCodes = statusCodes;
     }
@@ -213,6 +225,14 @@ public class MyApplication extends LitePalApplication {
 
     public void setDirectionSystemParam(SystemParam directionSystemParam) {
         this.directionSystemParam = directionSystemParam;
+    }
+
+    public void setUpdateContent(String updateContent) {
+        this.updateContent = updateContent;
+    }
+
+    public String getUpdateContent() {
+        return updateContent;
     }
 
     public List<String> getContactType() {

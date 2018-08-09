@@ -15,6 +15,7 @@ public interface ISearchModel {
     void setRespontListener(SearchModel.OnReceiveListener receiveListener);
     void saveSearchHistory(List<PropertyParamHints> history);
     void getSearchHistory(SearchModel.CallBack callBack);
+    void deleteSearchHistory();
     String changeToLabelData(PropertyParamHints data);
     List<String> changeToLabelData(List<PropertyParamHints> datas);
     List<PropertyParamHints> searchLabelHistory(List<String> params);

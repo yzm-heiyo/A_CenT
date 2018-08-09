@@ -2,6 +2,7 @@ package com.centanet.hk.aplus.Views.Dialog;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -28,14 +29,14 @@ public class StatusDialog extends BaseDialog implements View.OnClickListener {
 
     private String thiz = getClass().getSimpleName();
     private Dialog dialog;
-    List<Integer> checkBoxSelecterList;
+    List<String> checkBoxSelecterList;
     private WindowManager.LayoutParams lp;
     private View status;
     private SmartCheckBoxLayout checkBoxLayout;
     private Button yes;
     private onDialogOnclikeLisenter onDialogOnclikeLisenter;
     private List<String> statusList;
-    private boolean isFirst = true;
+//    private boolean isFirst = true;
 //    private boolean isSelectAll = false;
 
 
@@ -44,13 +45,13 @@ public class StatusDialog extends BaseDialog implements View.OnClickListener {
 
 
     @SuppressLint("ValidFragment")
-    public StatusDialog(List<Integer> checkBoxSelecterList) {
+    public StatusDialog(List<String> checkBoxSelecterList) {
         this.checkBoxSelecterList = checkBoxSelecterList;
     }
 
 
     @SuppressLint("ValidFragment")
-    public StatusDialog(List<String> status, List<Integer> checkBoxSelecterList) {
+    public StatusDialog(List<String> status, List<String> checkBoxSelecterList) {
         this.checkBoxSelecterList = checkBoxSelecterList;
         statusList = status;
     }
@@ -83,15 +84,13 @@ public class StatusDialog extends BaseDialog implements View.OnClickListener {
         checkBoxLayout = status.findViewById(R.id.dialog_status_confirm_layout);
         checkBoxLayout.setOnItemClick(new SmartCheckBoxLayout.OnItemClick() {
             @Override
-            public void onClick(View v, int viewId, List<Integer> selectList, int position) {
+            public void onClick(View v, int viewId, List<String> selectList, int position) {
                 L.d("checkLayout", selectList.toString());
                 checkBoxSelecterList = selectList;
             }
         });
 
-//        checkBoxLayout.setItemText(statusList);
         checkBoxLayout.setSeletList(checkBoxSelecterList);
-//        if(checkBoxSelecterList==null||checkBoxSelecterList.isEmpty())checkBoxLayout.selectAllItem(true);
 
         yes = status.findViewById(R.id.dialog_status_confirm);
         yes.setOnClickListener(this);
@@ -101,26 +100,30 @@ public class StatusDialog extends BaseDialog implements View.OnClickListener {
         lp = window.getAttributes();
         lp.gravity = Gravity.BOTTOM; // 紧贴底部
         lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
-        status.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (isFirst) {
-                    lp.height = status.getHeight();
-                    L.d("statusHeight", status.getHeight() + "");
-                    window.setAttributes(lp);
-                    window.setBackgroundDrawableResource(android.R.color.transparent);
-                    isFirst = !isFirst;
-                }
-            }
-        });
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
+
+//        status.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                if (isFirst) {
+//                    lp.height = status.getHeight();
+//                    L.d("statusHeight", status.getHeight() + "");
+//                    window.setAttributes(lp);
+//                    window.setBackgroundDrawableResource(android.R.color.transparent);
+//                    isFirst = !isFirst;
+//                }
+//            }
+//        });
 
         if (checkBoxSelecterList == null)
             checkBoxSelecterList = new ArrayList<>();
     }
 
-//    public void selectAllItem(boolean isSelectAll) {
-//        this.isSelectAll=isSelectAll;
-//    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
 
     @Override
     public void onClick(View v) {
@@ -133,6 +136,6 @@ public class StatusDialog extends BaseDialog implements View.OnClickListener {
     }
 
     public interface onDialogOnclikeLisenter {
-        void onClick(Dialog v, int viewID, List<Integer> viewList, String[] content);
+        void onClick(Dialog v, int viewID, List<String> viewList, String[] content);
     }
 }

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/option_ll_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/option_view_transferred"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/checkbox"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="@string/transferred" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/option_view_confirmed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/checkbox"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="@string/confirmed" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/option_view_o_property"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/checkbox"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="@string/o_property" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/option_view_corporationTransferre"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+
+            style="@style/checkbox"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="@string/corporationTransferre" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/option_view_developmentEndCredits"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <CheckBox
+            style="@style/checkbox"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="@string/developmentEndCredits" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/option_view_green_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/checkbox"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="@string/green_price" />
+    </LinearLayout>
+
+
+
+</LinearLayout>

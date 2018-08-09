@@ -1,13 +1,19 @@
 package com.centanet.hk.aplus.Views.HousetListView.view;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +28,6 @@ import com.centanet.hk.aplus.Utils.ItemCountUtil;
 import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Views.ComplexSearchView.ComplexActivity;
 import com.centanet.hk.aplus.Views.Dialog.StatusDialog;
-import com.centanet.hk.aplus.Views.GooglevoiView;
 import com.centanet.hk.aplus.Views.HouseFragment.BaseHouseFragment;
 import com.centanet.hk.aplus.Views.LoginView.view.LoginActivity;
 import com.centanet.hk.aplus.Widgets.CircleTipsView;
@@ -40,8 +45,10 @@ import com.centanet.hk.aplus.bean.http.FavoriteDescription;
 import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 import com.centanet.hk.aplus.bean.http.HouseDescription;
 import com.centanet.hk.aplus.bean.house.Properties;
+import com.centanet.hk.aplus.bean.http.UserBehaviorDescription;
 import com.centanet.hk.aplus.eventbus.MessageEventBus;
 import com.centanet.hk.aplus.manager.ApplicationManager;
+import com.centanet.hk.aplus.manager.ScreenShotListenManager;
 import com.githang.statusbar.StatusBarCompat;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
@@ -82,6 +89,7 @@ import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.RefreshView.VIEW_REFRES
 
 public class HouseListFragment extends BaseHouseFragment implements IHouseListFragment, View.OnClickListener {
 
+    private static final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 321;
     private final String thiz = getClass().getSimpleName();
     private View view;
     private ListView lv;
@@ -95,7 +103,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
     private AHeaderDescription aHeaderDescription;
     private HouseDescription bodyDescription;
     private String houseCount = "0";
-    private List<Integer> staSelectList;
+    private List<String> staSelectList;
     public static String[] priceInterval;
     private int priceType = SALE;
     private int priceDialogSeletedId;
@@ -107,6 +115,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
     private View statusDown;
     private int position;
     private boolean isFirst = true;
+    private ScreenShotListenManager screenShotListenManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -141,7 +150,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
         complexDown = view.findViewById(R.id.fragment_img_complex_down);
         refreshLayout = view.findViewById(R.id.smartLayout);
         reset = view.findViewById(R.id.fragment_list_txt_reset);
-        mic = view.findViewById(R.id.houselist_img_mic);
+        mic = view.findViewById(R.id.mic);
         refreshLayout.setEnableLoadmore(false);
     }
 
@@ -153,6 +162,8 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
         staSelectList = new ArrayList<>();
         searchHistory = new ArrayList<>();
         priceInterval = new String[2];
+        priceInterval[0] = "";
+        priceInterval[1] = "";
         adapter = new ItemAdapter(getActivity(), listData);
         adapter.setOnItemClickListener(new ItemAdapter.OnItemClickListener() {
             @Override
@@ -175,6 +186,8 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
         ClassicsFooter.REFRESH_FOOTER_REFRESHING = getString(R.string.updateing);
         ClassicsFooter.REFRESH_FOOTER_LOADING = getString(R.string.updateing);
         ClassicsFooter.REFRESH_FOOTER_FINISH = getString(R.string.update_finish);
+
+        startScreenListen();
     }
 
     @Override
@@ -199,11 +212,12 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
                 currentPosition.setText("0/0");
             } else {
 
-                int y = lv.getChildAt(0).getTop();
                 int item = lv.getFirstVisiblePosition() + 1;
-                if (y < -144) item++;
+                if (lv.getChildAt(0) != null) {
+                    int y = lv.getChildAt(0).getTop();
+                    if (y < -144) item++;
+                }
                 currentPosition.setText(item + "/" + houseCount);
-                L.d("height", y + "");
             }
         });
 
@@ -233,6 +247,8 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
                 if (refreshLayout.isRefreshing() || refreshLayout.isLoading()) return;
                 Intent intent = new Intent(getActivity(), DetailActicity.class);
                 intent.putExtra("keyId", listData.get(position).getKeyId());
+                intent.putExtra("index", position);
+                intent.putExtra("propertyCount", houseCount);
                 startActivity(intent);
             }
         });
@@ -274,7 +290,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
             case R.id.fragment_list_txt_reset:
                 reset();
                 break;
-            case R.id.houselist_img_mic:
+            case R.id.mic:
                 Intent micIntent = new Intent(getContext(), SearchActivity.class);
                 micIntent.putExtra("mic", true);
                 if (!searchHistory.isEmpty()) {
@@ -287,6 +303,46 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
         }
     }
 
+    private void startScreenListen() {
+
+//        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            //申请WRITE_EXTERNAL_STORAGE权限
+//            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                    WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
+//        }
+
+        screenShotListenManager = ScreenShotListenManager.newInstance(getActivity());
+        screenShotListenManager.setListener((imagePath) -> onScreenShot());
+        screenShotListenManager.startListen();
+    }
+
+    private void onScreenShot() {
+        if (!isVisible || !isResume) return;
+        L.d(thiz, "HouseShot: " + " FirstVisiblePosition: " + lv.getFirstVisiblePosition() + " LastVisiblePosition: " + lv.getLastVisiblePosition());
+        UserBehaviorDescription userBehaviorDescription = new UserBehaviorDescription();
+        userBehaviorDescription.setAction(1);
+        userBehaviorDescription.setPage(4);
+        userBehaviorDescription.setExtras(getExtras());
+        presenter.doPost(HttpUtil.URL_USER_BEHAVIOR, aHeaderDescription, userBehaviorDescription);
+    }
+
+    private String getExtras() {
+        if (lv.getCount() == 0) return null;
+        int firstVisiblePosition = lv.getFirstVisiblePosition();
+        int lastVisiblePosition = lv.getLastVisiblePosition();
+
+        String extras = "{" + "\"PropertyKeyId\"" + ":" + "[";
+        for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
+            extras = extras + "\"" + listData.get(i).getKeyId() + "\"" + ",";
+        }
+        extras = extras.substring(0, extras.length() - 1);
+        extras = extras + "]}";
+        L.d(thiz, "onShot: " + extras);
+        return extras;
+    }
+
+
     private void reset() {
 
         complexTipsView.setVisibility(View.GONE);
@@ -294,15 +350,17 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
         sortDialogSelectId = R.id.sort_rb_default;
         priceDialogSeletedId = R.id.dialog_radiobtn_default;
         staSelectList.clear();
-//        adapter.setShowGreenTabView(false);
+
         statusDown.setVisibility(View.VISIBLE);
         statusCircleTipsView.setVisibility(View.GONE);
         ApplicationManager.setHouseOperation(new Operation());
         search.setText(null);
-        priceInterval = new String[2];
+
+        priceInterval[0] = "";
+        priceInterval[1] = "";
         searchHistory.clear();
         bodyDescription = new HouseDescription();
-//        openFreshView();
+
     }
 
     private void showStatusDialog() {
@@ -314,10 +372,8 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
             staSelectList = viewList;
             statusCircleTipsView.setText(viewList.size());
             if (content == null) {
-//                statusCircleTipsView.setText(6);
                 statusDown.setVisibility(View.VISIBLE);
                 statusCircleTipsView.setVisibility(View.GONE);
-//                statusCircleTipsView.setVisibility(View.VISIBLE);
             } else {
                 statusCircleTipsView.setVisibility(View.VISIBLE);
                 statusDown.setVisibility(View.GONE);
@@ -325,7 +381,6 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
             bodyDescription.setPropertyStatus(ApplicationManager.getStatusValue(content));
             openFreshView();
         });
-//        statusEndDialog.selectAllItem(true);
         statusEndDialog.show(getFragmentManager(), "");
     }
 
@@ -343,6 +398,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
                 priceDialogSeletedId = (int) params.get(PriceDialog.PARAMS_SELECTID);
                 String[] items = (String[]) params.get(PriceDialog.PARAMS_PRICE);
 //                bodyDescription.setPageIndex(1);
+                L.d("showPriceDialog", items[0] + " " + items[1]);
                 if (items != null) {
                     if (type == SALE) {
                         bodyDescription.setSalePriceFrom(items[0] == "" ? null : items[0]);
@@ -352,6 +408,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
                     } else {
                         bodyDescription.setRentPriceFrom(items[0] == "" ? null : items[0]);
                         bodyDescription.setRentPriceTo(items[1] == "" ? null : items[1]);
+                        L.d("showPriceDialog", items[0] + " : " + items[1]);
                         bodyDescription.setSalePriceFrom(null);
                         bodyDescription.setSalePriceTo(null);
                     }
@@ -427,7 +484,8 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
                 openLoadView();
                 break;
             case HOUSELIST_COUNT:
-                setCountTxt(messageEvent);
+                if (messageEvent != null)
+                    setCountTxt(messageEvent);
                 break;
             case HOUSELIST:
                 lv.setVisibility(View.VISIBLE);
@@ -555,8 +613,23 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        L.d("result", "" + resultCode);
         switch (resultCode) {
+            case 0:
+                L.d("0", "search");
+                if (data != null) {
+                    Bundle bundle = data.getExtras();
+                    String condition = bundle.getString(SearchActivity.VIEW_SEARCH_KEY_TYPE);
+                    if (condition != null) {
+                        searchHistory.clear();
+                        for (String address : condition.split("/")) {
+                            searchHistory.add(address.split(":")[1]);
+                        }
+                    }
+                }
+                break;
             case 1:
+                L.d("1", "search");
                 if (data != null) {
                     Bundle bundle = data.getExtras();
                     List<String> addressList = new ArrayList<>();
@@ -585,6 +658,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
                 break;
 
             case 2:
+                L.d("2", "search");
                 Bundle bundle = data.getExtras();
                 HouseDescription description = (HouseDescription) bundle.get("body");
                 int count = 0;

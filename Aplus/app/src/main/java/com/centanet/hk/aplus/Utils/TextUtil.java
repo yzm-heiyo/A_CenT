@@ -44,4 +44,13 @@ public class TextUtil {
                         + "</font>");
         return temp;
     }
+
+    /**
+     * 将属性名称的首字母变成大写
+     */
+    public static String getMethodName(String fieldName) {
+        byte[] bytes = fieldName.getBytes();
+        bytes[0] = (byte) (bytes[0] - 'a' + 'A');
+        return new String(bytes);
+    }
 }

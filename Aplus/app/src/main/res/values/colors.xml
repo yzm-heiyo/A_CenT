@@ -5,16 +5,25 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="colortheme">#BB2E2D</color>
+    <color name="color_blue">#3498db</color>
     <color name="colorBackground">#ffffffff</color>
     <color name="colorline">#D1D1D1</color>
     <color name="color_itemt_result_text">#6F6F6F</color>
     <color name="color_itemt_result_date">#7EC5BC</color>
-    <color name="white">#ffffff</color>
+    <color name="color_white">#ffffff</color>
     <color name="color_theme_item">#f8f8f8</color>
-    <color name="translucent">#00000000</color>
+    <color name="color_translucent">#00000000</color>
     <color name="color_itemt_detail_title">#222222</color>
-    <color name="black_medium">#666666</color>
-    <color name="line">#EFEFEF</color>
+    <color name="color_black_medium">#666666</color>
+    <color name="color_light_grey">#EFEFEF</color>
     <color name="color_rim">#E7E7E7</color>
-
+    <color name="color_light_green">#009420</color>
+    <color name="color_dark_green">#009988</color>
+    <color name="color_neutral_grey">#6C6C6C</color>
+    <color name="color_french_gray">#9B9B9B</color>
+    <color name="color_black">#000000</color>
+    <color name="color_orange">#f39c13</color>
+    <color name="calendar_week_gray">#D8D8D8</color>
+    <color name="color_blue_wathet">#4A90E2</color>
+    <color name="color_brown">#3E3A39</color>
 </resources>

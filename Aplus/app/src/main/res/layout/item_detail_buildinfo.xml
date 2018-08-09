@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/layer_rim_line"
+    android:orientation="vertical"
+    android:padding="15dp">
+    <!-- 大廈備註 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ico_buidling_rmk" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left|center"
+            android:paddingLeft="8dp"
+            android:text="大廈備註"
+            android:textColor="@color/colortheme"
+            android:textSize="@dimen/themeSize" />
+
+    </LinearLayout>
+
+    <com.centanet.hk.aplus.Widgets.SmallItemView
+        android:id="@+id/detail_txt_movein_date"
+        style="@style/smallitem_style"
+        app:SmallItemContent=""
+        app:SmallItemContentWeight="5"
+        app:SmallItemTitle="入伙日"
+        app:SmallItemTitleWeight="1"/>
+
+    <com.centanet.hk.aplus.Widgets.SmallItemView
+        android:id="@+id/detail_txt_management_cost"
+        style="@style/smallitem_style"
+        app:SmallItemContent=""
+        app:SmallItemContentWeight="5"
+        app:SmallItemTitle="管理費"
+        app:SmallItemTitleWeight="1"/>
+
+    <com.centanet.hk.aplus.Widgets.SmallItemView
+        android:id="@+id/detail_txt_landlease"
+        style="@style/smallitem_style"
+        app:SmallItemContent=""
+        app:SmallItemContentWeight="5"
+        app:SmallItemTitle="地租年期"
+        app:SmallItemTitleWeight="1"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="設施"
+            android:textSize="@dimen/themeSizesmall" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:orientation="vertical">
+
+            <com.centanet.hk.aplus.Widgets.LineBreakLayout
+                android:id="@+id/text_ll_facility_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|left"/>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

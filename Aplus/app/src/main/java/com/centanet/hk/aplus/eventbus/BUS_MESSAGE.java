@@ -64,5 +64,14 @@ public class BUS_MESSAGE {
 
     public static final int VIRTUALPHONE = 28;
     public static final int CALLHIDDEN_YES = 29;
+    public static final int OBUILDING_YES = 30;
 
+    public class HouseNavigation {
+        public static final int SHOW = 31;
+        public static final int HIDDEN = 32;
+    }
+
+    public class HomeFastSearch{
+        public static final int FAST_SEARCH = 33;
+    }
 }

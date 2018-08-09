@@ -1,13 +1,14 @@
 package com.centanet.hk.aplus.Views.SearchView.model;
 
+import com.centanet.hk.aplus.Utils.MD5Util;
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Utils.L;
-import com.centanet.hk.aplus.bean.auto_estate.AutoHouseData;
+import com.centanet.hk.aplus.bean.auto_estate.AutoHouseResponse;
 import com.centanet.hk.aplus.bean.auto_estate.PropertyParamHints;
 import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 
-import org.litepal.crud.DataSupport;
+import org.litepal.LitePal;
 import org.litepal.tablemanager.Connector;
 
 import java.io.IOException;
@@ -35,30 +36,39 @@ public class SearchModel implements ISearchModel {
     @Override
     public void doPost(String address, AHeaderDescription headers, Object bodys) {
 
-        HttpUtil.doPost(address, bodys, headers, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                L.d("NetWork-Exception", e.toString());
-            }
+        String number = System.currentTimeMillis() / 1000 + "";
+        L.d("time", number);
+        headers.setNumber(number);
+        headers.setSign(MD5Util.getMD5Str("CYDAP_com-group~Centa@" + number + headers.getStaffno()));
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String dataBack = response.body().string().trim().toString();
-                L.d(thiz + "-Response", dataBack);
-                try {
-                    AutoHouseData autoHouseData = GsonUtil.parseJson(dataBack, AutoHouseData.class);
-                    if (onReceiveListener != null) {
-                        onReceiveListener.onReceive(autoHouseData.getPropertyParamHints());
-                        onReceiveListener.onReceivelFinish();
-                    }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                } catch (InstantiationException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
+        HttpUtil.cancelRequest();//防止實時搜索數據覆蓋
+        HttpUtil.doPost(address, bodys, headers, callback);
     }
+
+    private Callback callback = new Callback() {
+        @Override
+        public void onFailure(Call call, IOException e) {
+            L.d("NetWork-Exception", e.toString());
+        }
+
+        @Override
+        public void onResponse(Call call, Response response) throws IOException {
+
+            String dataBack = response.body().string().trim().toString();
+            L.d(thiz + "-Response", dataBack);
+            try {
+                AutoHouseResponse autoHouseData = GsonUtil.parseJson(dataBack, AutoHouseResponse.class);
+                if (onReceiveListener != null) {
+                    onReceiveListener.onReceive(autoHouseData.getPropertyParamHints());
+                    onReceiveListener.onReceivelFinish();
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     @Override
     public void setRespontListener(OnReceiveListener receiveListener) {
@@ -77,7 +87,7 @@ public class SearchModel implements ISearchModel {
             }
         } else {
             for (PropertyParamHints his : history) {
-                DataSupport.deleteAll(PropertyParamHints.class, "KeyId = ?", his.getKeyId());
+                LitePal.deleteAll(PropertyParamHints.class, "KeyId = ?", his.getKeyId());
             }
             if (historySize + getSearchHistory().size() <= 10) {
                 for (PropertyParamHints data : history) {
@@ -87,8 +97,8 @@ public class SearchModel implements ISearchModel {
             } else {
                 int len = historySize + getSearchHistory().size() - 10;
                 for (int i = 0; i < len; i++) {
-                    PropertyParamHints first = DataSupport.findFirst(PropertyParamHints.class);
-                    DataSupport.deleteAll(PropertyParamHints.class, "KeyId = ?", first.getKeyId());
+                    PropertyParamHints first = LitePal.findFirst(PropertyParamHints.class);
+                    LitePal.deleteAll(PropertyParamHints.class, "KeyId = ?", first.getKeyId());
                     first.delete();
                 }
                 for (PropertyParamHints data : history) {
@@ -111,6 +121,11 @@ public class SearchModel implements ISearchModel {
     }
 
     @Override
+    public void deleteSearchHistory() {
+        LitePal.deleteAll(PropertyParamHints.class);
+    }
+
+    @Override
     public List<String> changeToLabelData(List<PropertyParamHints> datas) {
         List<String> labelData = new ArrayList<>();
         for (PropertyParamHints data : datas) {
@@ -130,7 +145,7 @@ public class SearchModel implements ISearchModel {
         Connector.getDatabase();
         List<PropertyParamHints> labelHistory = new ArrayList<>();
         for (String param : params) {
-            labelHistory.addAll(DataSupport.where("KeyId = ?", param).find(PropertyParamHints.class));
+            labelHistory.addAll(LitePal.where("KeyId = ?", param).find(PropertyParamHints.class));
         }
         return labelHistory;
     }
@@ -151,7 +166,7 @@ public class SearchModel implements ISearchModel {
 
 
     public List<PropertyParamHints> getSearchHistory() {
-        return DataSupport.findAll(PropertyParamHints.class);
+        return LitePal.findAll(PropertyParamHints.class);
     }
 
 

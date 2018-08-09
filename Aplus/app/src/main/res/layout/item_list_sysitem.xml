@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/sysitem_ll_content"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <CheckBox
+        android:id="@+id/sysitem_checkbox"
+        style="@style/checkbox"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:clickable="false"
+        android:enabled="false" />
+
+    <TextView
+        android:id="@+id/sysitem_txt_title"
+        style="@style/fragment_more_status"
+        />
+
+</LinearLayout>

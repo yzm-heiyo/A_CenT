@@ -1,6 +1,7 @@
 package com.centanet.hk.aplus.Views.MineView.view;
 
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.Dialog.DialogFactory;
+import com.centanet.hk.aplus.Views.Dialog.LogoutDialog;
 import com.centanet.hk.aplus.Views.LoginView.view.LoginActivity;
 import com.centanet.hk.aplus.Views.MineView.present.FeedBackPresent;
 import com.centanet.hk.aplus.Views.MineView.present.IFeedBackPresent;
@@ -25,6 +27,8 @@ import com.centanet.hk.aplus.bean.mine.Infomation;
 import com.centanet.hk.aplus.manager.ApplicationManager;
 import com.githang.statusbar.StatusBarCompat;
 
+import static com.centanet.hk.aplus.MyApplication.getContext;
+import static com.centanet.hk.aplus.Views.Dialog.LogoutDialog.DIALOG_YES;
 import static com.centanet.hk.aplus.common.CommandField.DialogType.LOGOUT;
 
 /**
@@ -86,16 +90,18 @@ public class MineFragment extends Fragment implements IMineView, View.OnClickLis
                 break;
 
             case R.id.fragment_mine_logout:
-                DialogFragment dialog = DialogFactory.newInstance(LOGOUT, new DialogFactory.IGetClickItem() {
+                LogoutDialog logoutDialog = new LogoutDialog();
+                logoutDialog.setOnDialogOnclikeLisenter(new LogoutDialog.OnDialogOnclikeLisenter() {
                     @Override
-                    public void getClickItem(DialogFragment dialog, String... items) {
-                        dialog.dismiss();
-                        MyApplication.removeAllActiies();
-                        startActivity(new Intent(getContext(), LoginActivity.class));
-
+                    public void onClick(Dialog v, int clickID) {
+                        v.dismiss();
+                        if (clickID == DIALOG_YES) {
+                            MyApplication.removeAllActiies();
+                            startActivity(new Intent(getContext(), LoginActivity.class));
+                        }
                     }
                 });
-                dialog.show(getFragmentManager(), "");
+                logoutDialog.show(getActivity().getFragmentManager(), "");
                 break;
             case R.id.mine_txt_about:
                 startActivity(new Intent(getContext(), AboutActivity.class));
@@ -109,6 +115,7 @@ public class MineFragment extends Fragment implements IMineView, View.OnClickLis
 
     @Override
     public void refreshView(final Infomation infomation) {
+        if(getActivity()==null)return;
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -117,7 +124,8 @@ public class MineFragment extends Fragment implements IMineView, View.OnClickLis
                 fullname.setText(infomation.getFullName());
                 departname.setText(infomation.getDepartmentName());
                 position.setText(infomation.getPosition());
-                if(!infomation.getPhotoPath().equals("")) Glide.with(getActivity()).load(infomation.getPhotoPath()).into(icoView);
+                if (infomation.getPhotoPath() != null && !infomation.getPhotoPath().equals(""))
+                    Glide.with(getActivity()).load(infomation.getPhotoPath()).into(icoView);
             }
         });
     }

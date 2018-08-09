@@ -6,6 +6,8 @@ import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
+import com.centanet.hk.aplus.bean.build_tag.BuildTagResponse;
+import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 import com.centanet.hk.aplus.common.APSystemParameterType;
 import com.centanet.hk.aplus.common.CommandField;
 import com.centanet.hk.aplus.common.DataManager;
@@ -16,6 +18,7 @@ import com.centanet.hk.aplus.bean.params.Parameter;
 import com.centanet.hk.aplus.bean.params.SystemParam;
 import com.centanet.hk.aplus.bean.params.SystemParamItems;
 import com.centanet.hk.aplus.bean.update.UpdateParams;
+import com.centanet.hk.aplus.manager.AppSystemParamsManager;
 import com.centanet.hk.aplus.manager.ApplicationManager;
 
 import java.io.BufferedOutputStream;
@@ -66,6 +69,7 @@ public class LoginModel implements ILoginModel {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String dataBack = response.body().string().toString();
+
                 if (response.code() == 200) {
                     L.d("doGet", dataBack);
 
@@ -94,20 +98,21 @@ public class LoginModel implements ILoginModel {
                                         }
                                         ApplicationManager.getApplication().setClientVer(updateParams.getResult().getClientVer());
                                         ApplicationManager.getApplication().setUpdateUrl(updateParams.getResult().getUpdateUrl());
+                                        ApplicationManager.getApplication().setUpdateContent(updateParams.getResult().getUpdateContent());
+                                        L.d("updateContent", updateParams.getResult().getUpdateContent());
                                     }
                             } catch (IllegalAccessException e) {
                                 e.printStackTrace();
                             } catch (InstantiationException e) {
                                 e.printStackTrace();
                             }
-
                             break;
                     }
-
                 } else if (listener != null) listener.onFailure();
             }
         });
     }
+
 
     //获得独一无二的Psuedo ID
     @Override
@@ -149,6 +154,7 @@ public class LoginModel implements ILoginModel {
         HttpUtil.doPost(address, body, header, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                L.d("onFailure", e.toString());
                 if (listener != null) listener.onFailure();
             }
 
@@ -210,31 +216,13 @@ public class LoginModel implements ILoginModel {
      * @param isNeedVerify
      */
     private void getParams(String dataBack, boolean isNeedVerify) {
-        Parameter parameter = null;
-        try {
-            parameter = GsonUtil.parseJson(dataBack, Parameter.class);
 
-            for (SystemParam p : parameter.getSystemParam()) {
-                L.d("p", p.toString());
-                switch (p.getParameterType()) {
-                    case APSystemParameterType.house:
-                        ApplicationManager.setIntervalSystemParam(p);
-                        break;
-                    case APSystemParameterType.houseDirection:
-                        ApplicationManager.setDirectionSystemParam(p);
-                        break;
+        AppSystemParamsManager.setSystemParams(dataBack);
+        ApplicationManager.setIntervalSystemParam(AppSystemParamsManager.getSystemParams(APSystemParameterType.house));
+        ApplicationManager.setDirectionSystemParam(AppSystemParamsManager.getSystemParams(APSystemParameterType.houseDirection));
+        ApplicationManager.setLabelSystemParam(AppSystemParamsManager.getSystemParams(APSystemParameterType.propertyTag));
 
-                    case APSystemParameterType.propertyTag:
-                        ApplicationManager.setLabelSystemParam(p);
-//                        case
-                }
-            }
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        }
-        if (!parameter.isNeedUpdate() && isNeedVerify) return;
+        if (!AppSystemParamsManager.isNeedToUpdate() && isNeedVerify) return;
         saveFile(dataBack);
     }
 
@@ -378,30 +366,6 @@ public class LoginModel implements ILoginModel {
         return false;
     }
 
-//    private String getStatusText(String statu){
-//        switch (statu.substring(0, 1)) {
-//            case "N":
-//                level = 1;
-//                break;
-//            case "P":
-//                level = 2;
-//                break;
-//            case "S":
-//                level = 6;
-//                break;
-//            case "T":
-//                level = 4;
-//                break;
-//            case "G":
-//                level = 5;
-//                break;
-//            default:
-//                level = 3;
-//                break;
-//        }
-//        return statu;
-//    }
-
     public void setParams(List<Map<String, String>> params) {
         DataManager.parameter = params;
     }
@@ -410,6 +374,34 @@ public class LoginModel implements ILoginModel {
     @Override
     public void setLisenter(OnReceiveLisenter lisenter) {
         this.listener = lisenter;
+    }
+
+    @Override
+    public void getTagCategory(AHeaderDescription header) {
+        L.d("TagCategory","");
+        HttpUtil.doGet(HttpUtil.URL + HttpUtil.URL_TAG_BUILD, header, null, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                L.d("TagCategory",e.getMessage().toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+                String databack = response.body().string().toString();
+                L.d("TagCategory",databack);
+                if(response.isSuccessful()){
+                    try {
+                        BuildTagResponse tagResponse = GsonUtil.parseJson(databack,BuildTagResponse.class);
+                        AppSystemParamsManager.setTagCategorys(tagResponse.getTagCategorys());
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InstantiationException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
     }
 
     public interface OnReceiveLisenter {

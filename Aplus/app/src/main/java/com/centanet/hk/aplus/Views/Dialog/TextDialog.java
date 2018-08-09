@@ -101,46 +101,6 @@ public class TextDialog extends DialogFragment implements View.OnClickListener {
         this.tipString = tipString;
     }
 
-//    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-//    @Nullable
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        View content=inflater.inflate(R.layout.fragment_dialog_tips,container,false);
-//
-//        if(view!=null){
-//            RelativeLayout topContentView=content.findViewById(R.id.tips_dialoa_contentview);
-//            topContentView.removeAllViews();
-//            topContentView.addView(view);
-//        }
-//
-//        //todo 根據傳入的值來改變
-//        if(ContentString!=null) {
-//            TextView conTentTxt=content.findViewById(Layout_ID);
-//            conTentTxt.setText(ContentString);}
-//
-//        if(tipString!=null){
-//            TextView tipTxt = content.findViewById(R.id.dialog_title_txt);
-//            tipTxt.setText(tipString+"");
-//        }
-//
-//        leftBtn=content.findViewById(R.id.tips_dialog_left);
-//        leftBtn.setOnClickListener(this);
-//        rightBtn=content.findViewById(R.id.tips_dialog_right);
-//        rightBtn.setOnClickListener(this);
-//        lineView = content.findViewById(R.id.dialog_tips_line);
-//
-//
-//        if(!isLeftVisibility){
-//            leftBtn.setVisibility(View.GONE);
-//            lineView.setVisibility(View.GONE);
-//        }
-//
-//
-//        return content;
-//    }
-
     public void setCanceledOnTouchOutside(boolean cancelable){
         ableToCancelOutside = cancelable;
     }

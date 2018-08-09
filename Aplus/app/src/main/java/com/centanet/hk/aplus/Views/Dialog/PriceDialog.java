@@ -2,27 +2,41 @@ package com.centanet.hk.aplus.Views.Dialog;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.DensityUtil;
+import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Views.basic.BaseDialog;
 import com.centanet.hk.aplus.Widgets.ProcessBarView;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.centanet.hk.aplus.common.CommandField.DialogItemStatus.UNSELECT;
 import static com.centanet.hk.aplus.common.CommandField.PriceType.RENT;
@@ -39,21 +53,21 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
     public static final String PARAMS_SELECTID = "selectId";
     public static final String PARAMS_PRICE = "price";
     private static final int SALE_MAX = 3000;
-    private static final int RENT_MAX = 100000;
+    private static final int RENT_MAX = 100;
     private Dialog dialog;
     private ProcessBarView processBarView;
     private EditText priceLeftEdit, priceRightEdit;
     private View dialogView;
     private String[] price;
-    private View priceLayout;
+    private LinearLayout priceLayout;
     private RadioGroup priceGroup, typeGroup;
     private WindowManager.LayoutParams lp;
     private int selectRadId;
     private Button priceBtn;
     private RadioButton defaultBtn, _0_400_Btn, _400_600_btn, _600_800btn, _800_1000_btn, _1000_2000_btn, _2000_3000_btn, abovebtn;
-    private String[] salePrice = {"0", "200", "400", "600", "800", "1000", "2000", "3000"};
-    private String[] rentPrice = {"0", "10000", "15000", "20000", "40000", "60000", "100000"};
-    private String[][] rentPriceList = {{"0", "10000"}, {"10000", "15000"}, {"15000", "20000"}, {"20000", "40000"}, {"40000", "60000"}, {"60000", "100000"}, {"100000", "100000"}, {"", ""}};
+    private String[] salePrice = {"0", "200", "400", "600", "800", "1000", "2000", "3000", ""};
+    private String[] rentPrice = {"0", "10", "15", "20", "40", "60", "100", ""};
+    private String[][] rentPriceList = {{"0", "10"}, {"10", "15"}, {"15", "20"}, {"20", "40"}, {"40", "60"}, {"60", "100"}, {"100", ""}, {"", ""}};
     private String[][] salePriceList = {{"0", "400"}, {"400", "600"}, {"600", "800"}, {"800", "1000"}, {"1000", "2000"}, {"2000", "3000"}, {"3000", ""}, {"", ""}};
     private String[] salePriceTxt = {"不限", "0 - 400萬", "400萬 - 600萬", "600萬 - 800萬", "800萬 - 1,000萬", "1,000萬 - 2,000萬", "2,000萬 - 3,000萬", "3,000萬以上", "萬"};
     private String[] rentPriceTxt = {"不限", "0 - 10,000", "10,000 - 15,000", "15,000 - 20,000", "20,000 - 40,000", "40,000 - 60,000", "60,000 - 100,000", "100,000以上", "千"};
@@ -63,8 +77,14 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
     private int priceMax = SALE_MAX;
     private TextView editTxt;
     private int oldStartPrice = 0;
-    private int oldEndPrice = SALE_MAX;
+    private int oldEndPrice;
     private boolean isFirst = true;
+    private boolean isRentOpen = false;
+    public boolean isOpen = false;
+    @android.support.annotation.IdRes
+    int TAG1401 = 1000;
+    private int lastheight = 0;
+
 
     public PriceDialog() {
     }
@@ -75,6 +95,17 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
         oldType = type;
         this.selectRadId = selectRadId;
         this.price = price;
+
+        if (type == SALE) {
+            oldEndPrice = SALE_MAX;
+        } else {
+            oldEndPrice = RENT_MAX;
+        }
+
+        if (type == RENT) {
+            L.d("type", "rent");
+            isRentOpen = true;
+        }
 
         if (price[0] != null && !price[0].equals(""))
             oldStartPrice = Integer.parseInt(price[0]);
@@ -101,6 +132,55 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
 
         priceLayout = dialog.findViewById(R.id.dialog_price_layout);
 
+        View decorView = dialog.getWindow().getDecorView();
+        decorView.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        //int measuredHeight = decorView.getMeasuredHeight();//拿尺寸不好用
+                        Rect rect = new Rect();
+                        //拿这个控件在屏幕上的可见区域
+                        decorView.getWindowVisibleDisplayFrame(rect);
+                        int height = rect.height();
+                        //第一次刚进来的时候,给上一次的可见高度赋一个初始值,
+                        // 然后不需要再做什么比较了,直接return即可
+                        if (lastheight == 0) {
+                            lastheight = height;
+                            return;
+                        }
+
+                        WindowManager manager = getActivity().getWindowManager();
+                        DisplayMetrics outMetrics = new DisplayMetrics();
+                        manager.getDefaultDisplay().getMetrics(outMetrics);
+                        int screenHeight = outMetrics.heightPixels;
+
+                        //当前这一次的可见高度比上一次的可见高度要小(有比较大的高度差,大于300了),
+                        // 认为是软键盘弹出
+                        if (lastheight - height > 200) {
+                            //隐藏这个RoomFragment中的控件
+                            L.d("open", "");
+                            Timer timer = new Timer();
+                            timer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    ScrollView scrollView = dialog.findViewById(R.id.dialog_price);
+                                    scrollView.getY();
+                                    L.d("scrollCurrentY", scrollView.getScrollY() + "");
+                                    ((ScrollView) dialog.findViewById(R.id.dialog_price)).smoothScrollTo(0, scrollView.getScrollY() + DensityUtil.dip2px(null,20));
+                                    L.d("scrollCurrentY", scrollView.getScrollY() + "");
+                                }
+                            }, 500);
+                        }
+                        //当前这一次的可见高度比上一次的可见高度要大,认为是软键盘收缩
+                        if (height - lastheight > 200) {
+                            L.d("close", "");
+                        }
+                        //记录下来
+                        lastheight = height;
+                    }
+                }
+        );
+
         priceLeftEdit = priceLayout.findViewById(R.id.dialog_price_left_edit);
         priceLeftEdit.setFocusableInTouchMode(true);
         priceLeftEdit.setFocusable(true);
@@ -113,6 +193,9 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
         priceRightEdit.requestFocus();
         priceRightEdit.clearFocus();
         editTxt = priceLayout.findViewById(R.id.dialog_price_edit_txt);
+
+//        priceLeftEdit.setOnClickListener(this);
+//        priceRightEdit.setOnClickListener(this);
 
         priceGroup = priceLayout.findViewById(R.id.dialog_price_group);
         priceGroup.check(selectRadId == 0 ? R.id.dialog_radiobtn_default : selectRadId);
@@ -137,6 +220,7 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
         _2000_3000_btn.setOnClickListener(this);
         abovebtn = priceLayout.findViewById(R.id.dialog_radiobtn_above3000);
         abovebtn.setOnClickListener(this);
+
         setItemValue(salePriceList);
 
         processBarView = priceLayout.findViewById(R.id.dialog_price_ratting);
@@ -147,94 +231,91 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
         lp = window.getAttributes();
         lp.gravity = Gravity.BOTTOM; // 紧贴底部
         lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
-
-        priceLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if(isFirst) {
-                    lp.height = priceLayout.getHeight();
-                    window.setAttributes(lp);
-                    isFirst =!isFirst;
-                }
-            }
-        });
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
 
 
         window.setBackgroundDrawableResource(android.R.color.transparent);
 
-        if (type == SALE) {
+        if (type == SALE)
+
+        {
             priceMax = SALE_MAX;
             typeGroup.check(R.id.dialog_price_rad_sale);
             setItemText(salePriceTxt);
-        } else {
+        } else
+
+        {
             priceMax = RENT_MAX;
             typeGroup.check(R.id.dialog_price_rad_rent);
             setItemText(rentPriceTxt);
         }
+
         initLisenter();
     }
 
-    private void initLisenter() {
-        priceLeftEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+    private TextWatcher left = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            }
+        }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            @Override
-            public void afterTextChanged(Editable s) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (!abovebtn.isChecked())
                 price[0] = priceLeftEdit.getText().toString();
-            }
-        });
-        priceRightEdit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+    };
 
-            }
+    private TextWatcher right = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
+        }
 
-            @Override
-            public void afterTextChanged(Editable s) {
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (!abovebtn.isChecked()) {
                 price[1] = priceRightEdit.getText().toString();
+                if (price[1].indexOf("+") != -1)
+                    price[1] = "";
             }
-        });
+        }
+    };
+
+    private void initLisenter() {
+        priceLeftEdit.addTextChangedListener(left);
+
+        priceRightEdit.addTextChangedListener(right);
         processBarView.setOnProgressChangeListener(onProgressChangeListener);
     }
 
     private ProcessBarView.OnProgressChangeListener onProgressChangeListener = new ProcessBarView.OnProgressChangeListener() {
         @Override
         public void onLeftProgressChange(float progress, int value) {
-
             priceLeftEdit.setText("" + value);
-            if (value != 0) {
-                if (type == RENT) {
-                    value = value >= 10000 ? (value / 1000) * 1000 : (value / 100) * 100;
-                    priceLeftEdit.setText("" + (value >= 10000 ? value / 1000 : value / 100));
-                }
-            }
             price[0] = value + "";
         }
 
         @Override
         public void onRightProgressChange(float progress, int value) {
+            L.d("", "progress: " + progress + " value: " + value);
             priceRightEdit.setText("" + value);
-            if (value != 0) {
-                if (type == RENT) {
-                    value = value >= 10000 ? (value / 1000) * 1000 : (value / 100) * 100;
-                    priceRightEdit.setText("" + (value >= 10000 ? value / 1000 : value / 100));
-                }
-            }
-            if(abovebtn.isChecked()){
-                priceRightEdit.setText(priceRightEdit.getText().toString()+" +");
-            }
             price[1] = value + "";
+            if (abovebtn.isChecked() || progress == 0) {
+                priceRightEdit.setText(priceRightEdit.getText().toString() + " +");
+            }
+
         }
     };
 
@@ -273,7 +354,6 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
 
 
     private boolean isSection(String[] price) {
-
         String[] priceString = (type == SALE ? salePrice : rentPrice);
         for (String priceStart : priceString) {
             if (price[0].equals(priceStart)) {
@@ -284,7 +364,6 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
                 }
             }
         }
-
         return false;
     }
 
@@ -303,6 +382,11 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
     @Override
     public void onClick(View v) {
 
+//        if (v.getId() == R.id.dialog_price_left_edit || v.getId() == R.id.dialog_price_right_edit) {
+//            ((ScrollView) dialog.findViewById(R.id.dialog_price)).scrollTo(0, DensityUtil.dip2px(null, 35));
+//            return;
+//        }
+
         selectRadId = v.getId();
         if (onDialogClikeLisenter != null) {
             if (selectRadId != R.id.dialog_price_confirm) {
@@ -313,13 +397,15 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
                 isClearGroup(price);
             if (selectRadId == R.id.dialog_price_confirm)
                 selectRadId = 0;
-            Map<String,Object> params = new HashMap<>();
+            Map<String, Object> params = new HashMap<>();
 
-            params.put(PARAMS_TYPE,type);
-            params.put(PARAMS_SELECTID,selectRadId);
-            params.put(PARAMS_PRICE,price);
+            if (abovebtn.isChecked()) price[1] = "";
 
-            onDialogClikeLisenter.onClike(getDialog(),0,params);
+            params.put(PARAMS_TYPE, type);
+            params.put(PARAMS_SELECTID, selectRadId);
+            params.put(PARAMS_PRICE, price);
+
+            onDialogClikeLisenter.onClike(getDialog(), 0, params);
         }
     }
 
@@ -332,21 +418,35 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
             } else {
                 if (price[0] == null && price[1] == null) return;
             }
+            L.d("showSlideBar", price[0] + " " + price[1]);
             setEditText();
         }
     }
 
     private void setEditText() {
 
+        L.d("setEditText", price[0] + " : " + price[1]);
+
         if (price[0] != null && !price[0].equals("")) {
             int value = Integer.parseInt(price[0]);
-            if (price[0].equals("3000") || price[0].equals("100000")) value = 0;
+            if (price[0].equals("3000") || price[0].equals("100")) {
+                value = 0;
+                processBarView.setOnProgressChangeListener(null);
+            }
             processBarView.setLeftValue(value);
+            processBarView.setOnProgressChangeListener(onProgressChangeListener);
         }
 
         if (price[1] != null && !price[1].equals("")) {
             int value = Integer.parseInt(price[1]);
             processBarView.setRightValue(value);
+        }
+
+        if (price[0].equals("3000") || price[0].equals("100")) {
+            priceGroup.check(R.id.dialog_radiobtn_above3000);
+            selectRadId = R.id.dialog_radiobtn_above3000;
+            priceLeftEdit.setText("0");
+            priceRightEdit.setText(price[0] + "  +");
         }
     }
 
@@ -364,9 +464,13 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
                 type = SALE;
                 priceMax = SALE_MAX;
                 processBarView.setMax(SALE_MAX);
-                recoverRadioStatus(type);
                 setItemValue(salePriceList);
                 setItemText(salePriceTxt);
+                if (isRentOpen) {
+                    isRentOpen = false;
+                    break;
+                }
+                recoverRadioStatus(type);
                 break;
             case R.id.dialog_price_rad_rent:
                 type = RENT;
@@ -383,12 +487,16 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
         if (type == oldType) {
             priceGroup.check(selectRadId == 0 ? R.id.dialog_radiobtn_default : selectRadId);
             //todo 設置成正確狀態
-            processBarView.setLeftValue(oldStartPrice);
-            processBarView.setRightValue(oldEndPrice);
-            if(defaultBtn.isChecked()){
+            if (defaultBtn.isChecked()) {
                 priceLeftEdit.setText(null);
                 priceRightEdit.setText(null);
+                return;
             }
+            processBarView.setLeftValue(oldStartPrice);
+            processBarView.setRightValue(oldEndPrice);
+
+            if (abovebtn.isChecked()) setEditText();
+
         } else {
             priceGroup.check(R.id.dialog_radiobtn_default);
             processBarView.setLeftProcess(0);
@@ -398,5 +506,7 @@ public class PriceDialog extends BaseDialog implements View.OnClickListener, Rad
         }
     }
 
-    public interface onDialogOnclikeLisenter extends BaseDialog.onDialogOnclikeLisenter<Map<String,Object>>{};
+
+    public interface onDialogOnclikeLisenter extends BaseDialog.onDialogOnclikeLisenter<Map<String, Object>> {
+    }
 }

@@ -2,6 +2,7 @@ package com.centanet.hk.aplus.manager;
 
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.bean.complexSearch.Operation;
+import com.centanet.hk.aplus.bean.district.DistrictItem;
 import com.centanet.hk.aplus.bean.params.Parameter;
 import com.centanet.hk.aplus.bean.params.SystemParam;
 
@@ -16,6 +17,7 @@ import java.util.Map;
 public class ApplicationManager {
 
     private static Map<String, String> statusCode;
+    private static List<DistrictItem> districtItems;
 
     public static MyApplication getApplication() {
         return (MyApplication) MyApplication.getContext().getApplicationContext();
@@ -43,6 +45,14 @@ public class ApplicationManager {
 
     public static void setFavoOperation(Operation operation) {
         ((MyApplication) MyApplication.getContext().getApplicationContext()).setFavoOperation(operation);
+    }
+
+    public static void setDistrictItems(List<DistrictItem> districtItems) {
+        ApplicationManager.districtItems = districtItems;
+    }
+
+    public static List<DistrictItem> getDistrictItems() {
+        return districtItems;
     }
 
     public static Operation getFavoOperation() {

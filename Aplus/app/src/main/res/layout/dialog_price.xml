@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_price"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
@@ -136,6 +136,7 @@
                 android:background="@drawable/shape_detal_date"
                 android:digits="1234567890"
                 android:gravity="center"
+                android:inputType="number"
                 android:hint="@string/dialog_price_unlimit"
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp"
@@ -158,6 +159,7 @@
                 android:digits="1234567890"
                 android:gravity="center"
                 android:hint="@string/dialog_price_unlimit"
+                android:inputType="number"
                 android:paddingBottom="5dp"
                 android:paddingTop="5dp"
                 android:singleLine="true" />
@@ -203,4 +205,4 @@
             android:textSize="@dimen/themeSizeplus" />
     </LinearLayout>
 
-</RelativeLayout>
+</ScrollView>

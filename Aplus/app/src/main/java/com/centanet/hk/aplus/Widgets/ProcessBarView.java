@@ -64,6 +64,13 @@ public class ProcessBarView extends View {
 
     private OnProgressChangeListener onProgressChangeListener;
 
+    private OnFocusChangeListener onFocusChangeListener = new OnFocusChangeListener() {
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            L.d("OnFocusChangeListener", hasFocus + "");
+        }
+    };
+
 
     public ProcessBarView(Context context) {
         super(context);
@@ -95,7 +102,7 @@ public class ProcessBarView extends View {
     private void init(Context context, AttributeSet attrs, int defStyleAttr) {
         TypedArray a = context.obtainStyledAttributes(
                 attrs, R.styleable.ProcessBarView, defStyleAttr, 0);
-        color_line_normal = a.getColor(R.styleable.ProcessBarView_color_line_normal, Color.parseColor("#dedede"));
+        color_line_normal = a.getColor(R.styleable.ProcessBarView_color_line_normal, Color.parseColor("#88efefef"));
         color_line_select = a.getColor(R.styleable.ProcessBarView_color_line_select, Color.parseColor("#BB2E2D"));
         stroke_width_normal = a.getDimension(R.styleable.ProcessBarView_stroke_width_normal, 2f);
         stroke_width_select = a.getDimension(R.styleable.ProcessBarView_stroke_width_select, 4f);
@@ -109,12 +116,17 @@ public class ProcessBarView extends View {
 
     }
 
+
+    @Override
+    public void setOnFocusChangeListener(OnFocusChangeListener l) {
+        super.setOnFocusChangeListener(onFocusChangeListener);
+    }
+
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
-
-        if(isFirstLoad) {
+        if (isFirstLoad) {
             rightOldX = getWidth() - radius;
             rightX = rightOldX;
             isFirstLoad = false;
@@ -175,6 +187,7 @@ public class ProcessBarView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        L.d("Sliding", event.getX() + "");
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 //down的时候记录下触摸点X位置以及触摸点是否落在有效范围的状态
@@ -190,6 +203,7 @@ public class ProcessBarView extends View {
                 } else if (touchStatus == 2) {
                     setRight(changeProgress);
                 }
+//                setOldPointX(event.getX(), touchStatus);
                 break;
             case MotionEvent.ACTION_UP:
 
@@ -286,6 +300,7 @@ public class ProcessBarView extends View {
 
         if (onProgressChangeListener != null) {
             float process = 1 - (rightX - radius * 3) / (width - radius * 4);
+            L.d("process", process + "  process: " + (1 - process) + " max"+max);
             onProgressChangeListener.onRightProgressChange(process, (int) (max * (1 - process)));
         }
     }

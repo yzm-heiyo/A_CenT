@@ -27,14 +27,12 @@ import com.centanet.hk.aplus.Views.Dialog.SimpleTipsDialog;
 import com.centanet.hk.aplus.Views.Dialog.voice.VoiceInputPanel;
 import com.centanet.hk.aplus.Views.FollowAddView.present.FollowAddPresent;
 import com.centanet.hk.aplus.Views.FollowAddView.present.IFollowAddPresent;
-import com.centanet.hk.aplus.Views.SearchView.view.SearchActivity;
 import com.centanet.hk.aplus.Views.basic.BasicActivty;
 import com.centanet.hk.aplus.Widgets.TitleBar;
-import com.centanet.hk.aplus.bean.auto_estate.PropertyParamHints;
-import com.centanet.hk.aplus.bean.detail.DetailAddress;
+import com.centanet.hk.aplus.bean.detail.DetailAddressResponse;
 import com.centanet.hk.aplus.bean.detail.DetailHouse;
 import com.centanet.hk.aplus.bean.http.FollowAddDescription;
-import com.centanet.hk.aplus.bean.http.DetailsDescription;
+import com.centanet.hk.aplus.bean.http.PropertyAddDescription;
 import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 import com.centanet.hk.aplus.eventbus.MessageEventBus;
 import com.githang.statusbar.StatusBarCompat;
@@ -42,8 +40,6 @@ import com.githang.statusbar.StatusBarCompat;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.List;
 
 import static com.centanet.hk.aplus.Utils.net.HttpUtil.URL_FOLLOW_ADD;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_FOLLOW_SUCCESS;
@@ -58,14 +54,15 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
     private TitleBar titleBar;
     private TextView noListenerTxt, voicemailMsgText, cutlineText, wrongNumTxt, lineBusyTxt;
     private EditText recordEdit;
-    private ImageView iconHot, iconKey, iconO, iconL, iconD, iconSingle, iconFavo, icoStatu;
-    private TextView clineNameTxt, houseChNameTxt, houseEnNameTxt, ssdTxt, addressTxt;
+    private ImageView icoStatu;
+    private TextView houseChNameTxt, houseEnNameTxt, addressTxt;
     private String labelContentString;
     private IFollowAddPresent present;
     private String keyId;
     private FollowAddDescription description;
     private AHeaderDescription headerDescription;
     private View addressView, mic;
+    private DetailHouse houseData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,7 +75,7 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
 
     private void initViews() {
         Intent intent = getIntent();
-        DetailHouse houseData = (DetailHouse) intent.getSerializableExtra("DetailData");
+        houseData = (DetailHouse) intent.getSerializableExtra("DetailData");
 
         mic = findViewById(R.id.follow_img_mic);
         mic.setOnClickListener(this);
@@ -96,24 +93,14 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
         wrongNumTxt.setOnClickListener(this);
         lineBusyTxt = findViewById(R.id.feedback_text_line_busy);
         lineBusyTxt.setOnClickListener(this);
-        clineNameTxt = findViewById(R.id.feedback_txt_client);
+
         houseChNameTxt = findViewById(R.id.feedback_txt_ch_housename);
         houseEnNameTxt = findViewById(R.id.feedback_txt_en_housename);
-        ssdTxt = findViewById(R.id.item_icon_ssd);
+
         addressTxt = findViewById(R.id.feedback_txt_address);
         addressTxt.setOnClickListener(this);
 
         icoStatu = findViewById(R.id.feedback_icon_statu);
-        iconHot = findViewById(R.id.item_icon_hot);
-        iconKey = findViewById(R.id.item_icon_key);
-        iconO = findViewById(R.id.item_icon_o);
-        iconL = findViewById(R.id.item_icon_l);
-        iconD = findViewById(R.id.item_icon_d);
-        iconSingle = findViewById(R.id.item_icon_medal);
-        iconFavo = findViewById(R.id.item_icon_favo);
-
-//        if (houseData.getUserIsShowAddressDetail())
-//            addressTxt.setVisibility(View.VISIBLE);
 
         if (!houseData.isUserIsShowDetailFloor()) {
             if (!houseData.getUserIsShowAddressDetail()) {
@@ -131,32 +118,9 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
             houseEnNameTxt.setText(houseData.getDetailAddressEnInfo());
         }
 
-//        if (!houseData.isUserIsShowDetailFloor()) {
-//            if (!houseData.getUserIsShowAddressDetail())
-//                addressView.setVisibility(View.VISIBLE);
-//            else addressView.setVisibility(View.GONE);
-//        } else {
-//            addressView.setVisibility(View.GONE);
-//        }
-
-        iconSingle.setSelected(houseData.isHasOnlyTrust());
-        iconFavo.setSelected(houseData.isFavorite());
-        iconO.setSelected(houseData.isODish());
-        iconKey.setImageLevel(houseData.getPropertyKeyType());
-        iconHot.setSelected(houseData.getHotList() == null || houseData.getHotList().equals("") ? false : true);
-        iconL.setSelected(!houseData.isConfirmed());
-        iconD.setSelected(houseData.getDevelopmentEndCredits());
-        clineNameTxt.setText(houseData.getPropertyBuildingOwner().equals("") ? " " + getString(R.string.detail_no_owner) : " " + houseData.getPropertyBuildingOwner());
-//        houseChNameTxt.setText(!houseData.isUserIsShowDetailFloor() ? houseData.getDetailAddressChInfo() : houseData.getDetailAddressChNoFoolrInfo());
-//        houseEnNameTxt.setText(!houseData.isUserIsShowDetailFloor() ? houseData.getDetailAddressEnInfo() : houseData.getDetailAddressEnNoFoolrInfo());
         titleBar.setTitleContent(getString(R.string.house_umber) + ":" + houseData.getPropertyNo());
         setIconViewLevel(0, houseData.getPropertyStatus());
-        if (houseData.getSSDType() != 0) {
-            ssdTxt.setVisibility(View.VISIBLE);
-            int per = 5 * houseData.getSSDType();
-            if (houseData.getSSDType() == 1) per = 0;
-            ssdTxt.setText(per + "%");
-        }
+
 
         recordEdit = findViewById(R.id.feedback_edit_record);
         recordEdit.setOnKeyListener(new View.OnKeyListener() {
@@ -271,8 +235,9 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
                         v.dismiss();
                         switch (type) {
                             case TitleBar.TYPE_BACK:
-                                if (dialogType == SimpleTipsDialog.DIALOG_YES)
+                                if (dialogType == SimpleTipsDialog.DIALOG_YES) {
                                     finish();
+                                }
                                 break;
                             case TitleBar.TYPE_PUT:
                                 if (follow.length() <= 0) return;
@@ -295,6 +260,7 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
 //        if (follow != "") {
         description.setFollowContent(follow);
         present.doPost(URL_FOLLOW_ADD, headerDescription, description);
+        FollowAddActivity.this.setResult(3);
     }
 
 
@@ -330,13 +296,12 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
                 addContentLabel(getResources().getString(R.string.wrongnumb));
                 break;
             case R.id.feedback_txt_address:
-                DetailsDescription description = new DetailsDescription();
+                PropertyAddDescription description = new PropertyAddDescription();
                 description.setKeyId(keyId);
                 present.doPost(HttpUtil.URL_ADDRESS_DETAIL, headerDescription, description);
 
                 break;
             case R.id.follow_img_mic:
-//                VoiceInputPanel.show(FollowAddActivity.this, false, FollowAddActivity.this);
                 showVoiceInputPanel();
                 break;
             default:
@@ -404,20 +369,38 @@ public class FollowAddActivity extends BasicActivty implements View.OnClickListe
 
 
     @Override
-    public void reFreshAddress(final DetailAddress address) {
+    public void reFreshAddress(final DetailAddressResponse address) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
+                L.d(thiz, address.toString());
+                if (address.getErrorMsg() != null && !address.getErrorMsg().equals("")) {
+                    showPermissionTipDialog(address.getErrorMsg());
+                    return;
+                }
                 addressView.setVisibility(View.GONE);
                 houseChNameTxt.setText(address.getDetailAddressChInfo());
                 houseEnNameTxt.setText(address.getDetailAddressEnInfo());
+                houseData.setDetailAddressChInfo(address.getDetailAddressChInfo());
+                houseData.setDetailAddressEnInfo(address.getDetailAddressEnInfo());
+                houseData.setUserIsShowDetailFloor(true);
+
                 Intent dbIntent = new Intent();
-                dbIntent.putExtra("DetailAddressChInfo", address.getDetailAddressChInfo());
-                dbIntent.putExtra("DetailAddressEnInfo", address.getDetailAddressEnInfo());
+                dbIntent.putExtra("FollowBackData", houseData);
                 FollowAddActivity.this.setResult(2, dbIntent);
+
             }
         });
     }
+
+    private void showPermissionTipDialog(String per) {
+        SimpleTipsDialog simpleTipsDialog = new SimpleTipsDialog();
+        simpleTipsDialog.setContentString(per);
+        simpleTipsDialog.setLeftBtnVisibility(false);
+        simpleTipsDialog.show(getSupportFragmentManager(), "");
+    }
+
 
     @Override
     protected void onDestroy() {

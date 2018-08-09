@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="6dp"
-    android:paddingBottom="6dp"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
     <LinearLayout
@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1.5"
             android:textColor="@color/color_itemt_detail_title"
-            android:textSize="@dimen/themeSizeplus" />
+            android:textSize="14dp" />
 
         <TextView
             android:id="@+id/follow_txt_time"
@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:gravity="right|center"
             android:textColor="@color/color_itemt_result_text"
-            android:textSize="@dimen/themeSizesmall" />
+            android:textSize="12dp" />
 
     </LinearLayout>
 
@@ -36,8 +36,14 @@
         android:id="@+id/follow_txt_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/color_itemt_detail_title"
+        android:textColor="@color/color_french_gray"
+        android:layout_marginBottom="8dp"
         android:textSize="@dimen/themeSize" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+
+        android:background="@color/color_light_grey"/>
 
 </LinearLayout>

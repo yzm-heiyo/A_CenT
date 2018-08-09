@@ -8,20 +8,20 @@ import java.io.Serializable;
 
 public class TrustorDetail implements Serializable{
 
-    private String PropertyKeyId;
-    private String TrustorKeyId;
-    private String ContactValue;
-    private String ContactTypeKeyId;
-    private String ContactTypeName;
-    private String MobileRemark;
-    private int DirectSellTyp;
-    private boolean IsHidden;
-    private String SetHiddenUserKeyId;
-    private String SetHiddenUserDeptKeyId;
-    private String DetailsCreateTime;
-    private String DetailsCreator;
-    private String DetailsUpdateTime;
-    private String DetailsUpdator;
+    private String PropertyKeyId;          /** 房源ID */
+    private String TrustorKeyId;           /** 委托人ID */
+    private String ContactValue;          /** 电话、邮件 */
+    private String ContactTypeKeyId;      /** 电话类型 从系统参数获取 */
+    private String ContactTypeName;       /** 电话类型名称 */
+    private String MobileRemark;          /** 备注 */
+    private int DirectSellTyp;            /** 直销类型 0：不反对 1：不可以 2：未知 */
+    private boolean IsHidden;             /** 是否隐藏联系方式 */
+    private String SetHiddenUserKeyId;    /** 设置隐藏人KeyId */
+    private String SetHiddenUserDeptKeyId;/** 设置隐藏部门KeyId */
+    private String DetailsCreateTime;     /** 业主联系方式创建时间 */
+    private String DetailsCreator;        /** 业主联系方式创建人 */
+    private String DetailsUpdateTime;     /** 业主联系方式更新时间 */
+    private String DetailsUpdator;        /** 业主联系方式修改人 */
     private String KeyId;
 
     public void setKeyId(String keyId) {

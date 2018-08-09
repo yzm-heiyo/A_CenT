@@ -41,6 +41,7 @@ public abstract class BasicActivty extends AppCompatActivity {
                     dialog.dismiss();
                     MyApplication.removeAllActiies();
                     startActivity(new Intent(BasicActivty.this, LoginActivity.class));
+                    finish();
                 }
             });
             simpleTipsDialog.show(getSupportFragmentManager(), "");
@@ -53,6 +54,4 @@ public abstract class BasicActivty extends AppCompatActivity {
         super.onDestroy();
         MyApplication.removeActivity(this);
     }
-
-
 }

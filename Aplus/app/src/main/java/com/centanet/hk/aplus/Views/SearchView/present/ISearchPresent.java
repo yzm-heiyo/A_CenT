@@ -16,5 +16,6 @@ public interface ISearchPresent {
     void saveSearchHistory(List<PropertyParamHints> history);
     void getSearchHistory();
     void recoverLabelHistiry(List<String> history);
+    void deleteHistory();
     String changeToLabelData(PropertyParamHints data);
 }

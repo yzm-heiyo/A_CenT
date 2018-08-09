@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ssd_ll_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/area_ll_editcontent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_marginLeft="15dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/area_edit_start"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="34dp"
+                android:paddingRight="10dp"
+                android:hint="@string/dialog_price_unlimit"
+                android:gravity="center"
+                android:textSize="14dp"
+                android:singleLine="true"
+                android:textStyle="bold"
+                android:textColor="@color/colorline"
+                android:paddingLeft="10dp"
+                android:background="@drawable/shape_square_circle_stroke_deepgrey"/>
+
+            <TextView
+                android:id="@+id/other_txt_staend"
+                style="@style/fragment_other_txt"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:text="呎 -" />
+
+            <EditText
+                android:id="@+id/area_edit_end"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="34dp"
+                android:paddingRight="10dp"
+                android:singleLine="true"
+                android:textSize="14dp"
+                android:gravity="center"
+                android:textStyle="bold"
+                android:hint="@string/dialog_price_unlimit"
+                android:textColor="@color/colorline"
+                android:paddingLeft="10dp"
+                android:background="@drawable/shape_square_circle_stroke_deepgrey"/>
+
+            <TextView
+                style="@style/fragment_other_txt"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="8dp"
+                android:text="@string/ruler" />
+        </LinearLayout>
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+
+        <com.centanet.hk.aplus.Widgets.ProcessBarView
+            android:id="@+id/area_pb_price"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="17dp"
+            android:layout_marginRight="17dp"
+            android:layout_height="30dp" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/area_view_use"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/checkbox_circle"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="實用" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/area_view_really"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <CheckBox
+            style="@style/checkbox_circle"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="建築" />
+    </LinearLayout>
+
+
+
+    
+
+</LinearLayout>

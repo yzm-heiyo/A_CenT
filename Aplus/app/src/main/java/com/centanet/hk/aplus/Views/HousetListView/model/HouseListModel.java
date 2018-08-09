@@ -1,5 +1,6 @@
 package com.centanet.hk.aplus.Views.HousetListView.model;
 
+import com.centanet.hk.aplus.Utils.MD5Util;
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Utils.L;
@@ -48,6 +49,11 @@ public class HouseListModel extends BaseClass implements IHouseListModel {
     @Override
     public void doPost(final String address, AHeaderDescription headers, Object bodys) {
 
+        String number = System.currentTimeMillis() / 1000 + "";
+        L.d("time", number);
+        headers.setNumber(number);
+        headers.setSign(MD5Util.getMD5Str("CYDAP_com-group~Centa@" + number + headers.getStaffno()));
+
         HttpUtil.doPost(address, bodys, headers, new Callback() {
 
             @Override
@@ -80,6 +86,9 @@ public class HouseListModel extends BaseClass implements IHouseListModel {
                             if (parseFavo(dataBack))
                                 if (statusChangeLisenter != null)
                                     statusChangeLisenter.setFavoCancel();
+                            break;
+                        case HttpUtil.URL_USER_BEHAVIOR:
+                            L.d("ScreenShot",dataBack);
                             break;
                         default:
                             break;

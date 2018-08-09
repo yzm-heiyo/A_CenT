@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ssd_ll_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/size_ll_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/size_edit_stastart"
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_square_circle_stroke_deepgrey"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:hint="@string/dialog_price_unlimit"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/colorline"
+                    android:textSize="14dp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:id="@+id/other_txt_staend"
+                    android:layout_width="10dp"
+                    android:layout_height="1dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:background="@color/color_black" />
+
+                <EditText
+                    android:id="@+id/size_edit_endstart"
+                    android:layout_width="0dp"
+                    android:layout_height="34dp"
+                    android:singleLine="true"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_square_circle_stroke_deepgrey"
+                    android:gravity="center"
+                    android:hint="@string/dialog_price_unlimit"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textColor="@color/colorline"
+                    android:textSize="14dp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    style="@style/fragment_other_txt"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="8dp"
+                    android:text="元/呎" />
+            </LinearLayout>
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <com.centanet.hk.aplus.Widgets.ProcessBarView
+                android:id="@+id/size_pb_price"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginLeft="17dp"
+                android:layout_marginRight="17dp" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/size_ll_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/size_view_use_ava_sale"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    style="@style/checkbox_circle"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:clickable="false"
+                    android:enabled="false" />
+
+                <TextView
+                    style="@style/fragment_more_status"
+                    android:text="@string/use_aver_sale" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/size_view_real_ava_sale"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <CheckBox
+                    style="@style/checkbox_circle"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:clickable="false"
+                    android:enabled="false" />
+
+                <TextView
+                    style="@style/fragment_more_status"
+                    android:text="@string/really_aver_sale" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/size_view_real_ava_sale_green"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    style="@style/checkbox_circle"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:clickable="false"
+                    android:enabled="false" />
+
+                <TextView
+                    style="@style/fragment_more_status"
+                    android:text="@string/use_aver_sale_green" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/size_view_use_ava_sale_green"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    style="@style/checkbox_circle"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:clickable="false"
+                    android:enabled="false" />
+
+                <TextView
+                    style="@style/fragment_more_status"
+                    android:text="@string/really_aver_sale_green" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/size_view_usr_ava_rent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <CheckBox
+                    style="@style/checkbox_circle"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:clickable="false"
+                    android:enabled="false" />
+
+                <TextView
+                    style="@style/fragment_more_status"
+                    android:text="@string/use_aver_rent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/size_view_real_ava_rent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    style="@style/checkbox_circle"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:clickable="false"
+                    android:enabled="false" />
+
+                <TextView
+                    style="@style/fragment_more_status"
+                    android:text="@string/really_aver_rent" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

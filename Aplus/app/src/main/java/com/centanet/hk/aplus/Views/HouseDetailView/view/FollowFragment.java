@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.support.v4.app.DialogFragment;
 import android.widget.Toast;
 
-import com.bigkoo.pickerview.TimePickerView;
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.DialogUtil;
@@ -79,6 +78,7 @@ public class FollowFragment extends Fragment implements View.OnClickListener {
     private boolean isFirst = true;
     private boolean isVisible = false;
     private int refreshType = 0;
+    private boolean isDataSearch = false;
 
 
     @Override
@@ -144,7 +144,6 @@ public class FollowFragment extends Fragment implements View.OnClickListener {
 
         refreshView.setOnRefreshListener(refreshlayout -> {
             description.setPageIndex(1);
-//            follows.clear();
             refreshType = 0;
             onUpdateListener.clearFlag();
             refreshlayout.setEnableLoadmore(true);
@@ -172,12 +171,6 @@ public class FollowFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-//        openFreshView();
-    }
-
-    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
@@ -197,7 +190,6 @@ public class FollowFragment extends Fragment implements View.OnClickListener {
 
         switch (messageEvent.getMsg()) {
             case DETAIL_FOLLOW:
-                L.d("DETAIL_FOLLOW", "");
                 List<PropertyFollow> followList = (List<PropertyFollow>) messageEvent.getObject();
                 if (followList != null && !followList.isEmpty()) {
                     if (refreshType == 0) follows.clear();
@@ -206,16 +198,16 @@ public class FollowFragment extends Fragment implements View.OnClickListener {
                     L.d("followSize", follows.size() + "");
                 } else {
                     L.d("followSizeNo", follows.size() + "");
-//                    if (follows.isEmpty()) {
-                    if (!isVisible) {
-                        closeRefresh();
-                        break;
+                    if (follows.isEmpty() || isDataSearch) {
+                        if (!isVisible) {
+                            closeRefresh();
+                            break;
+                        }
+                        follows.clear();
+                        adapter.notifyDataSetChanged();
+                        SimpleTipsDialog dialog = DialogUtil.getSimpleDialog(getString(R.string.dialog_tips_permission_follow_no));
+                        dialog.show(getFragmentManager(), "");
                     }
-                    follows.clear();
-                    adapter.notifyDataSetChanged();
-                    SimpleTipsDialog dialog = DialogUtil.getSimpleDialog(getString(R.string.dialog_tips_permission_follow_no));
-                    dialog.show(getFragmentManager(), "");
-//                    }
                 }
                 closeRefresh();
                 break;
@@ -249,13 +241,12 @@ public class FollowFragment extends Fragment implements View.OnClickListener {
         refreshView.finishLoadmore();
     }
 
-    //    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fragment_follow_date_begin:
             case R.id.fragment_follow_date_end:
-                setDate(v);
+//                setDate(v);
                 break;
             case R.id.img_add_remark:
                 trunToAddFollow();
@@ -272,6 +263,7 @@ public class FollowFragment extends Fragment implements View.OnClickListener {
                 description.setFollowTimeFrom(null);
                 description.setFollowTimeTo(null);
                 defaultTxt.setVisibility(View.VISIBLE);
+                isDataSearch = false;
                 break;
         }
     }
@@ -402,55 +394,56 @@ public class FollowFragment extends Fragment implements View.OnClickListener {
     }
 
     //返回时间
-    private void setDate(final View clickView) {
-
-        Calendar selectedDate = Calendar.getInstance();
-        Calendar startDate = Calendar.getInstance();
-        startDate.set(selectedDate.get(Calendar.YEAR) - 20, 0, 1);
-
-        //时间选择器
-        TimePickerView pvTime = new TimePickerView.Builder(getContext(), new TimePickerView.OnTimeSelectListener() {
-            @Override
-            public void onTimeSelect(Date date, View v) {//选中事件回调
-                description.setPageIndex(1);
-                switch (clickView.getId()) {
-                    case R.id.fragment_follow_date_begin:
-                        dateBeginTxt.setText(getTime(date));
-                        description.setFollowTimeFrom(getTime(date));
-                        break;
-
-                    case R.id.fragment_follow_date_end:
-                        dateEndTxt.setText(getTime(date));
-                        description.setFollowTimeTo(getTime(date));
-                        break;
-                    default:
-                        break;
-                }
-                openFreshView();
-            }
-
-            private String getTime(Date date) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                return calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH);
-            }
-        })
-                .setCancelText("取消")
-                .setSubmitText("確定")
-                .setTitleText("請選擇日期")
-                .setLabel("", "", "", "时", "分", "秒")
-                .setType(new boolean[]{true, true, true, false, false, false})
-                .setRangDate(startDate, selectedDate)
-                .isCenterLabel(false)
-                .setContentSize(22)
-                .setTitleBgColor(Color.WHITE)
-                .setSubmitColor(getResources().getColor(R.color.colortheme))//确定按钮文字颜色
-                .setCancelColor(Color.BLACK)//取消按钮文字颜色
-                .build();
-        pvTime.setDate(Calendar.getInstance());//注：根据需求来决定是否使用该方法（一般是精确到秒的情况），此项可以在弹出选择器的时候重新设置当前时间，避免在初始化之后由于时间已经设定，导致选中时间与当前时间不匹配的问题。
-        pvTime.show();
-
-    }
+//    private void setDate(final View clickView) {
+//
+//        Calendar selectedDate = Calendar.getInstance();
+//        Calendar startDate = Calendar.getInstance();
+//        startDate.set(selectedDate.get(Calendar.YEAR) - 20, 0, 1);
+//
+//        //时间选择器
+//        TimePickerView pvTime = new TimePickerView.Builder(getContext(), new TimePickerView.OnTimeSelectListener() {
+//            @Override
+//            public void onTimeSelect(Date date, View v) {//选中事件回调
+//                description.setPageIndex(1);
+//                switch (clickView.getId()) {
+//                    case R.id.fragment_follow_date_begin:
+//                        dateBeginTxt.setText(getTime(date));
+//                        description.setFollowTimeFrom(getTime(date));
+//                        break;
+//
+//                    case R.id.fragment_follow_date_end:
+//                        dateEndTxt.setText(getTime(date));
+//                        description.setFollowTimeTo(getTime(date));
+//                        break;
+//                    default:
+//                        break;
+//                }
+//                openFreshView();
+//            }
+//
+//            private String getTime(Date date) {
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(date);
+//                isDataSearch = true;
+//                return calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH);
+//            }
+//        })
+//                .setCancelText("取消")
+//                .setSubmitText("確定")
+//                .setTitleText("請選擇日期")
+//                .setLabel("", "", "", "时", "分", "秒")
+//                .setType(new boolean[]{true, true, true, false, false, false})
+//                .setRangDate(startDate, selectedDate)
+//                .isCenterLabel(false)
+//                .setContentSize(22)
+//                .setTitleBgColor(Color.WHITE)
+//                .setSubmitColor(getResources().getColor(R.color.colortheme))//确定按钮文字颜色
+//                .setCancelColor(Color.BLACK)//取消按钮文字颜色
+//                .build();
+//        pvTime.setDate(Calendar.getInstance());//注：根据需求来决定是否使用该方法（一般是精确到秒的情况），此项可以在弹出选择器的时候重新设置当前时间，避免在初始化之后由于时间已经设定，导致选中时间与当前时间不匹配的问题。
+//        pvTime.show();
+//
+//    }
 
     @Override
     public void onDestroy() {

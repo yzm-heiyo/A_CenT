@@ -1,5 +1,9 @@
 package com.centanet.hk.aplus.bean.params;
 
+import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -7,7 +11,7 @@ import java.util.List;
  * Created by yangzm4 on 2018/2/2.
  */
 
-public class SystemParamItems implements Serializable{
+public class SystemParamItems extends LitePalSupport implements Serializable {
 
     String ItemValue;
     String ItemText;
@@ -114,6 +118,40 @@ public class SystemParamItems implements Serializable{
 
     public List<com.centanet.hk.aplus.bean.params.SysParameterTagItems> getSysParameterTagItems() {
         return SysParameterTagItems;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SystemParamItems)) return false;
+
+        SystemParamItems that = (SystemParamItems) o;
+
+        if (!getItemValue().equals(that.getItemValue())) return false;
+        if (!getItemText().equals(that.getItemText())) return false;
+        if (!getItemFullText().equals(that.getItemFullText())) return false;
+        if (!getItemCode().equals(that.getItemCode())) return false;
+        if (!getItemStatus().equals(that.getItemStatus())) return false;
+        if (!getExtendAttr().equals(that.getExtendAttr())) return false;
+        if (!getFlagDefault().equals(that.getFlagDefault())) return false;
+        if (!getSeq().equals(that.getSeq())) return false;
+        if (!getIsShow().equals(that.getIsShow())) return false;
+        return getSysParameterTagItems().equals(that.getSysParameterTagItems());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = ItemValue != null ? ItemValue.hashCode() : 0;
+        result = 31 * result + (ItemText != null ? ItemText.hashCode() : 0);
+        result = 31 * result + (ItemFullText != null ? ItemFullText.hashCode() : 0);
+        result = 31 * result + (ItemCode != null ? ItemCode.hashCode() : 0);
+        result = 31 * result + (ItemStatus != null ? ItemStatus.hashCode() : 0);
+        result = 31 * result + (ExtendAttr != null ? ExtendAttr.hashCode() : 0);
+        result = 31 * result + (FlagDefault != null ? FlagDefault.hashCode() : 0);
+        result = 31 * result + (Seq != null ? Seq.hashCode() : 0);
+        result = 31 * result + (IsShow != null ? IsShow.hashCode() : 0);
+        result = 31 * result + (SysParameterTagItems != null ? SysParameterTagItems.hashCode() : 0);
+        return result;
     }
 
     @Override

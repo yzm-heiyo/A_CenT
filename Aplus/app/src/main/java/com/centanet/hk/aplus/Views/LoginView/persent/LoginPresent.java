@@ -51,12 +51,9 @@ public class LoginPresent implements ILoginPresent {
                 return;
             }
             headerDescription.setToken(permission.getPermisstionUserInfo().get(0).getAccountInfo());
-            headerDescription.setStaffno(staffNo);
-            String number = new Date().getTime() + "";
-            headerDescription.setNumber(number);
-            headerDescription.setSign(MD5Util.getMD5Str(headerDescription.getSign() + number + staffNo));
             userPermission = permission.getPermisstionUserInfo().get(0).getPermisstions();
             loginModel.doPost(HttpUtil.URL_PARAMETER, headerDescription, new ParameterDescription());
+            loginModel.getTagCategory(headerDescription);
         }
 
         @Override
@@ -79,10 +76,17 @@ public class LoginPresent implements ILoginPresent {
                 Onfinish();
                 return;
             }
+
             staffNo = login.getResult().getDomainUser().getStaffNo();
+            String number = System.currentTimeMillis() / 1000 + "";
+            L.d("time", number);
+            headerDescription.setNumber(number);
+            headerDescription.setSign(MD5Util.getMD5Str("CYDAP_com-group~Centa@" + number + staffNo));
+            L.d("sign", headerDescription.getSign());
             ssoHeader.setHKSession(login.getResult().getSession());
             L.d("HkSession", login.getResult().getSession());
             ssoHeader.setCompanyCode(login.getResult().getDomainUser().getCityCode());
+            headerDescription.setStaffno(staffNo);
             //todo 强制更新測試
             loginModel.doGet(HttpUtil.URL_UPDATE, ssoHeader, null);
             loginModel.doGet(HttpUtil.URL_HomeConfig, ssoHeader, new SSOHomeConfigDescription());
@@ -95,6 +99,7 @@ public class LoginPresent implements ILoginPresent {
                 return;
             }
             loginView.reFreshApplication(headerDescription, userPermission, ssoHeader);
+
             loginView.toLogin();
         }
 

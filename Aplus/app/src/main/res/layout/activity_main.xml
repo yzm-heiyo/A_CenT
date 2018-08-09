@@ -2,67 +2,90 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
     android:background="@android:color/transparent"
     android:orientation="vertical">
-    <View android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_above="@id/main_navigationbar"
-        android:background="@drawable/shape_line_shade_down_to_up"/>
-    <RadioGroup
-        android:id="@+id/main_navigationbar"
+
+    
+    <android.support.v7.widget.CardView
+        android:id="@+id/main_bottom"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/white"
-        android:orientation="horizontal"
-        android:paddingTop="8dp">
+        app:cardElevation="3dp"
+        android:layout_height="45dp">
 
-        <RadioButton
-            android:id="@+id/activity_main_manager"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:button="@null"
-            android:checked="true"
-            android:drawableTop="@drawable/selector_hse_mangmt"
-            android:gravity="center"
-            android:text="@string/main_premises_manager"
-            android:textColor="@color/textcolor"
-            android:textSize="@dimen/themeSizesmall" />
+        <RadioGroup
+            android:id="@+id/main_navigationbar"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            android:paddingTop="5dp">
 
-        <RadioButton
-            android:id="@+id/activity_main_collect"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/selector_main_menu_bookmark"
-            android:gravity="center"
-            android:text="@string/main_mine_collect"
-            android:textColor="@color/textcolor"
-            android:textSize="@dimen/themeSizesmall" />
+            <RadioButton
+                android:id="@+id/activity_main_manager"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:checked="true"
+                android:layout_marginBottom="5dp"
+                android:drawableTop="@drawable/selector_hse_mangmt"
+                android:gravity="center"
+                android:text="@string/property"
+                android:textColor="@color/textcolor"
+                android:textSize="@dimen/themeSizesmall" />
 
-        <RadioButton
-            android:id="@+id/activity_main_user"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:button="@null"
-            android:drawableTop="@drawable/selector_staff"
-            android:gravity="center"
-            android:text="@string/main_mine_account"
-            android:textColor="@color/textcolor"
-            android:textSize="@dimen/themeSizesmall" />
-    </RadioGroup>
+
+            <RadioButton
+                android:id="@+id/activity_main_collect"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_main_menu_bookmark"
+                android:gravity="center"
+                android:text="@string/favorite"
+                android:textColor="@color/textcolor"
+                android:layout_marginBottom="5dp"
+                android:textSize="@dimen/themeSizesmall" />
+
+
+            <RadioButton
+                android:id="@+id/activity_main_tran"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_tran"
+                android:gravity="center"
+                android:text="@string/tran"
+                android:textColor="@color/textcolor"
+                android:textSize="@dimen/themeSizesmall" />
+
+            <RadioButton
+                android:id="@+id/activity_main_user"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:drawableTop="@drawable/selector_staff"
+                android:gravity="center"
+                android:text="@string/my"
+                android:textColor="@color/textcolor"
+                android:textSize="@dimen/themeSizesmall" />
+
+        </RadioGroup>
+
+    </android.support.v7.widget.CardView>
 
 
     <android.support.v4.view.ViewPager
         android:id="@+id/main_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/main_navigationbar"
-        android:layout_marginBottom="2dp"
+        android:layout_above="@+id/main_bottom"
         android:background="@color/color_theme_item"></android.support.v4.view.ViewPager>
 
 </RelativeLayout>

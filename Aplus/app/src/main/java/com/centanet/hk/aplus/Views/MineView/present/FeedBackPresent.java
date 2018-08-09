@@ -4,6 +4,7 @@ import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Views.MineView.model.FeedBackModel;
 import com.centanet.hk.aplus.Views.MineView.model.IFeedBackModel;
 import com.centanet.hk.aplus.Views.MineView.view.IMineView;
+import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 import com.centanet.hk.aplus.bean.mine.Infomation;
 
 /**
@@ -36,7 +37,7 @@ public class FeedBackPresent implements IFeedBackPresent {
 
 
     @Override
-    public void doPose(String address, Object header, Object body) {
+    public void doPose(String address, AHeaderDescription header, Object body) {
         feedBackModel.doPost(address, header, body);
     }
 }

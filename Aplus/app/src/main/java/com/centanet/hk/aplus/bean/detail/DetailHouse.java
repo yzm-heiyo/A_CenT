@@ -1,6 +1,7 @@
 package com.centanet.hk.aplus.bean.detail;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by yangzm4 on 2018/3/8.
@@ -87,6 +88,28 @@ public class DetailHouse implements Serializable {
     private boolean UserIsShowTrustor;
     private String SalePricePremiumUnpaid;
     private String BulidingPropertyUsage;
+    private List<String> BuildingTagInfos;
+    private String LastUpdateTime;
+
+    public void setLastUpdateTime(String lastUpdateTime) {
+        LastUpdateTime = lastUpdateTime;
+    }
+
+    public String getLastUpdateTime() {
+        return LastUpdateTime;
+    }
+
+    public boolean isUserIsShowAddressDetail() {
+        return UserIsShowAddressDetail;
+    }
+
+    public boolean isDevelopmentEndCredits() {
+        return DevelopmentEndCredits;
+    }
+
+    public List<String> getBuildingTagInfos() {
+        return BuildingTagInfos;
+    }
 
     public int getPropertyKeyType() {
         return PropertyKeyType;
@@ -410,6 +433,10 @@ public class DetailHouse implements Serializable {
 
     public String getBulidingPropertyUsage() {
         return BulidingPropertyUsage;
+    }
+
+    public void setBuildingTagInfos(List<String> buildingTagInfos) {
+        BuildingTagInfos = buildingTagInfos;
     }
 
     public void setBulidingPropertyUsage(String bulidingPropertyUsage) {

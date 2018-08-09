@@ -34,7 +34,7 @@ public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChange
     private RadioGroup sortLeftRG, sortRightRG, txtRG;
     private View sortLayout;
     private int defaultId;
-    private boolean isFirst = true;
+//    private boolean isFirst = true;
 
     public SortDialog() {
     }
@@ -83,16 +83,19 @@ public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChange
         lp = window.getAttributes();
         lp.gravity = Gravity.BOTTOM; // 紧贴底部
         lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
-        sortLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if(isFirst) {
-                    lp.height = getActivity().getWindowManager().getDefaultDisplay().getHeight() * 2 / 5;
-                    window.setAttributes(lp);
-                    isFirst = !isFirst;
-                }
-            }
-        });
+        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        window.setAttributes(lp);
+
+//        sortLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//            @Override
+//            public void onGlobalLayout() {
+//                if (isFirst) {
+//                    lp.height = getActivity().getWindowManager().getDefaultDisplay().getHeight() * 2 / 5;
+//                    window.setAttributes(lp);
+//                    isFirst = !isFirst;
+//                }
+//            }
+//        });
 
         window.setBackgroundDrawableResource(android.R.color.transparent);
     }
@@ -212,7 +215,7 @@ public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChange
                 break;
         }
         L.d("SortDialog", "" + params.get("Ascending"));
-        onDialogClikeLisenter.onClike(dialog, 0,params);
+        onDialogClikeLisenter.onClike(dialog, 0, params);
     }
 
     public interface onDialogOnclikeLisenter extends BaseDialog.onDialogOnclikeLisenter<Map<String, Object>> {

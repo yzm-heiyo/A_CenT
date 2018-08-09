@@ -85,7 +85,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="4dp"
-        android:background="@color/translucent" />
+        android:background="@color/color_translucent" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -134,7 +134,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="20dp"
-                    android:background="@color/line" />
+                    android:background="@color/color_light_grey" />
 
                 <TextView
                     android:id="@+id/mine_txt_clause"
@@ -145,7 +145,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="20dp"
-                    android:background="@color/line" />
+                    android:background="@color/color_light_grey" />
 
                 <TextView
                     android:id="@+id/fragment_mine_question"

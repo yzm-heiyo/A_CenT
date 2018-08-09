@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ssd_ll_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ssd_view_0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/checkbox_circle"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="0%" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ssd_view_10"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <CheckBox
+            style="@style/checkbox_circle"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="10%" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ssd_view_15"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <CheckBox
+            style="@style/checkbox_circle"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="15%" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ssd_view_20"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <CheckBox
+            style="@style/checkbox_circle"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="20%" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ssd_view_unknow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/checkbox_circle"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="@string/unknow" />
+    </LinearLayout>
+
+
+</LinearLayout>

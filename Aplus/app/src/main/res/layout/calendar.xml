@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/color_white"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/calendar_txt_month"
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:text="2018888"
+        android:gravity="center"
+        android:textSize="14dp"
+        android:textColor="@android:color/black"
+        android:background="@color/calendar_week_gray"
+        />
+
+    <com.centanet.hk.aplus.Widgets.MyCalendarView
+        android:id="@+id/calendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/color_white"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        />
+
+</LinearLayout>

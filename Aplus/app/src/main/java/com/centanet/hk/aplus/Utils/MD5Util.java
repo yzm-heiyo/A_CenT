@@ -36,8 +36,8 @@ public class MD5Util {
             else
                 md5StrBuff.append(Integer.toHexString(0xFF & byteArray[i]));
         }
+        L.d("MD5",md5StrBuff.substring(8, 24).toString().toUpperCase() );
         //16位加密，从第9位到25位
-        return md5StrBuff.substring(8, 24).toString().toUpperCase();
+        return md5StrBuff.toString();
     }
-
 }

@@ -1,10 +1,12 @@
 package com.centanet.hk.aplus.bean.detail;
 
+import java.io.Serializable;
+
 /**
  * Created by yangzm4 on 2018/3/9.
  */
 
-public class PropertyFollow {
+public class PropertyFollow implements Serializable{
 
     private String KeyId;
     private String FollowTypeKeyId;

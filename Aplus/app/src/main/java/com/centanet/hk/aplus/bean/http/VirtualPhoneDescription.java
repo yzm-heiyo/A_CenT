@@ -20,7 +20,7 @@ public class VirtualPhoneDescription {
         TargetMobileNumber = targetMobileNumber;
     }
 
-    public void setSystem(int system) {
+    public void setSystem(String system) {
         System = system+"";
     }
 

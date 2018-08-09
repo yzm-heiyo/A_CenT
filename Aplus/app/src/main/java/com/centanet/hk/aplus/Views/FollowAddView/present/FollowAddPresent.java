@@ -3,7 +3,7 @@ package com.centanet.hk.aplus.Views.FollowAddView.present;
 import com.centanet.hk.aplus.Views.FollowAddView.model.FollowAddModel;
 import com.centanet.hk.aplus.Views.FollowAddView.model.IFollowAddModel;
 import com.centanet.hk.aplus.Views.FollowAddView.view.IFollowAddView;
-import com.centanet.hk.aplus.bean.detail.DetailAddress;
+import com.centanet.hk.aplus.bean.detail.DetailAddressResponse;
 import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 
 /**
@@ -23,7 +23,7 @@ public class FollowAddPresent implements IFollowAddPresent {
 
     FollowAddModel.OnReceiveListener listener = new FollowAddModel.OnReceiveListener() {
         @Override
-        public void onReceive(DetailAddress address) {
+        public void onReceive(DetailAddressResponse address) {
             feedBackActivity.reFreshAddress(address);
         }
     };

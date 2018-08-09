@@ -4,35 +4,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/color_white"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
         android:background="@color/colortheme"
         android:orientation="horizontal">
 
-        <LinearLayout
-            android:id="@+id/activity_search_back"
+        <ImageView
+            android:id="@+id/back"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:src="@drawable/btn_back_white" />
-
-        </LinearLayout>
+            android:scaleType="center"
+            android:src="@drawable/btn_back_white" />
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_marginBottom="6dp"
             android:layout_marginTop="6dp"
@@ -40,11 +33,51 @@
             android:background="@drawable/search_background"
             android:orientation="horizontal">
 
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center">
+
+                <TextView
+                    android:id="@+id/search_txt_area"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    android:text="@string/area"
+                    android:textColor="@color/color_black" />
+
+                <ImageView
+                    android:id="@+id/search_img_down"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@id/search_txt_area"
+                    android:src="@drawable/ic_down" />
+
+                <TextView
+                    android:id="@+id/search_txt_areatip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@id/search_img_down"
+                    android:layout_toRightOf="@id/search_txt_area"
+                    android:background="@drawable/shape_circle_red"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:text="5"
+                    android:visibility="gone"
+                    android:textColor="@color/color_white"
+                    android:textSize="10dp" />
+
+            </RelativeLayout>
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="12dp"
-                android:src="@drawable/btn_search_bar_search" />
+                android:src="@drawable/ic_search" />
 
             <EditText
                 android:id="@+id/search_edit"
@@ -59,80 +92,58 @@
                 android:textSize="@dimen/themeSizesmall" />
 
             <ImageView
-                android:id="@+id/search_img_mic"
+                android:id="@+id/mic"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginRight="12dp"
-                android:src="@drawable/btn_mic" />
+                android:src="@drawable/ic_mic" />
 
+            <View
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorline" />
+
+            <android.support.v4.widget.Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/search_ll_floot"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="3dp"
+                android:paddingTop="3dp">
+
+                <TextView
+                    android:id="@+id/search_txt_floot"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLength="5"
+                    android:singleLine="true"
+                    android:text="@string/search_floot"
+                    android:textColor="@color/color_black"
+                    android:textSize="12dp" />
+
+                <TextView
+                    android:id="@+id/search_txt_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLength="3"
+                    android:singleLine="true"
+                    android:text="@string/search_units"
+                    android:textColor="@color/color_black"
+                    android:textSize="12dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"></LinearLayout>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:background="@color/colortheme"
-        android:orientation="horizontal">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center">
-
-
-        </View>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="6dp"
-            android:layout_weight="6"
-            android:orientation="horizontal">
-
-
-            <EditText
-                android:id="@+id/search_edit_floot"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/search_background"
-                android:gravity="center"
-                android:hint="@string/search_floot"
-                android:textSize="@dimen/themeSizesmall" />
-
-
-            <EditText
-                android:id="@+id/search_edit_unit"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/search_background"
-                android:gravity="center"
-                android:hint="@string/search_units"
-                android:textSize="@dimen/themeSizesmall" />
-
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"></View>
-
+        <android.support.v4.widget.Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
@@ -140,11 +151,13 @@
     <!-- 智能搜索界面 -->
     <FrameLayout
         android:layout_width="match_parent"
+        android:background="@color/color_white"
         android:layout_height="match_parent">
 
         <!--歷史記錄界面-->
         <ScrollView
             android:layout_width="match_parent"
+            android:background="@color/color_white"
             android:layout_height="match_parent">
 
             <LinearLayout
@@ -157,21 +170,47 @@
                     android:id="@+id/search_select_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="#efefef"
+                    android:background="@color/color_white"
                     android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/search_img_search"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:layout_marginBottom="8dp"
+                        android:layout_marginLeft="15dp"
+                        android:scaleType="center"
+                        android:background="@drawable/ic_search_red" />
 
                     <TextView
                         android:id="@+id/select_txt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="true"
-                        android:layout_marginLeft="17dp"
+                        android:layout_toRightOf="@id/search_img_search"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginTop="14dp"
                         android:text="已選屋苑"
-                        android:textColor="#848484"
-                        android:textSize="14dp"
+                        android:textColor="@color/colortheme"
+                        android:textSize="15dp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/select_txt_clear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/select_txt"
+                        android:layout_alignBottom="@+id/select_txt"
+                        android:layout_alignEnd="@+id/search_labelgroup"
+                        android:background="@drawable/shape_square_circle_grey"
+                        android:paddingBottom="3dp"
+                        android:paddingLeft="9dp"
+                        android:paddingRight="9dp"
+                        android:paddingTop="3dp"
+                        android:text="@string/clear"
+                        android:textColor="@color/color_black"
+                        android:textSize="12dp" />
 
                     <com.centanet.hk.aplus.Widgets.LineBreakLayout
                         android:id="@+id/search_labelgroup"
@@ -197,17 +236,18 @@
                         android:id="@+id/search_history_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="#efefef"
+                        android:background="@color/color_white"
                         android:visibility="gone">
 
                         <ImageView
                             android:id="@+id/search_history_img"
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:layout_marginLeft="15dp"
                             android:layout_marginTop="8dp"
-                            android:background="@drawable/ico_search_history" />
+                            android:scaleType="center"
+                            android:background="@drawable/ic_history" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -216,13 +256,25 @@
                             android:layout_marginLeft="10dp"
                             android:layout_toRightOf="@id/search_history_img"
                             android:text="搜索記錄"
-                            android:textColor="@android:color/black" />
+                            android:textColor="@color/colortheme"
+                            android:textStyle="bold" />
 
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_alignParentBottom="true"
-                            android:background="#E7E7E7" />
+                        <TextView
+                            android:id="@+id/search_history_txt_clear"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginRight="10dp"
+                            android:paddingLeft="9dp"
+                            android:paddingRight="9dp"
+                            android:paddingBottom="3dp"
+                            android:paddingTop="3dp"
+                            android:textSize="12dp"
+                            android:background="@drawable/shape_square_circle_grey"
+                            android:textColor="@color/color_black"
+                            android:text="@string/clear"/>
+
                     </RelativeLayout>
 
                     <ListView
@@ -230,6 +282,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_below="@id/search_history_title"
+                        android:divider="@android:color/transparent"
                         android:footerDividersEnabled="false"
                         android:visibility="visible"></ListView>
                 </RelativeLayout>
@@ -241,31 +294,46 @@
             android:id="@+id/search_simple_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:background="@android:color/white"
+            android:orientation="vertical"
             android:visibility="gone">
 
             <ListView
                 android:id="@+id/activity_search_listview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:divider="@android:color/transparent"
                 android:footerDividersEnabled="false"></ListView>
         </LinearLayout>
 
         <TextView
             android:id="@+id/activity_search_confirm_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center|bottom"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/shape_item_search_btn"
+            android:background="@color/colortheme"
+            android:gravity="center"
             android:paddingBottom="10dp"
-            android:paddingLeft="80dp"
-            android:paddingRight="80dp"
             android:paddingTop="10dp"
-            android:text="@string/search_search"
+            android:text="@string/search"
             android:textColor="@color/colorBackground"
-            android:textSize="@dimen/themeSizeplus" />
+            android:textSize="17dp" />
+
+        <LinearLayout
+            android:id="@+id/activity_search_back"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:src="@drawable/btn_back_white" />
+
+        </LinearLayout>
 
     </FrameLayout>
 

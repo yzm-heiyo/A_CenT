@@ -45,7 +45,6 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:textColor="@color/colorBackground"
-                android:textStyle="bold"
                 android:textSize="@dimen/themeSizeplus" />
 
             <!--android:ellipsize="marquee"-->

@@ -55,10 +55,11 @@ public class LoadingDialog extends AlertDialog {
         }
     }
 
-    public static void show(Context context) {
+    public static LoadingDialog show(Context context) {
         LoadingDialog loadingDialog = new LoadingDialog(context);
         loadingDialog.setCancelable(false);
         loadingDialog.show();
+        return loadingDialog;
     }
 
     @Override

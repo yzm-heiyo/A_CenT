@@ -46,12 +46,32 @@ public class CommandField {
     public class APPropertyDateType {
         public static final int statusChangedDate = 1;  // 改盤日期
         public static final int lasetUpdate = 2;  // 最后修改日期
-        public static final int lastFollowDate = 3; // 最后跟進日期
+        public static final int lastFollowDate = 3; // 最后修改日期
         public static final int registDate = 4;  // 開盤日期
         public static final int estimatedDate = 5;  // 估計日期
-        public static final int changePriceDate = 6;  // 最后改價日期
+        public static final int changePriceDate = 6;  // 最后修改日期
         public static final int onlyTrustStartDate = 7;  // 委託書開始日
         public static final int onlyTrustEndDate = 8;  // 委託書到期日
     }
 
+    public class APPropertyTrustorDirectSell{
+        public static final int ALLOW = 0;  // 改盤日期
+        public static final int NOTALLOW = 1;  // 最后修改日期
+        public static final int UNKNOW = 2; // 最后跟進日期
+    }
+
+    public class PriceUnitType{//均價類型(1:實均售,2:實均租,3:建均售,4:建均租,5:綠表價實均售,6:綠表價建均售)
+        public static final int AVG_USE_SALE = 1;  // 實均售
+        public static final int AVG_USE_RENT = 2;  // 實均租
+        public static final int AVG_REALLY_SALE = 3; // 建均售
+        public static final int AVG_REALLY_RENT = 4;  // 建均租
+        public static final int AVG_GREEN_USE_SALE = 5;  // 綠表價實均售
+        public static final int AVG_GREEN_REALLY_SALE = 6;  // 綠表價建均售
+    }
+
+    public class PropertySquareType{//1-建築面積，2-實用面積，3-花園面積
+        public static final int AREA_REALLY = 1;  // 建築面積
+        public static final int AREA_USE = 2;  // 實用面積
+        public static final int AREA_GARDEN = 3;  // 花園面積
+    }
 }

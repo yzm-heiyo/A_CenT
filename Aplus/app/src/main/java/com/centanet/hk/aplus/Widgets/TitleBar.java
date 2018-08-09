@@ -122,8 +122,6 @@ public class TitleBar extends LinearLayout implements View.OnClickListener {
             }
         }
         a.recycle();
-
-
     }
 
     public ImageView getImageView() {

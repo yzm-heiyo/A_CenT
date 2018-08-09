@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:paddingTop="8dp"
-                android:text="備注"
+                android:text="備註"
                 android:textColor="@color/color_itemt_result_text"
                 android:textSize="14dp" />
 

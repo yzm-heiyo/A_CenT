@@ -5,6 +5,7 @@ import android.app.job.JobService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.centanet.hk.aplus.Utils.L;
@@ -16,6 +17,7 @@ import static android.content.ContentValues.TAG;
  * Created by yangzm4 on 2018/4/6.
  */
 
+@RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 public class PrefsessionService extends JobService {
 
     private String TAG = this.getClass().getSimpleName();

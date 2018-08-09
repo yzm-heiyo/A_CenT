@@ -59,7 +59,7 @@ public class FeedBackActivity extends AppCompatActivity {
                     if (feedStr.length() > 0) {
                         dialog.setContentString(getString(R.string.dialog_tips_put));
                     } else {
-                        dialog.setContentString("内容不能爲空");
+                        dialog.setContentString(getString(R.string.dialog_tips_content_null));
                         dialog.setLeftBtnVisibility(false);
                     }
 
@@ -81,7 +81,6 @@ public class FeedBackActivity extends AppCompatActivity {
                         private void putFollowData() {
                             FeedBackDescription description = new FeedBackDescription();
                             description.setContent(editText.getText().toString());
-                            L.d("SSoHeaer", ApplicationManager.getApplication().getSsoHeaderDescription().toString());
                             HttpUtil.doPost(HttpUtil.URL_SSO_FEEDBACK, description, ApplicationManager.getApplication().getSsoHeaderDescription(), new Callback() {
                                 @Override
                                 public void onFailure(Call call, IOException e) {
@@ -99,9 +98,10 @@ public class FeedBackActivity extends AppCompatActivity {
                                             if (feedBack != null) {
                                                 SimpleTipsDialog dialog = new SimpleTipsDialog();
                                                 if (feedBack != null && feedBack.getRCode().equals("200")) {
-                                                    dialog.setContentString("提交成功");
+                                                    dialog.setContentString(getString(R.string.dialog_tips_put_success));
                                                     FeedBackActivity.this.finish();
-                                                } else dialog.setContentString("提交失敗");
+                                                } else
+                                                    dialog.setContentString(getString(R.string.dialog_tips_put_fail));
                                                 dialog.setLeftBtnVisibility(false);
                                                 dialog.show(getSupportFragmentManager(), "");
                                             }

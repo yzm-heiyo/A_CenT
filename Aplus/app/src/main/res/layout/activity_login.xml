@@ -126,13 +126,13 @@
             android:textSize="@dimen/themeSizeplus" />
 
         <TextView
+            android:id="@+id/login_txt_app_version"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="right"
             android:paddingBottom="10dp"
             android:paddingRight="18dp"
-            android:text="@string/login_versioncode_btn"
             android:textColor="@color/colorBackground"
             android:textSize="@dimen/themeSizesmall" />
 

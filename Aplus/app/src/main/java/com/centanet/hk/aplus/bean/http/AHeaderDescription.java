@@ -14,6 +14,7 @@ public class AHeaderDescription {
     private String staffno;
     private String ClientVer = "1.0.1";
     private String UserAgent = android.os.Build.BRAND;
+//    public static final String md5Header = "CYDAP_com-group~Centa@";
 
     public AHeaderDescription() {
     }

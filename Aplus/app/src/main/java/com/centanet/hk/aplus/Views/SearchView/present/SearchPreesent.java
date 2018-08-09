@@ -54,6 +54,11 @@ public class SearchPreesent implements ISearchPresent {
     }
 
     @Override
+    public void deleteHistory() {
+        searchModel.deleteSearchHistory();
+    }
+
+    @Override
     public String changeToLabelData(PropertyParamHints data) {
         return searchModel.changeToLabelData(data);
     }

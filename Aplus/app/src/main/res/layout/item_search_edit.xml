@@ -58,7 +58,7 @@
                 android:textSize="@dimen/themeSizesmall" />
 
             <ImageView
-                android:id="@+id/houselist_img_mic"
+                android:id="@+id/mic"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginRight="12dp"

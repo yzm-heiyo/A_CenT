@@ -29,7 +29,7 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
 
     private OnItemClick onItemClick;
 
-    private List<Integer> seletList;
+    private List<String> seletList;
 
     private List<String> itemText;
 
@@ -75,8 +75,8 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
         }
     }
 
-    public void setSeletList(List<Integer> seletList) {
-        L.d("statusSelect", seletList.size() + "");
+    public void setSeletList(List<String> seletList) {
+//        L.d("statusSelect", seletList.size() + "");
         if (seletList == null || seletList.isEmpty()) {
             ((CheckBox) findViewById(R.id.dialog_status_all)).setChecked(true);
             return;
@@ -155,8 +155,18 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
      * @return
      */
     public void setSaveStatus() {
-        for (int id : seletList) {
-            ((CheckBox) findViewById(id)).setChecked(true);
+//        for (int id : seletList) {
+//            ((CheckBox) findViewById(id)).setChecked(true);
+//        }
+
+        int count = this.getChildCount();
+        for (int i = 0; i < count; i++) {
+            View view = getChildAt(i);
+            if (view instanceof CheckBox) {
+                if (seletList.contains(view.getTag())) {
+                    ((CheckBox) view).setChecked(true);
+                }
+            }
         }
     }
 
@@ -183,7 +193,6 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
                 return results.toArray(new String[results.size()]);
             }
         }
-
         return null;
     }
 
@@ -219,7 +228,7 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
             seletList.clear();
 
         for (CheckBox b : viewChechBoxes) {
-            if (b.isChecked()) seletList.add(b.getId());
+            if (b.isChecked()) seletList.add((String) b.getTag());
         }
     }
 
@@ -234,6 +243,6 @@ public class SmartCheckBoxLayout extends LinearLayout implements CheckBox.OnClic
 
 
     public interface OnItemClick {
-        void onClick(View v, int viewId, List<Integer> selectList, int position);
+        void onClick(View v, int viewId, List<String> selectList, int position);
     }
 }

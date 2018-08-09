@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Call;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -24,6 +25,8 @@ import okhttp3.RequestBody;
 public class HttpUtil {
 
     public static String URL = "";
+    public static String SSO_DEBUG_ADDRESS = "https://hkqasso.centanet.com/api/api/";//测试地址
+    public static String SS0_RELEASE_ADDRESS = "https://hkagencysso.centanet.com/api/api/";
     public static String URL_USERLAUSE;
     public static final String URL_PATH = "property/war-zone";
     public static final String URL_PARAMETER = "permission/update-parameter";
@@ -35,16 +38,35 @@ public class HttpUtil {
     public static final String URL_FOLLOWS = "property/follows";
     public static final String URL_FOLLOW_ADD = "property/follow-add";
     public static final String URL_TRUSTOR = "property/trustor";
-    public static final String URL_SSO = "https://hkqasso.centanet.com/api/api/Login";
-    public static final String URL_HomeConfig = "https://hkqasso.centanet.com/api/api/HomeConfig";
+
+    public static final String URL_SSO = "https://hkqasso.centanet.com/api/api/Login";//测试
+    public static final String URL_HomeConfig = "https://hkqasso.centanet.com/api/api/HomeConfig";//测试
+    public static final String URL_UPDATE = "https://hkqasso.centanet.com/api/api/AppVersion";//测试
+    public static final String URL_SSO_FEEDBACK = "https://hkqasso.centanet.com/api/api/Feedback";//测试
+
+//    public static final String URL_SSO = "https://hkagencysso.centanet.com/api/api/Login";
+//    public static final String URL_HomeConfig = "https://hkagencysso.centanet.com/api/api/HomeConfig";
+//    public static final String URL_UPDATE = "https://hkagencysso.centanet.com/api/api/AppVersion";
+//    public static final String URL_SSO_FEEDBACK = "https://hkagencysso.centanet.com/api/api/Feedback";
+
     public static final String URL_PERMISSION = "permission/user-permisstion";
     public static final String URL_USERINFO = "permission/user-info";
-    public static final String URL_UPDATE = "https://hkqasso.centanet.com/api/api/AppVersion";
-    public static final String URL_SSO_FEEDBACK = "https://hkqasso.centanet.com/api/api/Feedback";
     public static final String URL_CALL_VIRTUAL_PHONE = "center/call-virtual-phone";
+    public static final String URL_USER_BEHAVIOR = "common/com-behavior";
+    public static final String URL_DETAILS_LIST = "property/get-details-list";
+    public static final String URL_DETAILE_NEXT_KEYID = "property/get-details-next-keyids";
+
+    public static final String URL_TRAN_LIST = "property/property-tran-list";
+    public static final String URL_DISTRICT = "property/get-user-district";
+
+    public static final String URL_FAST_SEARCH = "property/get-fast-searcher-tag"; // 獲取快速篩選項標籤
+    public static final String URL_TAG_BUILD = "property/get-building-tag"; // 獲取棟座設施標籤
+    public static final String URL_TAG_TRANLIST = "property/property-transaction-record"; // 獲取棟座設施標籤
+
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     public static int READ_TIME_OUT = 10;
     public static int CONNECT_TIME_OUT = 10;
+    private static Call call;
 
     public static void doPost(String address, Object bodys, Object headers, okhttp3.Callback callback) {
 
@@ -71,7 +93,12 @@ public class HttpUtil {
 
         L.d("URL", url);
         Request request = builder.url(url).post(requestBody).build();
-        client.newCall(request).enqueue(callback);
+        call = client.newCall(request);
+        call.enqueue(callback);
+    }
+
+    public static void cancelRequest() {
+        if (call != null) call.cancel();
     }
 
     public static void doGet(String address, Object headers, Object param, okhttp3.Callback callback) {

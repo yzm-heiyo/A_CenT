@@ -1,12 +1,13 @@
 package com.centanet.hk.aplus.bean.auto_estate;
 
 import org.litepal.crud.DataSupport;
+import org.litepal.crud.LitePalSupport;
 
 /**
  * Created by yangzm4 on 2018/3/1.
  */
 
-public class PropertyParamHints extends DataSupport{
+public class PropertyParamHints extends LitePalSupport {
 
     private String KeyId;
     private int KeyIdType;

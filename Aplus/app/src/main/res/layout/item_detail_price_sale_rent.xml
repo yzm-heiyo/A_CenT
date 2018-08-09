@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/layer_rim_line"
+    android:orientation="vertical">
+    <!-- 基本資料 -->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:textColor="@color/color_black"
+        android:text="@string/basicinfo"/>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/item_icon_hot"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="11dp"
+            android:scaleType="center"
+            android:src="@drawable/selector_icon_hot" />
+
+        <ImageView
+            android:id="@+id/item_icon_key"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@id/item_icon_hot"
+            android:scaleType="center"
+            android:src="@drawable/level_icon_key" />
+
+        <ImageView
+            android:id="@+id/item_icon_o"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@id/item_icon_key"
+            android:scaleType="center"
+            android:src="@drawable/selector_icon_o" />
+
+        <ImageView
+            android:id="@+id/item_icon_l"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@id/item_icon_o"
+            android:scaleType="center"
+            android:src="@drawable/selector_icon_l" />
+
+        <ImageView
+            android:id="@+id/item_icon_d"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@id/item_icon_l"
+            android:scaleType="center"
+            android:src="@drawable/selector_icon_d" />
+
+        <ImageView
+            android:id="@+id/item_icon_medal"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@id/item_icon_d"
+            android:scaleType="center"
+            android:src="@drawable/selector_icon_dujia" />
+
+        <TextView
+            android:id="@+id/item_icon_ssd"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@id/item_icon_medal"
+            android:gravity="center"
+            android:paddingBottom="2dp"
+            android:text="20"
+            android:textColor="#bb842d"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/item_icon_favo"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="11dp"
+            android:layout_toRightOf="@id/item_icon_ssd"
+            android:scaleType="center"
+            android:src="@drawable/selector_icon_favo" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/item_icon_favo">
+
+            <TextView
+                android:id="@+id/item_txt_client"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_marginBottom="8dp"
+                android:layout_marginRight="17dp"
+                android:layout_marginTop="11dp"
+                android:text="" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="11dp"
+                android:layout_toLeftOf="@id/item_txt_client"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/client" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="15dp">
+
+        <!-- 售價 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- 售價-價格 -->
+            <TextView
+                android:id="@+id/detail_txt_sale_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|left"
+                android:paddingBottom="2dp"
+                android:paddingTop="2dp"
+                android:text="售: "
+                android:textColor="@color/colortheme"
+                android:textSize="@dimen/themeSizeplus" />
+
+            <!-- 售價-小項目 -->
+            <com.centanet.hk.aplus.Widgets.SmallItemView
+                android:id="@+id/detail_txt_use_rvg_price"
+                style="@style/smallitem_style"
+                app:SmallItemContent=""
+                app:SmallItemTitle="實均價"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+            <com.centanet.hk.aplus.Widgets.SmallItemView
+                android:id="@+id/detail_txt_really_rvg_price"
+                style="@style/smallitem_style"
+                app:SmallItemContent=""
+                app:SmallItemTitle="建均價"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+            <TextView
+                android:id="@+id/detail_txt_green_tab_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|left"
+                android:paddingBottom="2dp"
+                android:paddingTop="5dp"
+                android:text="綠: "
+                android:textColor="#008000"
+                android:textSize="@dimen/themeSizeplus"
+                android:visibility="gone" />
+
+            <com.centanet.hk.aplus.Widgets.SmallItemView
+                android:id="@+id/detail_txt_entrust_3"
+                style="@style/smallitem_style"
+                app:SmallItemContent=""
+                app:SmallItemTitle="委託書三"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+            <com.centanet.hk.aplus.Widgets.SmallItemView
+                android:id="@+id/detail_txt_conjecture_data"
+                style="@style/smallitem_style"
+                app:SmallItemContent=""
+                app:SmallItemTitle="估計日期"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+            <com.centanet.hk.aplus.Widgets.SmallItemView
+                android:id="@+id/detail_txt_use_area"
+                style="@style/smallitem_style"
+                app:SmallItemContent=""
+                app:SmallItemTitle="實用面積"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+            <com.centanet.hk.aplus.Widgets.SmallItemView
+                android:id="@+id/detail_txt_really_area"
+                style="@style/smallitem_style"
+                app:SmallItemContent=""
+                app:SmallItemTitle="建築面積"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+            <com.centanet.hk.aplus.Widgets.SmallItemView
+                android:id="@+id/detail_txt_usepercent"
+                style="@style/smallitem_style"
+                app:SmallItemContent=""
+                app:SmallItemTitle="實用率"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+
+        </LinearLayout>
+
+        <!-- 租價 -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- 租-價格 -->
+            <TextView
+                android:id="@+id/detail_txt_rent_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|left"
+                android:paddingBottom="2dp"
+                android:paddingTop="2dp"
+                android:text="租: "
+                android:textColor="#BB842D"
+                android:textSize="@dimen/themeSizeplus" />
+
+            <!-- 售價-小項目 -->
+            <com.centanet.hk.aplus.Widgets.SmallItemView
+                android:id="@+id/detail_txt_use_rvg_rent"
+                style="@style/smallitem_style"
+                app:SmallItemContent=""
+                app:SmallItemTitle="實均租"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+            <com.centanet.hk.aplus.Widgets.SmallItemView
+                android:id="@+id/detail_txt_really_rvg_rent"
+                style="@style/smallitem_style"
+                app:SmallItemContent=""
+                app:SmallItemTitle="建均租"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+            <TextView
+                android:id="@+id/detail_txt_division"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|left"
+                android:paddingBottom="2dp"
+                android:textSize="@dimen/themeSizeplus"
+                android:visibility="gone" />
+
+            <com.centanet.hk.aplus.Widgets.SmallItemView
+                android:id="@+id/detail_txt_entrust_5"
+                style="@style/smallitem_style"
+                app:SmallItemContent=""
+                app:SmallItemTitle="委託書五"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+            <com.centanet.hk.aplus.Widgets.SmallItemView
+                android:id="@+id/detail_txt_ssd"
+                style="@style/smallitem_style"
+                app:SmallItemContent=""
+                app:SmallItemTitle="SSD"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+            <com.centanet.hk.aplus.Widgets.SmallItemView
+                android:id="@+id/detail_txt_rvd_data"
+                style="@style/smallitem_style"
+                app:SmallItemContent=""
+                app:SmallItemTitle="RVD日期"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+            <com.centanet.hk.aplus.Widgets.SmallItemView
+                android:id="@+id/detail_open_date"
+                style="@style/smallitem_style"
+                app:SmallItemContent=""
+                app:SmallItemTitle="開盤日"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="10dp"
+        android:background="@color/colorline" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_weight="1"
+            android:text="提示"
+            android:textSize="@dimen/themeSize" />
+
+        <TextView
+            android:id="@+id/detail_txt_tips"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:text=""
+            android:textColor="@color/color_itemt_detail_title"
+            android:textSize="@dimen/themeSize" />
+
+    </LinearLayout>
+
+</LinearLayout>

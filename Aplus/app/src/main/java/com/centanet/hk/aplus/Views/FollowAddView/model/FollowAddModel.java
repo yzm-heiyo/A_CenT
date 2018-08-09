@@ -1,9 +1,11 @@
 package com.centanet.hk.aplus.Views.FollowAddView.model;
 
+import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Utils.MD5Util;
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.bean.detail.DetailAddFollowResponse;
-import com.centanet.hk.aplus.bean.detail.DetailAddress;
+import com.centanet.hk.aplus.bean.detail.DetailAddressResponse;
 import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 import com.centanet.hk.aplus.eventbus.BaseClass;
 
@@ -30,6 +32,12 @@ public class FollowAddModel extends BaseClass implements IFollowAddModel {
 
     @Override
     public void doPost(final String address, AHeaderDescription headers, Object bodys) {
+
+        String number = System.currentTimeMillis() / 1000 + "";
+        L.d("time", number);
+        headers.setNumber(number);
+        headers.setSign(MD5Util.getMD5Str("CYDAP_com-group~Centa@" + number + headers.getStaffno()));
+
         HttpUtil.doPost(address, bodys, headers, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -66,7 +74,7 @@ public class FollowAddModel extends BaseClass implements IFollowAddModel {
 
     private void parseNetData(String data) {
         if (listener != null) try {
-            listener.onReceive(GsonUtil.parseJson(data, DetailAddress.class));
+            listener.onReceive(GsonUtil.parseJson(data, DetailAddressResponse.class));
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -79,6 +87,6 @@ public class FollowAddModel extends BaseClass implements IFollowAddModel {
     }
 
     public interface OnReceiveListener {
-        void onReceive(DetailAddress address);
+        void onReceive(DetailAddressResponse address);
     }
 }

@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -23,11 +24,12 @@ import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.DialogUtil;
 import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
+import com.centanet.hk.aplus.Views.Dialog.LoadingDialog;
 import com.centanet.hk.aplus.Views.Dialog.SimpleTipsDialog;
 import com.centanet.hk.aplus.bean.detail.DetailTrustor;
 import com.centanet.hk.aplus.bean.detail.Trustor;
 import com.centanet.hk.aplus.bean.detail.TrustorDetail;
-import com.centanet.hk.aplus.bean.detail.VirtualPhone;
+import com.centanet.hk.aplus.bean.detail.VirtualPhoneResponse;
 import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 import com.centanet.hk.aplus.bean.http.VirtualPhoneDescription;
 import com.centanet.hk.aplus.eventbus.MessageEventBus;
@@ -38,10 +40,14 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.CALLHIDDEN_YES;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefresh.DETAIL_REFRESH;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.DetailRefreshView.DETAIL_CLIENT_INFO;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.NetWorkState.NETWORK_STATE_FAIL;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.OBUILDING_YES;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.VIRTUALPHONE;
 
 /**
@@ -61,6 +67,9 @@ public class ClientInfoFragment extends Fragment implements View.OnClickListener
     private boolean isVisible = false;
     private DetailTrustor detailTrustor;
     private boolean isCallHiddenPhone = false;
+    private boolean isAbleToSeeObuliding = false;
+    private LoadingDialog loadingDialog;
+    private boolean isODish = false;
 
     @Override
     public void onAttach(Context context) {
@@ -77,6 +86,10 @@ public class ClientInfoFragment extends Fragment implements View.OnClickListener
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        loadingDialog = new LoadingDialog(getActivity());
+        loadingDialog.setCancelable(false);
+        //todo 必须要改
+        isODish = DetailActicity.isODish;
     }
 
 
@@ -90,7 +103,8 @@ public class ClientInfoFragment extends Fragment implements View.OnClickListener
                     addTrustorView(detailTrustor);
                 break;
             case VIRTUALPHONE:
-                VirtualPhone number = (VirtualPhone) messageEvent.getObject();
+                loadingDialog.dismiss();
+                VirtualPhoneResponse number = (VirtualPhoneResponse) messageEvent.getObject();
                 if (number != null) {
                     if (!number.isFlag() && number.getErrorMsg() != null && !number.getErrorMsg().equals(""))
                         DialogUtil.getSimpleDialog(number.getErrorMsg()).show(getFragmentManager(), "");
@@ -99,6 +113,12 @@ public class ClientInfoFragment extends Fragment implements View.OnClickListener
                 break;
             case CALLHIDDEN_YES:
                 isCallHiddenPhone = true;
+                break;
+            case OBUILDING_YES:
+                isAbleToSeeObuliding = true;
+                break;
+            case NETWORK_STATE_FAIL:
+                loadingDialog.dismiss();
                 break;
         }
     }
@@ -124,10 +144,8 @@ public class ClientInfoFragment extends Fragment implements View.OnClickListener
             simpleTipsDialog.show(getFragmentManager(), "");
             return false;
         }
-
         return true;
     }
-
 
     @Nullable
     @Override
@@ -166,6 +184,7 @@ public class ClientInfoFragment extends Fragment implements View.OnClickListener
     }
 
     private void addClientInfo(List<Trustor> clients) {
+        if (clients == null || clients.isEmpty()) return;
         ll_owners.removeAllViews();
         boolean isFirstLine = true;
         for (Trustor trustor : clients) {
@@ -204,28 +223,27 @@ public class ClientInfoFragment extends Fragment implements View.OnClickListener
                     }
                     isFirstContactLine = false;
                     View phoneInfo = null;
-//                    if (contactType.contains(contact.getContactTypeKeyId())) {
-//                        phoneInfo = LayoutInflater.from(getActivity()).inflate(R.layout.item_info_phone, null);
-//                        phoneInfo.setTag(contact.getKeyId());
-//                        phoneInfo.setOnClickListener(this);
-//                    } else {
-//                        phoneInfo = LayoutInflater.from(getActivity()).inflate(R.layout.item_info_other, null);
-//                    }
 
                     if (contactType.contains(contact.getContactTypeKeyId())) {
-                        if (contact.isHidden()) {
-                            if (isCallHiddenPhone) {
+
+                        if (!isODish || (isODish && isAbleToSeeObuliding)) {
+                            if (contact.isHidden()) {
+                                if (isCallHiddenPhone) {
+                                    phoneInfo = LayoutInflater.from(getActivity()).inflate(R.layout.item_info_phone, null);
+                                    phoneInfo.setTag(contact.getKeyId());
+                                    phoneInfo.setOnClickListener(this);
+                                } else {
+                                    phoneInfo = LayoutInflater.from(getActivity()).inflate(R.layout.item_info_other, null);
+                                }
+                            } else {
                                 phoneInfo = LayoutInflater.from(getActivity()).inflate(R.layout.item_info_phone, null);
                                 phoneInfo.setTag(contact.getKeyId());
                                 phoneInfo.setOnClickListener(this);
-                            } else {
-                                phoneInfo = LayoutInflater.from(getActivity()).inflate(R.layout.item_info_other, null);
                             }
                         } else {
-                            phoneInfo = LayoutInflater.from(getActivity()).inflate(R.layout.item_info_phone, null);
-                            phoneInfo.setTag(contact.getKeyId());
-                            phoneInfo.setOnClickListener(this);
+                            phoneInfo = LayoutInflater.from(getActivity()).inflate(R.layout.item_info_other, null);
                         }
+
                     } else {
                         phoneInfo = LayoutInflater.from(getActivity()).inflate(R.layout.item_info_other, null);
                     }
@@ -235,7 +253,6 @@ public class ClientInfoFragment extends Fragment implements View.OnClickListener
                     phoneNumber.setText(contact.getContactValue());
                     phoneRemark.setText(contact.getMobileRemark());
                     telephone.addView(phoneInfo);
-
 
                 }
 
@@ -264,24 +281,66 @@ public class ClientInfoFragment extends Fragment implements View.OnClickListener
         String staffNo = headerDescription1.getStaffno();
         virtualPhoneDescription.setStaffNo(staffNo);
         virtualPhoneDescription.setItemType("AP");
+        virtualPhoneDescription.setSystem("AA");
 
         SimpleTipsDialog simpleTipsDialog = new SimpleTipsDialog();
         simpleTipsDialog.setOnItemclickListener(new SimpleTipsDialog.OnItemClickListener() {
             @Override
             public void onClick(DialogFragment dialog, int type) {
-                if (type == SimpleTipsDialog.DIALOG_YES)
+                if (type == SimpleTipsDialog.DIALOG_YES) {
                     onUpdateListener.getClientInfo(HttpUtil.URL_CALL_VIRTUAL_PHONE, headerDescription1, virtualPhoneDescription);
+                    loadingDialog.show();
+                    v.setOnClickListener(null);
+                    TextView phoneNumber = v.findViewById(R.id.info_title);
+                    ImageView phoneLogo = v.findViewById(R.id.info_logo);
+                    View bgView = v.findViewById(R.id.smallitem_tele_layout);
+                    bgView.setBackground(getContext().getResources().getDrawable(R.drawable.shape_detail_no_tele_background));
+                    int left = ((LinearLayout.LayoutParams) phoneLogo.getLayoutParams()).leftMargin;
+
+                    String number = phoneNumber.getText().toString();
+                    Timer timer = new Timer();
+                    final int[] i = {0};
+                    TimerTask timerTask = new TimerTask() {
+                        @Override
+                        public void run() {
+                            if (getActivity() == null) return;
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    L.d("time", i[0] + "");
+                                    LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) phoneLogo.getLayoutParams();
+                                    lp.leftMargin = left * 8;
+                                    phoneLogo.setLayoutParams(lp);
+                                    phoneNumber.setText(" (" + (15 - (++i[0])) + "s)     ");
+                                    if (i[0] == 15) {
+                                        i[0] = 0;
+                                        timer.cancel();
+                                        phoneNumber.setText(number);
+                                        v.setOnClickListener(ClientInfoFragment.this);
+                                        bgView.setBackground(getContext().getResources().getDrawable(R.drawable.shape_detail_tele_background));
+                                        LinearLayout.LayoutParams oldp = (LinearLayout.LayoutParams) phoneLogo.getLayoutParams();
+                                        lp.leftMargin = left;
+                                        phoneLogo.setLayoutParams(oldp);
+                                    }
+                                }
+                            });
+                        }
+                    };
+                    timer.schedule(timerTask, 0, 1000);
+                }
             }
         });
         simpleTipsDialog.setContentString(getString(R.string.dialog_tips_detail_call));
         simpleTipsDialog.show(getFragmentManager(), "");
 
-//        callPhone("10086");
     }
 
     public void callPhone(String phoneNum) {
-
         L.d("callPhone", "callPhone");
+
+        numberIntent = new Intent(Intent.ACTION_CALL);
+        Uri data = Uri.parse("tel:" + phoneNum);
+        numberIntent.setData(data);
 
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             //申请電話权限
@@ -289,9 +348,6 @@ public class ClientInfoFragment extends Fragment implements View.OnClickListener
                     123);
             return;
         }
-        numberIntent = new Intent(Intent.ACTION_CALL);
-        Uri data = Uri.parse("tel:" + phoneNum);
-        numberIntent.setData(data);
         startActivity(numberIntent);
     }
 
@@ -313,7 +369,8 @@ public class ClientInfoFragment extends Fragment implements View.OnClickListener
     private void doRequest(int requestCode, int[] grantResults) {
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             // Permission Granted
-            startActivity(numberIntent);
+            if (numberIntent != null)
+                startActivity(numberIntent);
         } else {
             // Permission Denied
         }

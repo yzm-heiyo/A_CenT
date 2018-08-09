@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:id="@+id/dialog_logout_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#00ffffff"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:visibility="visible">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/shape_logout_background_top"
+            android:gravity="center"
+            android:maxHeight="52dp"
+            android:minHeight="52dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="10dp"
+            android:text="登出後不會刪除任何歷史數據，下次登錄依然可以使用本賬號"
+            android:textSize="@dimen/themeSizesmall" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/color_rim" />
+
+
+        <TextView
+            android:id="@+id/dialog_logout_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/shape_logout_background_buttom"
+            android:gravity="center"
+            android:maxHeight="52dp"
+            android:minHeight="52dp"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="登出"
+            android:textColor="#E13F4F"
+            android:textSize="@dimen/themeSizeplus" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/dialog_logout_cancl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:background="@drawable/shape_logout_background_all"
+        android:gravity="center"
+        android:maxHeight="52dp"
+        android:minHeight="52dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="取消"
+        android:textColor="#007AFF"
+        android:textSize="@dimen/themeSizeplus" />
+
+
+</LinearLayout>

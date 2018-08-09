@@ -1,5 +1,6 @@
 package com.centanet.hk.aplus.Views.HouseDetailView.view;
 
+import com.centanet.hk.aplus.bean.detail.DetailBriefInfo;
 import com.centanet.hk.aplus.bean.detail.DetailHouse;
 
 /**
@@ -8,4 +9,5 @@ import com.centanet.hk.aplus.bean.detail.DetailHouse;
 
 public interface IDetailView {
     void refreshListData(DetailHouse data);
+    void refreshFragment(DetailBriefInfo briefInfo);
 }

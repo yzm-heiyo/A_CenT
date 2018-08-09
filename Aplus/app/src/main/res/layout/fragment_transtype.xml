@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ssd_ll_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/option_view_carplace"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/checkbox"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="@string/centa_sale" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/option_view_congreenprice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/checkbox"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="@string/centa_rent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/option_view_greenprice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            style="@style/checkbox"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="@string/other_sale" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/option_view_exclusive"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+
+            style="@style/checkbox"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="@string/other_rent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/option_view_key"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+        <CheckBox
+            style="@style/checkbox"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:clickable="false"
+            android:enabled="false" />
+
+
+        <TextView
+            style="@style/fragment_more_status"
+            android:text="@string/internal" />
+    </LinearLayout>
+
+
+</LinearLayout>

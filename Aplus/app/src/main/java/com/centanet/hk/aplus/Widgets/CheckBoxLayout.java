@@ -44,7 +44,6 @@ public class CheckBoxLayout extends ViewGroup implements View.OnClickListener {
 
     private OnItemViewCheckChangerListener onItemViewCheckChangerListener;
 
-
     public CheckBoxLayout(Context context) {
         this(context, null);
     }

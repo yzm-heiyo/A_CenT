@@ -3,7 +3,7 @@
     android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/translucent">
+    android:background="@color/color_translucent">
 
     <RelativeLayout
         android:id="@+id/contentLayout"
@@ -26,7 +26,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center_horizontal"
                 android:text="開始講話"
-                android:textColor="@color/black_medium"
+                android:textColor="@color/color_black_medium"
                 android:textSize="18dp" />
 
             <RelativeLayout

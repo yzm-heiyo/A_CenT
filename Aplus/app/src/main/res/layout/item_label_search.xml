@@ -8,28 +8,20 @@
         android:id="@+id/item_label_text"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
+        android:layout_alignParentTop="true"
         android:background="@android:color/transparent"
+        android:drawablePadding="5dp"
+        android:drawableRight="@drawable/ic_close_white"
+        android:ellipsize="end"
+        android:gravity="center"
         android:paddingBottom="5dp"
         android:paddingLeft="13dp"
-        android:paddingTop="5dp"
-        android:gravity="center"
-        android:layout_alignParentTop="true"
-        android:text="天台"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textColor="#848484"
         android:paddingRight="10dp"
-        android:drawablePadding="5dp"
-        android:drawableRight="@drawable/btn_clear_search_citeria"
-        android:textSize="14dp"></TextView>
+        android:paddingTop="5dp"
+        android:singleLine="true"
+        android:text="天台"
+        android:textColor="@color/color_white"
+        android:textSize="12dp" />
 
-    <!--<ImageView-->
-        <!--android:id="@+id/item_label_del"-->
-        <!--android:layout_width="14dp"-->
-        <!--android:layout_height="14dp"-->
-        <!--android:layout_marginLeft="9dp"-->
-        <!--android:layout_marginRight="11dp"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:background="@drawable/btn_clear_search_citeria"/>-->
 
 </LinearLayout>

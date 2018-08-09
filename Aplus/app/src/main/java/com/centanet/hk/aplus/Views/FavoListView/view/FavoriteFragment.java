@@ -1,13 +1,17 @@
 package com.centanet.hk.aplus.Views.FavoListView.view;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +44,10 @@ import com.centanet.hk.aplus.bean.house.Properties;
 import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 import com.centanet.hk.aplus.bean.http.FavoriteDescription;
 import com.centanet.hk.aplus.bean.http.HouseDescription;
+import com.centanet.hk.aplus.bean.http.UserBehaviorDescription;
 import com.centanet.hk.aplus.eventbus.MessageEventBus;
 import com.centanet.hk.aplus.manager.ApplicationManager;
+import com.centanet.hk.aplus.manager.ScreenShotListenManager;
 import com.githang.statusbar.StatusBarCompat;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -82,6 +88,7 @@ import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.RefreshView.VIEW_REFRES
 
 public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragment, View.OnClickListener {
 
+    private static final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 321;
     private final String thiz = getClass().getSimpleName();
     private View view;
     private ListView lv;
@@ -96,7 +103,7 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
     private HouseDescription bodyDescription;
     private String houseCount = "0";
     private boolean isFavorite = false;
-    private List<Integer> staSelectList;
+    private List<String> staSelectList;
     public static String[] priceInterval;
     private int priceType = SALE;
     private int priceDialogSeletedId;
@@ -107,6 +114,7 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
     private CircleTipsView complexTipsView;
     private View complexDown;
     private View statusDown;
+    private ScreenShotListenManager screenShotListenManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -126,7 +134,6 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
             bodyDescription.setPropertyType(5);
         }
 //        openFreshView();
-
         return view;
     }
 
@@ -144,7 +151,7 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
         complexDown = view.findViewById(R.id.fragment_img_complex_down);
         refreshLayout = view.findViewById(R.id.smartLayout);
         reset = view.findViewById(R.id.fragment_list_txt_reset);
-        mic = view.findViewById(R.id.houselist_img_mic);
+        mic = view.findViewById(R.id.mic);
         mic.setOnClickListener(this);
         refreshLayout.setEnableLoadmore(false);
     }
@@ -157,6 +164,8 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
         staSelectList = new ArrayList<>();
         searchHistory = new ArrayList<>();
         priceInterval = new String[2];
+        priceInterval[0] = "";
+        priceInterval[1] = "";
         adapter = new ItemAdapter(getActivity(), listFavo);
         adapter.setOnItemClickListener(new ItemAdapter.OnItemClickListener() {
             @Override
@@ -167,9 +176,9 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
         });
         lv.setAdapter(adapter);
         presenter = new HouseListPresenter(this);
-//        statusCircleTipsView.setText(6);
-//        statusCircleTipsView.setVisibility(View.VISIBLE);
         EventBus.getDefault().register(this);
+
+        startScreenListen();
     }
 
 
@@ -189,10 +198,11 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
                 if (houseCount.equals("0")) {
                     currentPosition.setText("0/0");
                 } else {
-//                    currentPosition.setText(lv.getFirstVisiblePosition() + 1 + "/" + houseCount);
-                    int y = lv.getChildAt(0).getTop();
                     int item = lv.getFirstVisiblePosition() + 1;
-                    if (y < -144) item++;
+                    if (lv.getChildAt(0) != null) {
+                        int y = lv.getChildAt(0).getTop();
+                        if (y < -144) item++;
+                    }
                     currentPosition.setText(item + "/" + houseCount);
                 }
             }
@@ -235,6 +245,45 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
         });
     }
 
+    private void startScreenListen() {
+//        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)
+//                != PackageManager.PERMISSION_GRANTED) {
+//            //申请WRITE_EXTERNAL_STORAGE权限
+//            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                    WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
+//        }
+
+        screenShotListenManager = ScreenShotListenManager.newInstance(getActivity());
+        screenShotListenManager.setListener((imagePath) -> onScreenShot());
+        screenShotListenManager.startListen();
+    }
+
+
+    private void onScreenShot() {
+        if (!isVisible || !isResume) return;
+        L.d(thiz, "HouseShot: " + " FirstVisiblePosition: " + lv.getFirstVisiblePosition() + " LastVisiblePosition: " + lv.getLastVisiblePosition());
+        UserBehaviorDescription userBehaviorDescription = new UserBehaviorDescription();
+        userBehaviorDescription.setAction(1);
+        userBehaviorDescription.setPage(5);
+        userBehaviorDescription.setExtras(getExtras());
+        presenter.doPost(HttpUtil.URL_USER_BEHAVIOR, aHeaderDescription, userBehaviorDescription);
+    }
+
+    private String getExtras() {
+        if (lv.getCount() == 0) return null;
+        int firstVisiblePosition = lv.getFirstVisiblePosition();
+        int lastVisiblePosition = lv.getLastVisiblePosition();
+
+        String extras = "{" + "\"PropertyKeyId\"" + ":" + "[";
+        for (int i = firstVisiblePosition; i <= lastVisiblePosition; i++) {
+            extras = extras + "\"" + listFavo.get(i).getKeyId() + "\"" + ",";
+        }
+        extras = extras.substring(0, extras.length() - 1);
+        extras = extras + "]}";
+        L.d(thiz, "onShot: " + extras);
+        return extras;
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -266,7 +315,7 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
             case R.id.fragment_list_txt_reset:
                 reset();
                 break;
-            case R.id.houselist_img_mic:
+            case R.id.mic:
                 Intent micIntent = new Intent(getContext(), SearchActivity.class);
                 micIntent.putExtra("mic", true);
                 if (!searchHistory.isEmpty()) {
@@ -289,37 +338,29 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
         statusCircleTipsView.setVisibility(View.GONE);
         ApplicationManager.setFavoOperation(new Operation());
         search.setText(null);
-        priceInterval = new String[2];
+//        priceInterval = new String[2];
+        priceInterval[0] = "";
+        priceInterval[1] = "";
         searchHistory.clear();
         bodyDescription = new HouseDescription();
         bodyDescription.setPropertyType(5);
 //        openFreshView();
     }
 
+
     private void showStatusDialog() {
 
         StatusDialog statusEndDialog = new StatusDialog(ApplicationManager.getStatusText(), staSelectList);
         statusEndDialog.setOnDialogOnclikeLisenter(new StatusDialog.onDialogOnclikeLisenter() {
             @Override
-            public void onClick(Dialog v, int viewID, List<Integer> viewList, String[] content) {
-//                v.dismiss();
-//                staSelectList = viewList;
-//                statusCircleTipsView.setText(viewList.size() == 7 ? 6 : viewList.size());
-//                if (viewList.isEmpty()) {
-//                    statusCircleTipsView.setVisibility(View.GONE);
-//                } else {
-//                    statusCircleTipsView.setVisibility(View.VISIBLE);
-//                }
-//                bodyDescription.setPropertyStatus(ApplicationManager.getStatusValue(content));
-//                openFreshView();
+            public void onClick(Dialog v, int viewID, List<String> viewList, String[] content) {
+
                 v.dismiss();
                 staSelectList = viewList;
                 statusCircleTipsView.setText(viewList.size());
                 if (content == null) {
-//                statusCircleTipsView.setText(6);
                     statusDown.setVisibility(View.VISIBLE);
                     statusCircleTipsView.setVisibility(View.GONE);
-//                statusCircleTipsView.setVisibility(View.VISIBLE);
                 } else {
                     statusCircleTipsView.setVisibility(View.VISIBLE);
                     statusDown.setVisibility(View.GONE);
@@ -547,6 +588,7 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
         refreshLayout.autoLoadmore();
     }
 
+
     @Override
     public void toLogin() {
         startActivity(new Intent(getActivity(), LoginActivity.class));
@@ -566,6 +608,20 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode) {
+
+            case 0:
+                if (data != null) {
+                    Bundle bundle = data.getExtras();
+                    String condition = bundle.getString(SearchActivity.VIEW_SEARCH_KEY_TYPE);
+                    if (condition != null) {
+                        searchHistory.clear();
+                        for (String address : condition.split("/")) {
+                            searchHistory.add(address.split(":")[1]);
+                        }
+                    }
+                }
+                break;
+
             case 1:
                 if (data != null) {
                     Bundle bundle = data.getExtras();

@@ -17,7 +17,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.bigkoo.pickerview.TimePickerView;
+import com.bigkoo.pickerview.view.TimePickerView;
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.L;
@@ -65,7 +65,6 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
     private static final int TYPE_PRICE_USE_RENT = 2;
     private TextView textDate, textDatecompletionBegin, textDatecompletionEnd, textDateOpenDateBegin, textDateOpenDateEnd, statusBegin, statusEnd;
     private View statusBeginLayout, statusEndLayout;
-    private IMoreActivity more;
     private int areaType = TYPE_AREA_REALLY;
     private int priceType = TYPE_PRICE_USE_SALE;
     private int openDataType;
@@ -73,7 +72,7 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
     private View statusView;
     private String ssd = null;
     private TextView dateTipTxt, search, reset;
-    private List<Integer> staBeginSelectList, staEndSelectList;
+    private List<String> staBeginSelectList, staEndSelectList;
     private EditText areaLft, areaRight, priceLeft, priceRight, owner, phone;
     private CheckBoxLayout direction, interval, houseTag;
     private Map<String, String> houseTagValue, intervalValue, directionValue;
@@ -171,8 +170,8 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
         openDataType = operation.getDateType() == 0 ? R.id.dialog_opendate_rb_default : operation.getDateType();
         if (openDataType == R.id.dialog_opendate_rb_changehouse) {
             statusView.setVisibility(View.VISIBLE);
-            staBeginSelectList = operation.getStaBeginSelectList();
-            staEndSelectList = operation.getStaEndSelectList();
+//            staBeginSelectList = operation.getStaBeginSelectList();
+//            staEndSelectList = operation.getStaEndSelectList();
             statusBegin.setText(operation.getStaBeginText() == "" ? null : operation.getStaBeginText());
             statusEnd.setText(operation.getStaEndText() == "" ? null : operation.getStaEndText());
         }
@@ -272,7 +271,6 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
 
         priceRG = findViewById(R.id.complex_price_group);
         areaRG = findViewById(R.id.complex_area_group);
-
 
         dateTipTxt = findViewById(R.id.opendate_txt_date);
 
@@ -593,8 +591,8 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
         operation.setPriceType(priceType);
         operation.setDateTypeText(dateTipTxt.getText().toString());
         operation.setDateType(openDataType);
-        operation.setStaBeginSelectList(staBeginSelectList);
-        operation.setStaEndSelectList(staEndSelectList);
+//        operation.setStaBeginSelectList(staBeginSelectList);
+//        operation.setStaEndSelectList(staEndSelectList);
         operation.setStaBeginText(statusBegin.getText().toString());
         operation.setStaEndText(statusEnd.getText().toString());
         operation.setAreaFrom(areaLft.getText().toString());
@@ -619,7 +617,7 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
         StatusDialog statusEndDialog = new StatusDialog(getStatusText(), staEndSelectList);
         statusEndDialog.setOnDialogOnclikeLisenter(new StatusDialog.onDialogOnclikeLisenter() {
             @Override
-            public void onClick(Dialog v, int viewID, List<Integer> viewList, String[] content) {
+            public void onClick(Dialog v, int viewID, List<String> viewList, String[] content) {
                 v.dismiss();
                 staEndSelectList = viewList;
                 statusEnd.setText(getSelectStatusText(content));
@@ -634,10 +632,10 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
         StatusDialog statusBeginDialog = new StatusDialog(getStatusText(), staBeginSelectList);
         statusBeginDialog.setOnDialogOnclikeLisenter(new StatusDialog.onDialogOnclikeLisenter() {
             @Override
-            public void onClick(Dialog v, int viewID, List<Integer> viewList, String[] content) {
+            public void onClick(Dialog v, int viewID, List<String> viewList, String[] content) {
                 v.dismiss();
                 staBeginSelectList = viewList;
-                L.d("statu",staBeginSelectList.toString());
+                L.d("statu", staBeginSelectList.toString());
                 statusBegin.setText(getSelectStatusText(content));
                 staValueBeginList = getStatusCodes(content);
             }
@@ -691,72 +689,72 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
 
         if (viewID == R.id.activity_more_opendate_begin || viewID == R.id.activity_more_opendate_end)
             showType = new boolean[]{true, true, true, false, false, false};
+//
+//        //时间选择器
+//        TimePickerView pvTime = new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
+//            @Override
+//            public void onTimeSelect(Date date, View v) {//选中事件回调
+//                switch (viewID) {
+//
+//                    case R.id.activity_more_opendate_begin:
+//                        textDateOpenDateBegin.setText(getTime(date));
+//                        changeDateStart = date;
+//                        break;
+//                    case R.id.activity_more_opendate_end:
+//                        textDateOpenDateEnd.setText(getTime(date));
+//                        changeDateEnd = date;
+//                        break;
+//                    case R.id.activity_more_completion_begin:
+//                        textDatecompletionBegin.setText(getTime(date));
+//                        completeDateStart = date;
+//                        break;
+//                    case R.id.activity_more_completion_end:
+//                        textDatecompletionEnd.setText(getTime(date));
+//                        completeDateEnd = date;
+//                        break;
+//                }
+//            }
 
-        //时间选择器
-        TimePickerView pvTime = new TimePickerView.Builder(this, new TimePickerView.OnTimeSelectListener() {
-            @Override
-            public void onTimeSelect(Date date, View v) {//选中事件回调
-                switch (viewID) {
+//            private String getTime(Date date) {
+//                Calendar calendar = Calendar.getInstance();
+//                calendar.setTime(date);
+//                if (viewID == R.id.activity_more_opendate_begin || viewID == R.id.activity_more_opendate_end)
+//                    return calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH);
+//                else return calendar.get(Calendar.YEAR) + "";
+//            }
+//        })
+//                .setCancelText("取消")
+//                .setSubmitText("確定")
+//                .setTitleText("請選擇日期")
+//                .setLabel("", "", "", "时", "分", "秒")
+//                .setType(showType)
+//                .setRangDate(startDate, selectedDate)
+//                .isCenterLabel(false)
+//                .setContentSize(22)
+//                .setTitleBgColor(Color.WHITE)
+//                .setSubmitColor(getResources().getColor(R.color.colortheme))//确定按钮文字颜色
+//                .setCancelColor(Color.BLACK)//取消按钮文字颜色
+//                .build();
 
-                    case R.id.activity_more_opendate_begin:
-                        textDateOpenDateBegin.setText(getTime(date));
-                        changeDateStart = date;
-                        break;
-                    case R.id.activity_more_opendate_end:
-                        textDateOpenDateEnd.setText(getTime(date));
-                        changeDateEnd = date;
-                        break;
-                    case R.id.activity_more_completion_begin:
-                        textDatecompletionBegin.setText(getTime(date));
-                        completeDateStart = date;
-                        break;
-                    case R.id.activity_more_completion_end:
-                        textDatecompletionEnd.setText(getTime(date));
-                        completeDateEnd = date;
-                        break;
-                }
-            }
-
-            private String getTime(Date date) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
-                if (viewID == R.id.activity_more_opendate_begin || viewID == R.id.activity_more_opendate_end)
-                    return calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH);
-                else return calendar.get(Calendar.YEAR) + "";
-            }
-        })
-                .setCancelText("取消")
-                .setSubmitText("確定")
-                .setTitleText("請選擇日期")
-                .setLabel("", "", "", "时", "分", "秒")
-                .setType(showType)
-                .setRangDate(startDate, selectedDate)
-                .isCenterLabel(false)
-                .setContentSize(22)
-                .setTitleBgColor(Color.WHITE)
-                .setSubmitColor(getResources().getColor(R.color.colortheme))//确定按钮文字颜色
-                .setCancelColor(Color.BLACK)//取消按钮文字颜色
-                .build();
-
-        Calendar defaulut = Calendar.getInstance();
-        switch (viewID) {
-
-            case R.id.activity_more_opendate_begin:
-                if (changeDateStart != null) defaulut.setTime(changeDateStart);
-                break;
-            case R.id.activity_more_opendate_end:
-                if (changeDateEnd != null) defaulut.setTime(changeDateEnd);
-                break;
-            case R.id.activity_more_completion_begin:
-                if (completeDateStart != null) defaulut.setTime(completeDateStart);
-                break;
-            case R.id.activity_more_completion_end:
-                if (completeDateEnd != null) defaulut.setTime(completeDateEnd);
-                break;
-        }
-
-        pvTime.setDate(defaulut);//注：根据需求来决定是否使用该方法（一般是精确到秒的情况），此项可以在弹出选择器的时候重新设置当前时间，避免在初始化之后由于时间已经设定，导致选中时间与当前时间不匹配的问题。
-        pvTime.show();
+//        Calendar defaulut = Calendar.getInstance();
+//        switch (viewID) {
+//
+//            case R.id.activity_more_opendate_begin:
+//                if (changeDateStart != null) defaulut.setTime(changeDateStart);
+//                break;
+//            case R.id.activity_more_opendate_end:
+//                if (changeDateEnd != null) defaulut.setTime(changeDateEnd);
+//                break;
+//            case R.id.activity_more_completion_begin:
+//                if (completeDateStart != null) defaulut.setTime(completeDateStart);
+//                break;
+//            case R.id.activity_more_completion_end:
+//                if (completeDateEnd != null) defaulut.setTime(completeDateEnd);
+//                break;
+//        }
+//
+//        pvTime.setDate(defaulut);//注：根据需求来决定是否使用该方法（一般是精确到秒的情况），此项可以在弹出选择器的时候重新设置当前时间，避免在初始化之后由于时间已经设定，导致选中时间与当前时间不匹配的问题。
+//        pvTime.show();
 
     }
 
@@ -794,6 +792,8 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
                 // 点击的是输入框区域，保留点击EditText的事件
                 return false;
             } else {
+                if (v instanceof EditText)
+                    v.clearFocus();
                 return true;
             }
         }
@@ -818,17 +818,5 @@ public class ComplexActivity extends BasicActivty implements RadioGroup.OnChecke
                 break;
         }
 
-    }
-
-
-    public interface IMoreActivity {
-
-        void getSSD(String... ssd);
-
-        void getInterval(String... intervals);
-
-        void getDirection(String... directions);
-
-        void getTag(String... tags);
     }
 }

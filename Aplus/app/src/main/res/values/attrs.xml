@@ -50,6 +50,10 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="SmartLinBreakView">
+        <attr name="title" format="string" />
+    </declare-styleable>
+
     <declare-styleable name="LineBreakLayout">
         <!--标签之间左右距离-->
         <attr name="leftAndRightSpace1" format="dimension" />

@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.AnSystemParamUtil;
 import com.centanet.hk.aplus.Widgets.TitleBar;
 import com.githang.statusbar.StatusBarCompat;
 
@@ -18,22 +19,23 @@ import com.githang.statusbar.StatusBarCompat;
 public class AboutActivity extends AppCompatActivity {
 
     private TitleBar titleBar;
-    private TextView machine, sysType, sysVersion;
+    private TextView machine, sysType, sysVersion, appVersion;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        StatusBarCompat.setStatusBarColor(this, Color.parseColor("#BB2E2D"),false);
+        StatusBarCompat.setStatusBarColor(this, Color.parseColor("#BB2E2D"), false);
         titleBar = findViewById(R.id.about_titlebar);
         titleBar.setTitleContent(getString(R.string.about_app));
 
         machine = findViewById(R.id.about_machine_txt);
         sysType = findViewById(R.id.about_sys_type_txt);
         sysVersion = findViewById(R.id.about_sys_version_txt);
+        appVersion = findViewById(R.id.about_txt_app_version);
 
-        machine.setText(android.os.Build.BRAND +" "+ android.os.Build.MODEL);
+        machine.setText(android.os.Build.BRAND + " " + android.os.Build.MODEL);
         sysVersion.setText(android.os.Build.VERSION.RELEASE);
-
+        appVersion.setText("v " + AnSystemParamUtil.getLocalVersionName(this));
     }
 }

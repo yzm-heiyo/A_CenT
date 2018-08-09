@@ -4,7 +4,7 @@
 
     <dimen name="themeSize">14dp</dimen>
     <dimen name="themeSizeplus">18dp</dimen>
-    <dimen name="themeSizesmall">13dp</dimen>
+    <dimen name="themeSizesmall">12dp</dimen>
 
 
 </resources>

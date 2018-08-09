@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <litepal>
 
-    <dbname value= "SearchHistory"></dbname>
+    <dbname value="SearchHistory"></dbname>
 
-    <version value = "1"></version>
+    <version value="1"></version>
 
     <list>
         <mapping class="com.centanet.hk.aplus.bean.auto_estate.PropertyParamHints"></mapping>
+        <mapping
+            class="com.centanet.hk.aplus.bean.userdesign_option.PropertySearchHistory"></mapping>
+        <mapping class="com.centanet.hk.aplus.bean.http.HouseDescription"></mapping>
+        <mapping class="com.centanet.hk.aplus.manager.PropertyRequestParamsManager"></mapping>
+        <mapping class="com.centanet.hk.aplus.bean.params.SystemParamItems"></mapping>
+        <mapping class="com.centanet.hk.aplus.bean.build_tag.TagInfo"></mapping>
+        <mapping class="com.centanet.hk.aplus.bean.district.DistrictItem"></mapping>
     </list>
 </litepal>

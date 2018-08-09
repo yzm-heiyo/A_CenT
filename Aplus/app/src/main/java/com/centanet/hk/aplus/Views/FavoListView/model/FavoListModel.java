@@ -2,6 +2,7 @@ package com.centanet.hk.aplus.Views.FavoListView.model;
 
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Utils.MD5Util;
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.bean.favo.FavoResponse;
@@ -51,7 +52,10 @@ public class FavoListModel extends BaseClass implements IHouseListModel {
     @Override
     public void doPost(final String address, AHeaderDescription headers, Object bodys) {
 
-
+        String number = System.currentTimeMillis() / 1000 + "";
+        L.d("time", number);
+        headers.setNumber(number);
+        headers.setSign(MD5Util.getMD5Str("CYDAP_com-group~Centa@" + number + headers.getStaffno()));
         final boolean isNeedVerify = isFileExist();
 
         HttpUtil.doPost(address, bodys, headers, new Callback() {
@@ -77,6 +81,10 @@ public class FavoListModel extends BaseClass implements IHouseListModel {
 
                         case URL_CANCELFAVO:
                             parseFavo(dataBack);
+                            break;
+
+                        case HttpUtil.URL_USER_BEHAVIOR:
+                            L.d("ScreenShot", dataBack);
                             break;
                         default:
                             break;

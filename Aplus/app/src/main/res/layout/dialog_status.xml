@@ -35,6 +35,7 @@
             <CheckBox
                 android:id="@+id/dialog_status_N"
                 style="@style/dialog_status_item_style"
+                android:tag="100"
                 android:text="@string/dialog_status_N" />
 
             <View
@@ -46,6 +47,7 @@
             <CheckBox
                 android:id="@+id/dialog_status_WT"
                 style="@style/dialog_status_item_style"
+                android:tag="500"
                 android:text="@string/dialog_status_WT" />
 
             <View
@@ -57,6 +59,7 @@
             <CheckBox
                 android:id="@+id/dialog_status_P"
                 style="@style/dialog_status_item_style"
+                android:tag="200"
                 android:text="@string/dialog_status_P" />
 
             <View
@@ -68,6 +71,7 @@
             <CheckBox
                 android:id="@+id/dialog_status_TP"
                 style="@style/dialog_status_item_style"
+                android:tag="600"
                 android:text="@string/dialog_status_TP" />
 
             <View
@@ -79,6 +83,7 @@
             <CheckBox
                 android:id="@+id/dialog_status_G"
                 style="@style/dialog_status_item_style"
+                android:tag="400"
                 android:text="@string/dialog_status_G" />
 
             <View
@@ -90,6 +95,7 @@
             <CheckBox
                 android:id="@+id/dialog_status_search"
                 style="@style/dialog_status_item_style"
+                android:tag="700"
                 android:text="@string/dialog_status_S" />
 
         </com.centanet.hk.aplus.Widgets.SmartCheckBoxLayout>

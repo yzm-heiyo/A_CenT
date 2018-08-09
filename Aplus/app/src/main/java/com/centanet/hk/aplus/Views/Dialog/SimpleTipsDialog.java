@@ -53,6 +53,8 @@ public class SimpleTipsDialog extends DialogFragment implements View.OnClickList
     private boolean ableToKeyBack = true;
     private int contentHeightOld = 1;
     private int contentHeightTrue;
+    private String leftString;
+    private String rightString;
 
     public SimpleTipsDialog() {
     }
@@ -104,26 +106,6 @@ public class SimpleTipsDialog extends DialogFragment implements View.OnClickList
         if (ContentString != null) {
             TextView conTentTxt = content.findViewById(Layout_ID);
             conTentTxt.setText(ContentString);
-//            conTentTxt.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//                private boolean isEnd = true;
-//                private boolean isFirst = true;
-//                //todo 获取contentView测量的误差值
-//                @Override
-//                public void onGlobalLayout() {
-//                    if (isEnd) {
-////                        L.d("text_string", ContentString + " height: " + conTentTxt.getHeight());
-//
-//                        if (isFirst) {
-//                            contentHeightOld = conTentTxt.getHeight();
-//                            isFirst = false;
-//                        }
-//                        if (contentHeightOld != conTentTxt.getHeight()) {
-//                            contentHeightTrue = conTentTxt.getHeight();
-//                            isEnd = false;
-//                        }
-//                    }
-//                }
-//            });
         }
 
         if (tipString != null) {
@@ -136,33 +118,18 @@ public class SimpleTipsDialog extends DialogFragment implements View.OnClickList
         rightBtn = content.findViewById(R.id.tips_dialog_right);
         rightBtn.setOnClickListener(this);
         lineView = content.findViewById(R.id.dialog_tips_line);
+        if (leftString != null && !leftString.equals("")) {
+            leftBtn.setText(leftString);
+        }
+
+        if (rightString != null && !rightString.equals("")) {
+            rightBtn.setText(rightString);
+        }
 
         if (!isLeftVisibility) {
             leftBtn.setVisibility(View.GONE);
             lineView.setVisibility(View.GONE);
         }
-
-//        content.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            private boolean isEnd = false;
-//
-//            @Override
-//            public void onGlobalLayout() {
-////                L.d("height", contentHeightOld + "  " + contentHeightTrue);
-//                if (!isEnd) {
-//                    if (contentHeightTrue - contentHeightOld >= 0) isEnd = true;
-//                    //todo 校正 TextView高度发生变化 为什么contentView没有测量到？？？？ 待解决
-//                    int off = contentHeightTrue - contentHeightOld >= 0 ? contentHeightTrue - contentHeightOld : 0;
-//                    lp.height = content.getHeight() + off;
-////                    L.d("lpHeight",lp.height+"");
-//                    WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
-//                    int width = windowManager.getDefaultDisplay().getWidth();
-//                    lp.width = (int) (width * dialogWidthPercent);
-////                    L.d("simpleDialog_height", content.getHeight() + "");
-//                    window.setAttributes(lp);
-//                    window.setBackgroundDrawableResource(android.R.color.transparent);
-//                }
-//            }
-//        });
 
         content.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
 
@@ -172,7 +139,7 @@ public class SimpleTipsDialog extends DialogFragment implements View.OnClickList
 
             WindowManager windowManager = (WindowManager) getActivity().getSystemService(Context.WINDOW_SERVICE);
             int width = windowManager.getDefaultDisplay().getWidth();
-            lp.width = (int) (width * 0.72);
+            lp.width = (int) (width * dialogWidthPercent);
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 //            content.measure(0,0);
             window.setAttributes(lp);
@@ -199,6 +166,14 @@ public class SimpleTipsDialog extends DialogFragment implements View.OnClickList
         isLeftVisibility = visibility;
     }
 
+    public void setLeftButtonText(String tips) {
+        leftString = tips;
+    }
+
+    public void setRightButtonText(String tips) {
+        rightString = tips;
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -221,7 +196,6 @@ public class SimpleTipsDialog extends DialogFragment implements View.OnClickList
         int width = windowManager.getDefaultDisplay().getWidth();
         int height = windowManager.getDefaultDisplay().getHeight();
 
-//        getDialog().getWindow().setLayout((int) (width * dialogWidthPercent), (int) (height * dialogHeightPercent));
     }
 
 

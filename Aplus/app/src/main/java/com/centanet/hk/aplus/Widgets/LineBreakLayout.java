@@ -129,7 +129,7 @@ public class LineBreakLayout extends ViewGroup implements View.OnClickListener {
                 @Override
                 public void onGlobalLayout() {
                     if (isFirst) {
-                        if (tv.getWidth() > getWidth() ) {
+                        if (tv.getWidth() > getWidth()) {
                             ViewGroup.LayoutParams layoutParams = new LinearLayout.LayoutParams(getWidth(), tv.getHeight());
                             tv.setLayoutParams(layoutParams);
                         }
@@ -137,18 +137,6 @@ public class LineBreakLayout extends ViewGroup implements View.OnClickListener {
                     }
                 }
             });
-
-//            view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//                @Override
-//                public void onGlobalLayout() {
-//                    L.d("search",view.getWidth()+"   "+getWidth());
-//                    if (view.getWidth() > getWidth() - 20) {
-//                        ViewGroup.LayoutParams layoutParams = new LinearLayout.LayoutParams(getWidth()-100, tv.getHeight());
-//                        view.setLayoutParams(layoutParams);
-//                        L.d("viewWidth",view.getWidth()+"");
-//                    }
-//                }
-//            });
 
             this.addView(view);
         }
@@ -160,13 +148,12 @@ public class LineBreakLayout extends ViewGroup implements View.OnClickListener {
      * @param itemList
      */
     public void addItem(List<String> itemList) {
-        if (!itemList.isEmpty()) {
+        if (itemList != null && !itemList.isEmpty()) {
             for (int i = 0; i < itemList.size(); i++) {
                 addItem(itemList.get(i));
             }
         }
     }
-
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
