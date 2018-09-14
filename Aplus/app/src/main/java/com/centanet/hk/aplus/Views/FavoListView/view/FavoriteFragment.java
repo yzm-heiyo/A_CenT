@@ -478,6 +478,7 @@ public class FavoriteFragment extends BaseHouseFragment implements IFavorieFragm
                 break;
             case FAVO_FAVO_CANCEL:
                 removeFavo(position);
+                DialogUtil.getSimpleDialog("已取消收藏").show(getFragmentManager(), "");
                 break;
             case DATA_FAVO_END:
                 refreshLayout.setEnableLoadmore(false);

@@ -1,6 +1,7 @@
 package com.centanet.hk.aplus.Views.HousetListView.view;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -10,12 +11,16 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +32,8 @@ import com.centanet.hk.aplus.Utils.DialogUtil;
 import com.centanet.hk.aplus.Utils.FileUtil;
 import com.centanet.hk.aplus.Utils.ItemCountUtil;
 import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Utils.TextUtil;
+import com.centanet.hk.aplus.Utils.TimeLimitUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.ComplexSearchView.ComplexActivity;
 import com.centanet.hk.aplus.Views.ComplexSearchView.FiltrateActivity;
@@ -44,9 +51,11 @@ import com.centanet.hk.aplus.Views.HouseFragment.BaseHouseFragment;
 import com.centanet.hk.aplus.Views.HousetListView.present.HouseListPresenter;
 import com.centanet.hk.aplus.Views.HousetListView.present.IHouseListPresenter;
 import com.centanet.hk.aplus.Views.LoginView.view.LoginActivity;
+import com.centanet.hk.aplus.Views.MainActivity.view.MainActivity;
 import com.centanet.hk.aplus.Views.SearchView.view.SearchActivity;
 import com.centanet.hk.aplus.Views.SearchView.view.SearchFragment;
 import com.centanet.hk.aplus.Widgets.CircleTipsView;
+import com.centanet.hk.aplus.bean.auto_estate.PropertyParamHints;
 import com.centanet.hk.aplus.bean.complexSearch.Operation;
 import com.centanet.hk.aplus.bean.district.DistrictItem;
 import com.centanet.hk.aplus.bean.house.Properties;
@@ -55,6 +64,7 @@ import com.centanet.hk.aplus.bean.http.FavoriteDescription;
 import com.centanet.hk.aplus.bean.http.HouseDescription;
 import com.centanet.hk.aplus.bean.http.UserBehaviorDescription;
 import com.centanet.hk.aplus.bean.params.SystemParamItems;
+import com.centanet.hk.aplus.bean.save_option.PropertyRequestSaveParams;
 import com.centanet.hk.aplus.bean.userdesign_option.PropertySearchHistory;
 import com.centanet.hk.aplus.common.APSystemParameterType;
 import com.centanet.hk.aplus.eventbus.MessageEventBus;
@@ -123,8 +133,6 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
     private String houseCount = "0";
     private List<Integer> staSelectList;
     public static String[] priceInterval;
-    private int priceType = SALE;
-    private int priceDialogSeletedId;
     private int sortDialogSelectId;
     private int refreshType = 0;
     private String searchTip;
@@ -135,6 +143,7 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
     private View back;
 
     private View allOptionView;
+    private CircleTipsView moreTip;
 
     private int position;
     private boolean isFirst = true;
@@ -158,7 +167,9 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
             initListeners();
         }
         setOptionCount();
-        refreshLayout.autoRefresh();
+//        refreshLayout.autoRefresh();
+        openFreshView();
+//        hideKeyboard();
         MessageEventBus msg = new MessageEventBus();
         msg.setMsg(SHOW);
         EventBus.getDefault().post(msg);
@@ -183,6 +194,9 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
         optionTip = view.findViewById(R.id.house_txt_option_tip);
         optionTxt = view.findViewById(R.id.list_txt_proselter);
         saveOptionTxt = view.findViewById(R.id.list_txt_save);
+        moreTip = view.findViewById(R.id.more_tip);
+        optionContent = view.findViewById(R.id.property_rl_option_content);
+
 
         lv = view.findViewById(R.id.fragment_presmises_listview);
         lv.setAdapter(adapter);
@@ -269,13 +283,19 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
     }
 
     private void init() {
+
+        screenShotListenManager = ScreenShotListenManager.newInstance(getActivity());
+
+
         MyApplication application = (MyApplication) getActivity().getApplicationContext();
         aHeaderDescription = application.getHeaderDescription();
 
         if (getArguments() != null) {
             bodyDescription = (HouseDescription) getArguments().get("HOUSE_REQUEST");
+            L.d("House_PropertyTypes", bodyDescription.toString());
             isFavo = getArguments().getBoolean("FAVO");
             searchTip = getArguments().getString(VIEW_SEARCH_LABEL);
+//            search.setText(getArguments().getString(VIEW_SEARCH_LABEL));
             L.d("HouseLabel", searchTip);
         }
 
@@ -316,11 +336,25 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
     @Override
     public void onResume() {
         super.onResume();
+        L.d("View_State", "House_Onresume");
         EventBus.getDefault().register(this);
+//        startScreenListen();
+//        hideKeyboard();
+    }
+
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        screenShotListenManager.stopListen();
+        L.d("View_State", "House_Onstop");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private void initListeners() {
+
+        screenShotListenManager.setListener((imagePath) -> onScreenShot());
+
 
         sort.setOnClickListener(this);
         more.setOnClickListener(this);
@@ -373,6 +407,7 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
                 intent.putExtra("keyId", listData.get(position).getKeyId());
                 intent.putExtra("index", position);
                 intent.putExtra("propertyCount", houseCount);
+                intent.putExtra("current", 1);
                 startActivity(intent);
             }
         });
@@ -397,31 +432,7 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.list_txt_search:
-//                Intent intent = new Intent(getContext(), SearchActivity.class);
-//                if (!searchHistory.isEmpty()) {
-//                    Bundle bundle = new Bundle();
-//                    bundle.putStringArrayList(VIEW_SEARCH_HISTORY_SAVE, (ArrayList<String>) searchHistory);
-//                    intent.putExtras(bundle);
-//                }
-//                startActivityForResult(intent, 0);
-                FragmentTransaction ft = getParentFragment().getChildFragmentManager().beginTransaction();
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-                Fragment fragment = getParentFragment().getChildFragmentManager().findFragmentByTag(SearchFragment.FRAGMENT_TAG_SEARCH);
-                if (fragment == null) {
-                    fragment = new SearchFragment();
-                    ft.add(fragment, SearchFragment.FRAGMENT_TAG_SEARCH);
-                } else ft.show(fragment);
-                ft.hide(this).commit();
-
-//                FragmentTransaction ft = getParentFragment().getChildFragmentManager().beginTransaction();
-//                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-//                Fragment fragment = getParentFragment().getChildFragmentManager().findFragmentByTag(SearchFragment.FRAGMENT_TAG_SEARCH);
-//                if (fragment != null)
-//                    ft.show(fragment);
-//                else
-//                    ft.show(getParentFragment().getChildFragmentManager().findFragmentByTag(HomePagerFragment.FRAGMENT_TAG_HOMEPAGER));
-//                ft.remove(this).commit();
-
+                turnToSearch();
                 break;
             case R.id.list_img_moreoption:
 
@@ -430,7 +441,6 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
                 Intent in = new Intent(getContext(), FiltrateActivity.class);
                 in.putExtras(bundle);
                 startActivityForResult(in, 0);
-
                 break;
 
             case R.id.list_img_sort:
@@ -438,14 +448,27 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
                 break;
 
             case R.id.mic:
-                Intent micIntent = new Intent(getContext(), SearchActivity.class);
-                micIntent.putExtra("mic", true);
-                if (!searchHistory.isEmpty()) {
-                    Bundle micBundle = new Bundle();
-                    micBundle.putStringArrayList(VIEW_SEARCH_HISTORY_SAVE, (ArrayList<String>) searchHistory);
-                    micIntent.putExtras(micBundle);
+
+                FragmentTransaction ft1 = getParentFragment().getChildFragmentManager().beginTransaction();
+                ft1.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                Fragment fragment1 = getParentFragment().getChildFragmentManager().findFragmentByTag(SearchFragment.FRAGMENT_TAG_SEARCH);
+                if (fragment1 == null) {
+                    fragment1 = new SearchFragment();
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putSerializable("HOUSE_REQUEST", bodyDescription);
+                    bundle1.putBoolean("mic", true);
+                    fragment1.setArguments(bundle1);
+                    ft1.hide(this);
+                    ft1.add(R.id.fragment_content, fragment1, SearchFragment.FRAGMENT_TAG_SEARCH).commit();
+                } else {
+                    Bundle bundle1 = new Bundle();
+                    bundle1.putBoolean("mic", true);
+                    bundle1.putSerializable("HOUSE_REQUEST", bodyDescription);
+                    fragment1.setArguments(bundle1);
+                    ft1.show(fragment1);
+                    ft1.hide(this).commit();
                 }
-                startActivityForResult(micIntent, 0);
+
                 break;
             case R.id.house_rl_alloption:
 
@@ -454,18 +477,11 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
                 optionDialog.setOnItemClickLisenter((dialog, v1, description) -> {
                     dialog.dismiss();
                     bodyDescription = description;
-                    L.d("Option", "getHasPropertyKey: " + description.getHasPropertyKey() + "");
-                    L.d("Option", "isOnlyTrust: " + description.isOnlyTrust() + "");
-                    L.d("Option", "isHasSalePricePremiumUnpaid: " + description.isHasSalePricePremiumUnpaid() + "");
-                    L.d("Option", "isShowSalePricePremiumUnpaid: " + description.isShowSalePricePremiumUnpaid() + "");
-                    L.d("Option", "isProxy: " + description.isProxy() + "");
-                    L.d("Option", "isNoneSSD: " + description.isNoneSSD() + "");
-                    L.d("Option", "isHotlist: " + description.isHotlist() + "");
-                    L.d("Option", "isHasParkingNumber: " + description.isHasParkingNumber() + "");
-                    L.d("Option", "isHasConfirmTransaction: " + description.isHasConfirmTransaction() + "");
-                    L.d("Option", "isHasDevelopmentEndCredits: " + description.isHasDevelopmentEndCredits() + "");
-                    L.d("Option", "isHasOptout: " + description.isHasOptout() + "");
-                    refreshLayout.autoRefresh();
+                    if (TextUtil.isEmply(description.getSortField())) {
+                        sortDialogSelectId = R.id.sort_rb_default;
+                    }
+                    setOptionCount();
+                    openFreshView();
                 });
                 optionDialog.show(getFragmentManager(), "");
                 break;
@@ -473,16 +489,36 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
                 UserDesignNameDialog userDesignNameDialog = new UserDesignNameDialog();
                 userDesignNameDialog.setOnItemclickListener((dialog1, s, type) -> {
                     dialog1.dismiss();
-                    if(type == UserDesignNameDialog.DIALOG_YES){
+                    if (type == UserDesignNameDialog.DIALOG_YES) {
                         saveOption(s);
                     }
                 });
-                userDesignNameDialog.show(getFragmentManager(),"");
+                userDesignNameDialog.show(getFragmentManager(), "");
                 break;
         }
     }
 
-    private void saveOption(String name){
+    private void turnToSearch() {
+
+        FragmentTransaction ft = getParentFragment().getChildFragmentManager().beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        Fragment fragment = getParentFragment().getChildFragmentManager().findFragmentByTag(SearchFragment.FRAGMENT_TAG_SEARCH);
+        Bundle bundle2 = new Bundle();
+        bundle2.putSerializable("HOUSE_REQUEST", bodyDescription);
+        if (fragment == null) {
+            fragment = new SearchFragment();
+            fragment.setArguments(bundle2);
+            ft.hide(this);
+            ft.add(R.id.fragment_content, fragment, SearchFragment.FRAGMENT_TAG_SEARCH).commit();
+        } else {
+            fragment.setArguments(bundle2);
+            ft.show(fragment);
+            ft.hide(this).commit();
+        }
+
+    }
+
+    private void saveOption(String name) {
         new Thread(() -> {
             String path = MyApplication.getContext().getFilesDir().getAbsolutePath() + "userDesign.txt";
             String gson = null;
@@ -509,18 +545,33 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
                 L.d("SearchHis_Single", new Gson().toJson(history));
             }
             FileUtil.saveFile(gson, file);
+            if (getActivity() != null) showSaveFinishDialog();
         }).start();
     }
 
+    private void showSaveFinishDialog() {
+        getActivity().runOnUiThread(() -> {
+            DialogUtil.getSimpleDialog(getString(R.string.success_to_save)).show(getFragmentManager(), "");
+        });
+    }
+
     private void startScreenListen() {
-        screenShotListenManager = ScreenShotListenManager.newInstance(getActivity());
-        screenShotListenManager.setListener((imagePath) -> onScreenShot());
         screenShotListenManager.startListen();
     }
 
     private void onScreenShot() {
-        if (!isVisible || !isResume) return;
+
+        L.d("house_fragment_screen","house_fragment_screen");
+//        if (TimeLimitUtil.isAchieveLimitTime(1000)) return;
+        if(!presenter.isAbleToScreen())return;
+
+        if (getActivity() == null) return;
+        if (((MainActivity) getActivity()).getCurrentItem() != 0) return;
+
+        L.d("onScreenShot_house", "Hidden:" + isHidden() + " Resume:" + isResumed() + " isVisible:" + isVisible);
+        if (isVisible || isHidden() || !isResumed()) return;
         L.d(thiz, "HouseShot: " + " FirstVisiblePosition: " + lv.getFirstVisiblePosition() + " LastVisiblePosition: " + lv.getLastVisiblePosition());
+        presenter.setAbleToScreen(false);
         UserBehaviorDescription userBehaviorDescription = new UserBehaviorDescription();
         userBehaviorDescription.setAction(1);
         userBehaviorDescription.setPage(4);
@@ -543,14 +594,12 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
         return extras;
     }
 
-
     private void showSortDialog() {
         SortDialog sortDialog = new SortDialog(sortDialogSelectId);
         sortDialog.setOnDialogClikeLisenter(new SortDialog.onDialogOnclikeLisenter() {
             @Override
             public void onClike(Dialog dialog, int viewID, Map<String, Object> params) {
                 dialog.dismiss();
-//                bodyDescription.setPageIndex(1);
                 sortDialogSelectId = (int) params.get(SortDialog.PARAMS_SELECTID);
                 bodyDescription.setAscending((Boolean) params.get(SortDialog.PARAMS_ASCENDING));
                 String sort = params.get(SortDialog.PARAMS_SORTFIELD) != null ? (String) params.get(SortDialog.PARAMS_SORTFIELD) : null;
@@ -558,6 +607,9 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
                 openFreshView();
             }
         });
+        if (bodyDescription.getHasSalePricePremiumUnpaid() || bodyDescription.isShowSalePricePremiumUnpaid())
+            sortDialog.isShowGreenPrice(true);
+        else sortDialog.isShowGreenPrice(false);
         sortDialog.show(getFragmentManager(), "");
     }
 
@@ -569,17 +621,21 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
         final Properties data = listData.get(position);
         final FavoriteDescription favoriteDescription = new FavoriteDescription();
         final String address = data.isFavoriteFlag() == true ? URL_CANCELFAVO : URL_FAVORITE;
-        if (!data.isFavoriteFlag()) dialog.setTipString("加入收藏");
+        if (!data.isFavoriteFlag()) {
+            dialog.setTipString("加入收藏");
+            dialog.setRightButtonText(getString(R.string.add));
+        } else
+            dialog.setRightButtonText(getString(R.string.remove));
         favoriteDescription.setKeyId(data.getKeyId());
-        dialog.setOnItemclickListener(new SimpleTipsDialog.OnItemClickListener() {
-            @Override
-            public void onClick(DialogFragment dialog, int type) {
-                if (type == SimpleTipsDialog.DIALOG_YES) {
-                    presenter.doPost(address, aHeaderDescription, favoriteDescription);
-                }
+        dialog.setOnItemclickListener((dialog1, type) -> {
+            if (type == SimpleTipsDialog.DIALOG_YES) {
+                presenter.doPost(address, aHeaderDescription, favoriteDescription);
             }
         });
-        dialog.setContentString(listData.get(position).getBuildingName());
+
+        Properties properties = listData.get(position);
+        String floor = properties.getFloor() == null || properties.getFloor().equals("") ? "" : properties.getFloor();
+        dialog.setContentString(properties.getEstateName() + " " + properties.getBuildingName() + " " + floor + " " + (properties.getHouseNo() == null ? "" : properties.getHouseNo() + "室"));
         dialog.show(getFragmentManager(), "");
     }
 
@@ -670,8 +726,15 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
 
     @Override
     public void refreshListData(List<Properties> properties) {
-        if (refreshType == 0) listData.clear();
-        listData.addAll(properties);
+
+        if (refreshType == 0) {
+            if (listData != null) {
+                listData.clear();
+                listData.addAll(properties);
+            }
+        } else if (refreshType == 1) {
+            listData.addAll(properties);
+        }
     }
 
     @Override
@@ -680,7 +743,10 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
         if (refreshLayout.isLoading()) return;
         if (!listData.isEmpty()) lv.post(() -> lv.setSelection(0));
         //todo 修改listView定位
-        adapter.setShowGreenTabView(bodyDescription.getHasSalePricePremiumUnpaid());
+        L.d("getHasSalePricePremiumUnpaid", bodyDescription.getHasSalePricePremiumUnpaid() + "  " + bodyDescription.isShowSalePricePremiumUnpaid());
+        if (bodyDescription.getHasSalePricePremiumUnpaid() || bodyDescription.isShowSalePricePremiumUnpaid())
+            adapter.setShowGreenTabView(true);
+        else adapter.setShowGreenTabView(false);
         refreshLayout.autoRefresh();
     }
 
@@ -702,6 +768,7 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
     @Override
     public void setCancelFavo() {
         changeFavoStatu(false);
+        DialogUtil.getSimpleDialog("已取消收藏").show(getFragmentManager(), "");
         Properties house = listData.get(position);
         EventBus.getDefault().post(new MessageEventBus(HOUSE_FAVO_CANCEL, house.getKeyId()));
         listData.get(position).setFavoriteFlag(false);
@@ -710,6 +777,7 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
     @Override
     public void setFavo() {
         changeFavoStatu(true);
+        DialogUtil.getSimpleDialog(" 成功加入收藏").show(getFragmentManager(), "");
         EventBus.getDefault().post(new MessageEventBus(HOUSE_FAVO, listData.get(position)));
         listData.get(position).setFavoriteFlag(true);
     }
@@ -782,11 +850,10 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
                 break;
 
             case FiltrateActivity.CODE_FILTRATE:
-//                bodyDescription =
                 Bundle bundle = data.getExtras();
                 bodyDescription = (HouseDescription) bundle.get(FiltrateActivity.HOUSE_PARAMS);
                 try {
-                    Toast.makeText(getContext(), ItemCountUtil.count(bodyDescription) + "", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), ItemCountUtil.count(bodyDescription) + "", Toast.LENGTH_SHORT).show();
                     optionTip.setVisibility(View.VISIBLE);
                     optionTip.setText(ItemCountUtil.count(bodyDescription) + "");
                 } catch (Exception e) {
@@ -794,29 +861,166 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
                 }
                 setOptionCount();
                 L.d("OnActivityBack1", bodyDescription.toString());
-                refreshLayout.autoRefresh();
+//                refreshLayout.autoRefresh();
+                openFreshView();
                 break;
         }
     }
 
     private void setOptionCount() {
         try {
-//            optionTip.setVisibility(View.VISIBLE);
-            optionTip.setText(ItemCountUtil.count(bodyDescription) + "");
-            if (ItemCountUtil.count(bodyDescription) <= 0) {
-                optionTip.setVisibility(View.GONE);
-                optionTxt.setText(R.string.dialog_price_unlimit);
-            } else {
-                optionTip.setVisibility(View.VISIBLE);
 
+            int count = ItemCountUtil.count(bodyDescription);
+
+            if (bodyDescription.getSquareFrom() != null && bodyDescription.getSquareTo() != null) {
+                count--;
+            }
+
+            if (bodyDescription.getCompleteYearFrom() != null && bodyDescription.getCompleteYearTo() != null) {
+                count--;
+            }
+
+            if (bodyDescription.getPriceUnitFrom() != null && bodyDescription.getPriceUnitTo() != null) {
+                count--;
+            }
+
+            if (bodyDescription.getSalePriceFrom() != null && bodyDescription.getSalePriceTo() != null) {
+                count--;
+            }
+
+            if (bodyDescription.getRentPriceFrom() != null && bodyDescription.getRentPriceTo() != null) {
+                count--;
+            }
+
+            if (bodyDescription.getPropertyDateFrom() != null && bodyDescription.getPropertyDateTo() != null) {
+                count--;
+            }
+
+            if (bodyDescription.getSquareUseFrom() != null && bodyDescription.getSquareUseTo() != null) {
+                count--;
+            }
+
+            if (!TextUtil.isEmply(bodyDescription.getSortField())) {
+                count--;
+            }
+
+            if (bodyDescription.getDistrictListIds() != null)
+                count = count - bodyDescription.getDistrictListIds().size();
+            if (bodyDescription.getSearcherAddress() != null)
+                count = count - bodyDescription.getSearcherAddress().size();
+            if (bodyDescription.getFloors() != null && !bodyDescription.getFloors().equals(""))
+                count--;
+            if (bodyDescription.getUnits() != null && !bodyDescription.getUnits().equals(""))
+                count--;
+
+            if (bodyDescription.getBuildingUseTypes() != null)
+                count = count - bodyDescription.getBuildingUseTypes().size();
+
+            moreTip.setText(count + "");
+            if (count <= 0) {
+                moreTip.setVisibility(View.GONE);
+            } else {
+                moreTip.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+//        L.d("getSearcherAddress",bodyDescription.getSearcherAddress().toString());
+        if (TextUtil.isEmply(bodyDescription.getSearcherAddress())) {
+            optionTxt.setText(R.string.dialog_price_unlimit);
+            search.setText(null);
+            optionTip.setVisibility(View.GONE);
+//            L.d("",);
+        } else {
+//            optionTxt.setText(parseData(PropertyRequestParamsManager.getParams().getAddress().get(0)));
+            optionTip.setVisibility(View.VISIBLE);
+            optionTip.setText(PropertyRequestParamsManager.getParams().getAddress().size() + "");
+            String addStr = "";
+            for (PropertyParamHints h : PropertyRequestParamsManager.getParams().getAddress()) {
+                addStr = addStr + getDeatilAddress(h) + ",";
+            }
+            optionTxt.setText(addStr);
+
+            optionContent.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
+            optionContent.measure(0, 0);
+//            int width = optionContent.getWidth();
+//            L.d("optionContent_Width",width+"");
+//            if (optionTxt.getWidth() + DensityUtil.dip2px(getContext(), 10) > width) {
+////            search.setText(addStr.substring(0, addStr.length() - 1));
+//                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width - DensityUtil.dip2px(getContext(), 50), ViewGroup.LayoutParams.WRAP_CONTENT);
+//                layoutParams.setMargins(DensityUtil.dip2px(getContext(), 12), 0, 0, 0);
+//                layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+//                optionTxt.setSingleLine();
+//                optionTxt.setEllipsize(TextUtils.TruncateAt.valueOf("END"));
+//                optionTxt.setLayoutParams(layoutParams);
+//            }
+        }
     }
 
-//    private void getFirstOption(HouseDescription model) throws IllegalAccessException {
-//
+    private View optionContent;
+    private ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+
+        @Override
+        public void onGlobalLayout() {
+            int width = optionContent.getWidth();
+            L.d("optionContent_Width", width + "");
+            if (optionTxt.getWidth() + DensityUtil.dip2px(getContext(), 35) > width) {
+//            search.setText(addStr.substring(0, addStr.length() - 1));
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width - DensityUtil.dip2px(getContext(), 35), ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(DensityUtil.dip2px(getContext(), 12), 0, 0, 0);
+                layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+                optionTxt.setSingleLine();
+                optionTxt.setEllipsize(TextUtils.TruncateAt.valueOf("END"));
+                optionTxt.setLayoutParams(layoutParams);
+            }
+            optionContent.getViewTreeObserver().removeGlobalOnLayoutListener(onGlobalLayoutListener);
+        }
+    };
+
+    private String getDeatilAddress(PropertyParamHints data) {
+
+        String detailAddress = "";
+        if (!TextUtil.isEmply(data.getDistrictName()))
+            detailAddress = data.getDistrictName() + "/";
+
+        if (!TextUtil.isEmply(data.getAreaName()))
+            detailAddress = detailAddress + data.getAreaName() + "/";
+
+        if (!TextUtil.isEmply(data.getEnAddressName()))
+            detailAddress = detailAddress + data.getEnAddressName();
+
+        return detailAddress;
+    }
+
+    private String parseData(PropertyParamHints data) {
+        String labelString = null;
+        if (data.getAreaName().length() > 0) {
+            labelString = data.getAreaName();
+        } else if (data.getDistrictName().length() > 0 && data.getAreaName().length() > 0) {
+            labelString = data.getDistrictName() + "\\\\\\" + data.getAreaName();
+        } else if (data.getDistrictName().length() > 0) {
+            labelString = data.getDistrictName();
+        } else if (data.getEnAddressName().length() > 0) {
+//            labelString = data.getAreaName();
+            labelString = data.getEnAddressName();
+        }
+        return labelString;
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+//        hideKeyboard();
+    }
+
+//    private void hideKeyboard() {
+//        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        if (imm.isActive() && getActivity().getCurrentFocus() != null) {
+//            if (getActivity().getCurrentFocus().getWindowToken() != null) {
+//                imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+//            }
+//        }
 //    }
 
     @Override
@@ -824,10 +1028,19 @@ public class HouseFragment extends BaseHouseFragment implements IHouseListFragme
         FragmentTransaction ft = getParentFragment().getChildFragmentManager().beginTransaction();
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         Fragment fragment = getParentFragment().getChildFragmentManager().findFragmentByTag(SearchFragment.FRAGMENT_TAG_SEARCH);
-        if (fragment != null)
+        if (fragment != null) {
+            Bundle bundle1 = new Bundle();
+            HouseDescription description = new HouseDescription();
+            description.setDistrictListIds(bodyDescription.getDistrictListIds());
+            description.setFloors(bodyDescription.getFloors());
+            description.setUnits(bodyDescription.getUnits());
+            bundle1.putSerializable("HOUSE_REQUEST", description);
+            fragment.setArguments(bundle1);
             ft.show(fragment);
-        else
+        } else {
+            PropertyRequestParamsManager.setParams(new PropertyRequestSaveParams());
             ft.show(getParentFragment().getChildFragmentManager().findFragmentByTag(HomePagerFragment.FRAGMENT_TAG_HOMEPAGER));
+        }
         ft.remove(this).commit();
         return true;
     }

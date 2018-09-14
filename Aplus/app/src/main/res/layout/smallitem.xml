@@ -19,8 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left|center"
             android:layout_weight="1"
-            android:textColor="@color/color_itemt_result_text"
-            android:textSize="@dimen/themeSizesmall" />
+            android:textColor="@color/color_french_gray"
+            android:textSize="12dp" />
 
         <LinearLayout
             android:id="@+id/smallitem_tele_layout"

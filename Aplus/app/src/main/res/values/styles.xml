@@ -127,18 +127,17 @@
     </style>
 
     <style name="fragment_mine_item_style">
-
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center|left</item>
         <item name="android:paddingLeft">20dp</item>
         <item name="android:paddingRight">20dp</item>
+        <item name="android:drawableRight">@drawable/btn_arrow_right_gray</item>
         <item name="android:paddingBottom">16dp</item>
         <item name="android:paddingTop">16dp</item>
         <item name="android:textColor">@color/color_itemt_detail_title</item>
         <item name="android:background">@drawable/selector_item_them_bg</item>
         <item name="android:textSize">@dimen/themeSize</item>
-
     </style>
 
 
@@ -163,9 +162,11 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:button">@null</item>
-        <item name="android:drawableLeft">@drawable/seletor_click</item>
-        <item name="android:drawablePadding">8dp</item>
+        <item name="android:drawableLeft">@drawable/selector_checkbox</item>
+        <item name="android:drawablePadding">15dp</item>
         <item name="android:padding">10dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginLeft">10dp</item>
         <item name="android:textSize">@dimen/themeSize</item>
         <item name="android:textColor">@color/color_itemt_detail_title</item>
 
@@ -176,10 +177,11 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:button">@null</item>
-        <item name="android:drawablePadding">8dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:drawableLeft">@drawable/selector_checkbox_circle</item>
         <item name="android:padding">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
         <item name="android:textSize">16dp</item>
-        <item name="android:textColor">@color/textcolor</item>
 
     </style>
 

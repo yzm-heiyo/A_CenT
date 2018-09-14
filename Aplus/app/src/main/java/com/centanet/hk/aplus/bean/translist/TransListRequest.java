@@ -1,17 +1,20 @@
 package com.centanet.hk.aplus.bean.translist;
 
+import android.widget.ListView;
+
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by yangzm4 on 2018/8/7.
  */
 
-public class TransListRequest {
+public class TransListRequest implements Serializable{
 
     private String UpdatePermisstionsTime = "2010-01-01T00:00:00";
     private String PropertyType = "16";
     private List<String> DistrictListIds;
-    private String SearcherAddress;
+    private List<String> SearcherAddress;
     private String Floors;
     private String Units;
     private String RentPriceFrom;
@@ -50,14 +53,14 @@ public class TransListRequest {
     private String PriceUnitTo;
     private int PageIndex = 1;
     private int PageSize = 15;
-    private String SortField = "";
+    private String SortField = "DisplayTransDate";
     private boolean Ascending = false;
     private boolean IsMobileRequest = true;
 
     public TransListRequest() {
     }
 
-    public TransListRequest(String updatePermisstionsTime, String propertyType, List<String> districtListIds, String searcherAddress, String floors, String units, String rentPriceFrom, String rentPriceTo, String sellPriceFrom, String sellPriceTo, String squareUseFrom, String squareUseTo, String squareFrom, String squareTo, String trusactionDate, String transactionDateFrom, String transactionDateTo, String prelimDateFrom, String prelimDateTo, String formalDateFrom, String formalDateTo, String completeDateFrom, String completeDateTo, String rentDateFrom, String rentDateTo, String contactSearchType, String contactName, String contactValue, List<String> buildingUsages, List<String> roomCounts, String transactionTypes, String isTransferred, String isConfirmed, String isOStatus, String isCorporationTransferre, String isDevelopmentEndCredits, String isSalePricePremiumUnpaid, String priceUnitType, String priceUnitFrom, String priceUnitTo, int pageIndex, int pageSize, String sortField, boolean ascending, boolean isMobileRequest) {
+    public TransListRequest(String updatePermisstionsTime, String propertyType, List<String> districtListIds, List<String> searcherAddress, String floors, String units, String rentPriceFrom, String rentPriceTo, String sellPriceFrom, String sellPriceTo, String squareUseFrom, String squareUseTo, String squareFrom, String squareTo, String trusactionDate, String transactionDateFrom, String transactionDateTo, String prelimDateFrom, String prelimDateTo, String formalDateFrom, String formalDateTo, String completeDateFrom, String completeDateTo, String rentDateFrom, String rentDateTo, String contactSearchType, String contactName, String contactValue, List<String> buildingUsages, List<String> roomCounts, String transactionTypes, String isTransferred, String isConfirmed, String isOStatus, String isCorporationTransferre, String isDevelopmentEndCredits, String isSalePricePremiumUnpaid, String priceUnitType, String priceUnitFrom, String priceUnitTo, int pageIndex, int pageSize, String sortField, boolean ascending, boolean isMobileRequest) {
         UpdatePermisstionsTime = updatePermisstionsTime;
         PropertyType = propertyType;
         DistrictListIds = districtListIds;
@@ -117,7 +120,7 @@ public class TransListRequest {
         return DistrictListIds;
     }
 
-    public String getSearcherAddress() {
+    public List<String> getSearcherAddress() {
         return SearcherAddress;
     }
 
@@ -297,7 +300,7 @@ public class TransListRequest {
         DistrictListIds = districtListIds;
     }
 
-    public void setSearcherAddress(String searcherAddress) {
+    public void setSearcherAddress(List<String> searcherAddress) {
         SearcherAddress = searcherAddress;
     }
 
@@ -429,7 +432,7 @@ public class TransListRequest {
         IsDevelopmentEndCredits = isDevelopmentEndCredits;
     }
 
-    public void setIsSalePricePremiumUnpaid(String isSalePricePremiumUnpaid) {
+    public void setSalePricePremiumUnpaid(String isSalePricePremiumUnpaid) {
         IsSalePricePremiumUnpaid = isSalePricePremiumUnpaid;
     }
 

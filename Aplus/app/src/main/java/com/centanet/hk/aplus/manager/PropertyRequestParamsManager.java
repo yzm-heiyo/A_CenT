@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 房源请求参数的Manager
  * Created by yangzm4 on 2018/8/2.
  */
 

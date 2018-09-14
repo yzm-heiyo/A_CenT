@@ -41,6 +41,7 @@ public class HouseListModel extends BaseClass implements IHouseListModel {
     private OnReceiveListener receiveListener;
 
     private OnHouseStatusChangeLisenter statusChangeLisenter;
+    private boolean isScreenShotActivity = true;
 
     public static synchronized HouseListModel getInstance() {
         return houseListModel;
@@ -88,7 +89,8 @@ public class HouseListModel extends BaseClass implements IHouseListModel {
                                     statusChangeLisenter.setFavoCancel();
                             break;
                         case HttpUtil.URL_USER_BEHAVIOR:
-                            L.d("ScreenShot",dataBack);
+                            L.d("ScreenShot_HouseList", dataBack);
+                            isScreenShotActivity = true;
                             break;
                         default:
                             break;
@@ -154,6 +156,16 @@ public class HouseListModel extends BaseClass implements IHouseListModel {
 
     public void setStatusChangeLisenter(OnHouseStatusChangeLisenter statusChangeLisenter) {
         this.statusChangeLisenter = statusChangeLisenter;
+    }
+
+    @Override
+    public boolean isAbleToScreen() {
+        return isScreenShotActivity;
+    }
+
+    @Override
+    public void setAbleToScreen(boolean b) {
+        isScreenShotActivity = b;
     }
 
 

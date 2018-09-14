@@ -1,5 +1,6 @@
 package com.centanet.hk.aplus.Views.HouseDetailView.view;
 
+//import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;

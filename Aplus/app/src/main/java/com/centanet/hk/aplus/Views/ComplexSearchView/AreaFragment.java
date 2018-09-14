@@ -3,13 +3,18 @@ package com.centanet.hk.aplus.Views.ComplexSearchView;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.Views.basic.BaseFragment;
 import com.centanet.hk.aplus.Widgets.ProcessBarView;
 import com.centanet.hk.aplus.bean.params.SystemParamItems;
@@ -52,7 +57,6 @@ public class AreaFragment extends BaseFragment implements View.OnClickListener {
         return contentFragment;
     }
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -71,27 +75,100 @@ public class AreaFragment extends BaseFragment implements View.OnClickListener {
     ProcessBarView.OnProgressChangeListener changeListener = new ProcessBarView.OnProgressChangeListener() {
         @Override
         public void onLeftProgressChange(float progress, int value) {
-            priceStartEdit.setText(value + "");
-            areaParam.areaFrom = value + "";
+//            priceStartEdit.setText(value + "");
+//            areaParam.areaFrom = value + "";
+            if (isChangeByEdit) {
+                isChangeByEdit = false;
+                return;
+            }
+
+            isProcessChange = true;
+
+            if (value == 0) {
+                priceStartEdit.setText(null);
+                areaParam.areaFrom = null;
+            } else {
+                priceStartEdit.setText((value + ""));
+                areaParam.areaFrom = value + "";
+            }
             onAreaChangeLisenter.onAreaChange(areaParam);
         }
 
         @Override
         public void onRightProgressChange(float progress, int value) {
-            priceEndEdit.setText(value + "");
-            areaParam.areaTo = value + "";
+//            priceEndEdit.setText(value + "");
+//            areaParam.areaTo = value + "";
+            if (isChangeByEdit) {
+                isChangeByEdit = false;
+                return;
+            }
+
+            isProcessChange = true;
+
+            if (value == 3000) {
+                priceEndEdit.setText(null);
+                areaParam.areaTo = null;
+            } else {
+                priceEndEdit.setText((value + ""));
+                areaParam.areaTo = value + "";
+            }
+
             onAreaChangeLisenter.onAreaChange(areaParam);
         }
     };
 
     private void initLisenter() {
 
+        priceStartEdit.addTextChangedListener(leftTextWatcher);
+        priceEndEdit.addTextChangedListener(rightTextWatcher);
+
         really.setOnClickListener(this);
         use.setOnClickListener(this);
 
         processBarView.setOnProgressChangeListener(changeListener);
 
+        priceEndEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) {
+
+                } else {
+                    isProcessChange = true;
+//                    asdsadasd
+                    String price = priceEndEdit.getText().toString();
+                    if (price != null) {
+                        try {
+                            int priccs = Integer.parseInt(price);
+                            if (priccs > 3000) priceEndEdit.setText(null);
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }
+            }
+        });
+
+        priceEndEdit.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getActivity().getWindow().getDecorView().getWindowToken(), 0);
+                isProcessChange = true;
+                String price = priceEndEdit.getText().toString();
+                if (price != null) {
+                    try {
+                        int priccs = Integer.parseInt(price);
+                        if (priccs > 3000) priceEndEdit.setText(null);
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+            return false;
+        });
+
     }
+
+
 
     private void initView(View view) {
 
@@ -141,6 +218,81 @@ public class AreaFragment extends BaseFragment implements View.OnClickListener {
         }
     }
 
+
+    private TextWatcher leftTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+            if(isProcessChange){
+                isProcessChange = false;
+                return;
+            }
+
+            isChangeByEdit = true;
+            areaParam.areaFrom = priceStartEdit.getText().toString();
+            if (!TextUtil.isEmply(areaParam.areaFrom)) {
+                processBarView.setLeftValue(Integer.parseInt(areaParam.areaFrom));
+//                resetView();
+            } else {
+                processBarView.setLeftValue(0);
+            }
+            if (onAreaChangeLisenter != null) onAreaChangeLisenter.onAreaChange(areaParam);
+        }
+    };
+
+    private boolean isChangeByEdit;
+    private boolean isProcessChange;
+    private TextWatcher rightTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+            if(isProcessChange){
+                isProcessChange = false;
+                return;
+            }
+
+            isChangeByEdit = true;
+            areaParam.areaTo = priceEndEdit.getText().toString();
+
+            if (!TextUtil.isEmply(areaParam.areaTo)) {
+
+                if (Integer.parseInt(areaParam.areaTo) > 3000) {
+                    areaParam.areaTo = null;
+//                    priceEndEdit.setText(null);
+                    processBarView.setRightValue(3000);
+                } else processBarView.setRightValue(Integer.parseInt(areaParam.areaTo));
+
+//                processBarView.setRightValue(Integer.parseInt(areaParam.areaTo));
+//                resetView();
+            } else {
+                processBarView.setRightValue(3000);
+            }
+
+            if (onAreaChangeLisenter != null) onAreaChangeLisenter.onAreaChange(areaParam);
+        }
+    };
+    
+
     private void resetView() {
         int count = content.getChildCount();
         for (int i = 0; i < count; i++) {
@@ -152,8 +304,21 @@ public class AreaFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+
+        if(v.isSelected()){
+            editContenView.setVisibility(View.GONE);
+            areaParam.areaFrom = null;
+            areaParam.areaTo = null;
+            if (onAreaChangeLisenter != null) onAreaChangeLisenter.onAreaChange(areaParam);
+            resetView();
+            processBarView.setRightProcess(1);
+            processBarView.setLeftProcess(0);
+            return;
+        }
+        else editContenView.setVisibility(View.VISIBLE);
+
         resetView();
-        editContenView.setVisibility(View.VISIBLE);
+//        editContenView.setVisibility(View.VISIBLE);
         v.setSelected(true);
         switch (v.getId()) {
             case R.id.area_view_use:

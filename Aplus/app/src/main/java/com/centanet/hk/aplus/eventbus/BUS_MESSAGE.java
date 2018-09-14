@@ -73,5 +73,11 @@ public class BUS_MESSAGE {
 
     public class HomeFastSearch{
         public static final int FAST_SEARCH = 33;
+        public static final int FAST_TRAN_SEARCH = 34;
+    }
+
+    public class HomePager{
+        public static final int PAGER_HOME = 35;
+        public static final int TRANSPAGER_HOME = 36;
     }
 }

@@ -8,23 +8,34 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.DensityUtil;
 import com.centanet.hk.aplus.Utils.DialogUtil;
 import com.centanet.hk.aplus.Utils.ItemCountUtil;
 import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Utils.TextUtil;
+import com.centanet.hk.aplus.Utils.TimeLimitUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.ComplexSearchView.ComplexActivity;
+import com.centanet.hk.aplus.Views.ComplexSearchView.FiltrateActivity;
+import com.centanet.hk.aplus.Views.Dialog.AreaDialog;
+import com.centanet.hk.aplus.Views.Dialog.FavoSearchOptionDialog;
+import com.centanet.hk.aplus.Views.Dialog.FlootUnitDialog;
 import com.centanet.hk.aplus.Views.Dialog.PriceDialog;
+import com.centanet.hk.aplus.Views.Dialog.SearchOptionDialog;
 import com.centanet.hk.aplus.Views.Dialog.SimpleTipsDialog;
 import com.centanet.hk.aplus.Views.Dialog.SortDialog;
 import com.centanet.hk.aplus.Views.Dialog.StatusDialog;
@@ -35,7 +46,8 @@ import com.centanet.hk.aplus.Views.HouseFragment.BaseHouseFragment;
 import com.centanet.hk.aplus.Views.LoginView.view.LoginActivity;
 import com.centanet.hk.aplus.Views.SearchView.view.SearchActivity;
 import com.centanet.hk.aplus.Widgets.CircleTipsView;
-import com.centanet.hk.aplus.bean.complexSearch.Operation;
+import com.centanet.hk.aplus.bean.auto_estate.PropertyParamHints;
+import com.centanet.hk.aplus.bean.district.DistrictItem;
 import com.centanet.hk.aplus.bean.house.Properties;
 import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 import com.centanet.hk.aplus.bean.http.FavoriteDescription;
@@ -43,6 +55,8 @@ import com.centanet.hk.aplus.bean.http.HouseDescription;
 import com.centanet.hk.aplus.bean.http.UserBehaviorDescription;
 import com.centanet.hk.aplus.eventbus.MessageEventBus;
 import com.centanet.hk.aplus.manager.ApplicationManager;
+import com.centanet.hk.aplus.manager.FavoRequestParamsManager;
+import com.centanet.hk.aplus.manager.PropertyRequestParamsManager;
 import com.centanet.hk.aplus.manager.ScreenShotListenManager;
 import com.githang.statusbar.StatusBarCompat;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -54,16 +68,17 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static com.centanet.hk.aplus.Utils.net.HttpUtil.URL_CANCELFAVO;
 import static com.centanet.hk.aplus.Utils.net.HttpUtil.URL_FAVORITE;
+import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SEARCH_AREA;
 import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SEARCH_FLOOT;
 import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SEARCH_HISTORY_SAVE;
 import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SEARCH_LABEL;
 import static com.centanet.hk.aplus.Views.SearchView.view.SearchActivity.VIEW_SEARCH_UNIT;
-import static com.centanet.hk.aplus.common.CommandField.PriceType.SALE;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.FavoState.FAVO_FAVO_CANCEL;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.FavoState.HOUSE_FAVO;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.FavoState.HOUSE_FAVO_CANCEL;
@@ -98,13 +113,19 @@ public class FavHouseFragment extends BaseHouseFragment implements IFavorieFragm
     private AHeaderDescription aHeaderDescription;
     private HouseDescription bodyDescription;
     private String houseCount = "0";
+    private ImageView more;
     private boolean isFavorite = false;
 
     private int sortDialogSelectId;
+    private TextView areaTxt, flootTxt, unitTxt, areaTipTxt, optionTip, optionTxt;
+    private View flootUnitView;
     private int position;
     private int refreshType = 0;
 
     private ScreenShotListenManager screenShotListenManager;
+    private CircleTipsView moreTip;
+    private View allOptionView;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -122,19 +143,30 @@ public class FavHouseFragment extends BaseHouseFragment implements IFavorieFragm
             init();
             initListeners();
             bodyDescription.setPropertyType(5);
+            refreshLayout.autoRefresh();
         }
-//        openFreshView();
-
         return view;
     }
 
     private void initViews() {
         lv = view.findViewById(R.id.fragment_presmises_listview);
 
+//        optionContent = view.findViewById(R.id.property_rl_option_content);
         sort = view.findViewById(R.id.list_img_sort);
         search = view.findViewById(R.id.list_txt_search);
         currentPosition = view.findViewById(R.id.fragment_txt_currentpos);
         refreshLayout = view.findViewById(R.id.smartLayout);
+        more = view.findViewById(R.id.list_img_moreoption);
+        flootTxt = view.findViewById(R.id.floot);
+        unitTxt = view.findViewById(R.id.unit);
+        areaTipTxt = view.findViewById(R.id.house_txt_areatips);
+        areaTxt = view.findViewById(R.id.list_txt_area);
+        flootUnitView = view.findViewById(R.id.list_ll_floot);
+        allOptionView = view.findViewById(R.id.house_rl_alloption);
+        moreTip = view.findViewById(R.id.more_tip);
+
+        optionTip = view.findViewById(R.id.house_txt_option_tip);
+        optionTxt = view.findViewById(R.id.list_txt_proselter);
 
         mic = view.findViewById(R.id.mic);
         mic.setOnClickListener(this);
@@ -170,6 +202,10 @@ public class FavHouseFragment extends BaseHouseFragment implements IFavorieFragm
 
         sort.setOnClickListener(this);
         search.setOnClickListener(this);
+        more.setOnClickListener(this);
+        areaTxt.setOnClickListener(this);
+        flootUnitView.setOnClickListener(this);
+        allOptionView.setOnClickListener(this);
 
         lv.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
             @Override
@@ -218,7 +254,11 @@ public class FavHouseFragment extends BaseHouseFragment implements IFavorieFragm
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (refreshLayout.isRefreshing() || refreshLayout.isLoading()) return;
                 Intent intent = new Intent(getActivity(), DetailActicity.class);
+//                intent.putExtra("keyId", listFavo.get(position).getKeyId());
                 intent.putExtra("keyId", listFavo.get(position).getKeyId());
+                intent.putExtra("index", position);
+                intent.putExtra("current", 5);
+                intent.putExtra("propertyCount", houseCount);
                 startActivity(intent);
             }
         });
@@ -232,6 +272,7 @@ public class FavHouseFragment extends BaseHouseFragment implements IFavorieFragm
 
 
     private void onScreenShot() {
+//        if (!TimeLimitUtil.isAchieveLimitTime(1000)) return;
         if (!isVisible || !isResume) return;
         L.d(thiz, "HouseShot: " + " FirstVisiblePosition: " + lv.getFirstVisiblePosition() + " LastVisiblePosition: " + lv.getLastVisiblePosition());
         UserBehaviorDescription userBehaviorDescription = new UserBehaviorDescription();
@@ -261,37 +302,114 @@ public class FavHouseFragment extends BaseHouseFragment implements IFavorieFragm
         switch (v.getId()) {
             case R.id.list_txt_search:
                 Intent intent = new Intent(getContext(), SearchActivity.class);
+                Bundle bundle = new Bundle();
                 if (!searchHistory.isEmpty()) {
-                    Bundle bundle = new Bundle();
                     bundle.putStringArrayList(VIEW_SEARCH_HISTORY_SAVE, (ArrayList<String>) searchHistory);
-                    intent.putExtras(bundle);
                 }
+                bundle.putStringArrayList(VIEW_SEARCH_AREA, (ArrayList<String>) bodyDescription.getDistrictListIds());
+                bundle.putString(VIEW_SEARCH_FLOOT, bodyDescription.getFloors());
+                bundle.putString(VIEW_SEARCH_UNIT, bodyDescription.getUnits());
+//                L.d("VIEW_SEARCH_AREA",bodyDescription.getDistrictListIds().toString());
+                intent.putExtras(bundle);
                 startActivityForResult(intent, 0);
                 break;
-            case R.id.fragment_presmises_more:
-                Intent in = new Intent(getContext(), ComplexActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("operation", ApplicationManager.getFavoOperation());
-                in.putExtras(bundle);
-                startActivityForResult(in, 0);
-                break;
+
             case R.id.list_img_sort:
                 showSortDialog();
                 break;
             case R.id.mic:
                 Intent micIntent = new Intent(getContext(), SearchActivity.class);
                 micIntent.putExtra("mic", true);
+                Bundle micBundle = new Bundle();
                 if (!searchHistory.isEmpty()) {
-                    Bundle micBundle = new Bundle();
                     micBundle.putStringArrayList(VIEW_SEARCH_HISTORY_SAVE, (ArrayList<String>) searchHistory);
                     micIntent.putExtras(micBundle);
                 }
+                micBundle.putString(VIEW_SEARCH_FLOOT, bodyDescription.getFloors());
+                micBundle.putString(VIEW_SEARCH_UNIT, bodyDescription.getUnits());
+                micBundle.putStringArrayList(VIEW_SEARCH_AREA, (ArrayList<String>) bodyDescription.getDistrictListIds());
+                L.d("VIEW_SEARCH_AREA", bodyDescription.getDistrictListIds().toString());
+                micIntent.putExtras(micBundle);
                 startActivityForResult(micIntent, 0);
+                break;
+            case R.id.list_img_moreoption:
+                Bundle bundle1 = new Bundle();
+                bundle1.putSerializable(FiltrateActivity.HOUSE_PARAMS, bodyDescription);
+                Intent in1 = new Intent(getContext(), FiltrateActivity.class);
+                in1.putExtras(bundle1);
+                startActivityForResult(in1, 0);
+                break;
+            case R.id.list_ll_floot:
+                showFlootUnitDialog();
+                break;
+            case R.id.house_rl_alloption:
+
+                FavoSearchOptionDialog optionDialog = new FavoSearchOptionDialog();
+                optionDialog.setData(bodyDescription);
+                optionDialog.setOnItemClickLisenter((dialog, v1, description) -> {
+                    dialog.dismiss();
+                    bodyDescription = description;
+                    setOptionCount();
+                    openFreshView();
+                });
+                optionDialog.show(getFragmentManager(), "");
+                break;
+            case R.id.list_txt_area:
+                showAreaDialog();
                 break;
         }
     }
 
+    private void showAreaDialog() {
+        AreaDialog areaDialog = new AreaDialog();
+        areaDialog.setItem(ApplicationManager.getDistrictItems(), bodyDescription.getDistrictListIds());
+        areaDialog.setOnItemClickLisenter((dialog, v1, list) -> {
+            if (list != null && !list.isEmpty()) {
+                areaTipTxt.setVisibility(View.VISIBLE);
+                areaTipTxt.setText(list.size() + "");
+            } else areaTipTxt.setVisibility(View.GONE);
+            bodyDescription.setDistrictListIds(list);
+            FavoRequestParamsManager.getParams().setArea(getSelectDistrict(ApplicationManager.getDistrictItems(), list));
+            refreshLayout.autoRefresh();
+            setOptionCount();
+        });
+        areaDialog.show(getFragmentManager(), "");
+    }
 
+    private List<DistrictItem> getSelectDistrict(List<DistrictItem> items, List<String> keys) {
+        List<DistrictItem> districtItems = new ArrayList<>();
+        if (keys == null) return null;
+        for (DistrictItem item : items) {
+            if (keys.indexOf(item.getDistrictKeyId()) != -1) {
+                districtItems.add(item);
+            }
+        }
+        return districtItems;
+    }
+
+    private void showFlootUnitDialog() {
+        String[] str = new String[2];
+        str[0] = bodyDescription.getFloors();
+        str[1] = bodyDescription.getUnits();
+        FlootUnitDialog dialog = new FlootUnitDialog();
+        dialog.setData(str);
+        dialog.setOnItemClickLisenter((dialog1, v1, list) -> {
+            if (list[0] == null || list[0].equals("")) {
+                flootTxt.setText(R.string.search_floot);
+            } else flootTxt.setText(list[0]);
+
+            if (list[1] == null || list[1].equals("")) {
+                unitTxt.setText(R.string.search_units);
+            } else unitTxt.setText(list[1]);
+
+            bodyDescription.setFloors(list[0]);
+            bodyDescription.setUnits(list[1]);
+            refreshLayout.autoRefresh();
+            setOptionCount();
+
+        });
+        dialog.show(getFragmentManager(), "");
+    }
 
 
     private void showSortDialog() {
@@ -320,15 +438,14 @@ public class FavHouseFragment extends BaseHouseFragment implements IFavorieFragm
         final String address = data.isFavoriteFlag() == true ? URL_CANCELFAVO : URL_FAVORITE;
         if (!data.isFavoriteFlag()) dialog.setTipString("收藏");
         favoriteDescription.setKeyId(data.getKeyId());
-        dialog.setOnItemclickListener(new SimpleTipsDialog.OnItemClickListener() {
-            @Override
-            public void onClick(DialogFragment dialog, int type) {
-                if (type == SimpleTipsDialog.DIALOG_YES) {
-                    presenter.doPost(address, aHeaderDescription, favoriteDescription);
-                }
+        dialog.setOnItemclickListener((dialog1, type) -> {
+            if (type == SimpleTipsDialog.DIALOG_YES) {
+                presenter.doPost(address, aHeaderDescription, favoriteDescription);
             }
         });
-        dialog.setContentString(listFavo.get(position).getBuildingName());
+        Properties properties = listFavo.get(position);
+        String floor = properties.getFloor() == null || properties.getFloor().equals("") ? "" : properties.getFloor();
+        dialog.setContentString(properties.getEstateName() + " " + properties.getBuildingName() + " " + floor + " " + (properties.getHouseNo() == null ? "" : properties.getHouseNo() + "室"));
         dialog.show(getFragmentManager(), "");
     }
 
@@ -366,6 +483,7 @@ public class FavHouseFragment extends BaseHouseFragment implements IFavorieFragm
                 break;
             case FAVO_FAVO_CANCEL:
                 removeFavo(position);
+                DialogUtil.getSimpleDialog("已取消收藏").show(getFragmentManager(), "");
                 break;
             case DATA_FAVO_END:
                 refreshLayout.setEnableLoadmore(false);
@@ -430,7 +548,8 @@ public class FavHouseFragment extends BaseHouseFragment implements IFavorieFragm
     private void setCountTxt(MessageEventBus messageEvent) {
         houseCount = (String) messageEvent.getObject();
         if (houseCount.equals("0")) {
-            DialogUtil.getSimpleDialog(getString(R.string.house_no_find)).show(getFragmentManager(), "");
+            if (isVisible)
+                DialogUtil.getSimpleDialog(getString(R.string.house_no_find)).show(getFragmentManager(), "");
             currentPosition.setVisibility(View.GONE);
             return;
         }
@@ -508,6 +627,7 @@ public class FavHouseFragment extends BaseHouseFragment implements IFavorieFragm
                         }
                     }
                 }
+                setOptionCount();
                 break;
 
             case 1:
@@ -527,6 +647,7 @@ public class FavHouseFragment extends BaseHouseFragment implements IFavorieFragm
                     if (label != null) search.setText(label);
                     bodyDescription.setFloors(bundle.getString(VIEW_SEARCH_FLOOT));
                     bodyDescription.setUnits(bundle.getString(VIEW_SEARCH_UNIT));
+                    bodyDescription.setDistrictListIds((bundle.getStringArrayList(VIEW_SEARCH_AREA)));
                     openFreshView();
                 } else {
                     search.setText(null);
@@ -536,37 +657,202 @@ public class FavHouseFragment extends BaseHouseFragment implements IFavorieFragm
                     bodyDescription.setUnits(null);
                     openFreshView();
                 }
+                setOptionCount();
                 break;
-            case 2:
+            case FiltrateActivity.CODE_FILTRATE:
+//                bodyDescription =
                 Bundle bundle = data.getExtras();
-                HouseDescription description = (HouseDescription) bundle.get("body");
-                int count = 0;
-                if (description != null) {
-                    try {
-                        count = ItemCountUtil.count(description);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    L.d(thiz, "count: " + count);
-                    if (count == 0 || count == -1) {
-                    } else {
-                    }
-                    description.setPropertyStatus(bodyDescription.getPropertyStatus());
-                    description.setRentPriceFrom(bodyDescription.getRentPriceFrom());
-                    description.setRentPriceTo(bodyDescription.getRentPriceTo());
-                    description.setSalePriceFrom(bodyDescription.getSalePriceFrom());
-                    description.setSalePriceTo(bodyDescription.getSalePriceTo());
-                    description.setPropertyType(5);
-                    bodyDescription = description;
-                    openFreshView();
+                bodyDescription = (HouseDescription) bundle.get(FiltrateActivity.HOUSE_PARAMS);
+                try {
+                    Toast.makeText(getContext(), ItemCountUtil.count(bodyDescription) + "", Toast.LENGTH_SHORT).show();
+//                    optionTip.setVisibility(View.VISIBLE);
+//                    optionTip.setText(ItemCountUtil.count(bodyDescription) + "");
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                Operation operation = (Operation) bundle.get("operation");
-                ApplicationManager.setFavoOperation(operation);
+                setOptionCount();
+//                setOptionCount();
+                L.d("OnActivityBack1", bodyDescription.toString());
+                refreshLayout.autoRefresh();
                 break;
-            case 3:
-                ApplicationManager.setHouseOperation(new Operation());
-                break;
+
+        }
+    }
+
+    private void setOptionCount() {
+        try {
+//            moreTip.setVisibility(View.VISIBLE);
+//            moreTip.setText(ItemCountUtil.count(bodyDescription) + "");
+            int count = ItemCountUtil.count(bodyDescription);
+
+            if (bodyDescription.getSquareFrom() != null && bodyDescription.getSquareTo() != null) {
+                count--;
+            }
+
+            if (bodyDescription.getCompleteYearFrom() != null && bodyDescription.getCompleteYearTo() != null) {
+                count--;
+            }
+
+            if (bodyDescription.getPriceUnitFrom() != null && bodyDescription.getPriceUnitTo() != null) {
+                count--;
+            }
+
+            if (bodyDescription.getSalePriceFrom() != null && bodyDescription.getSalePriceTo() != null) {
+                count--;
+            }
+
+            if (bodyDescription.getRentPriceFrom() != null && bodyDescription.getRentPriceTo() != null) {
+                count--;
+            }
+
+            if (bodyDescription.getPropertyDateFrom() != null && bodyDescription.getPropertyDateTo() != null) {
+                count--;
+            }
+
+            if (bodyDescription.getSquareUseFrom() != null && bodyDescription.getSquareUseTo() != null) {
+                count--;
+            }
+
+            if (!TextUtil.isEmply(bodyDescription.getSortField())) {
+                count--;
+            }
+
+            if (bodyDescription.getDistrictListIds() != null)
+                count = count - bodyDescription.getDistrictListIds().size();
+            if (bodyDescription.getSearcherAddress() != null)
+                count = count - bodyDescription.getSearcherAddress().size();
+            if (bodyDescription.getFloors() != null && !bodyDescription.getFloors().equals(""))
+                count--;
+            if (bodyDescription.getUnits() != null && !bodyDescription.getUnits().equals(""))
+                count--;
+
+            if (bodyDescription.getBuildingUseTypes() != null)
+                count = count - bodyDescription.getBuildingUseTypes().size();
+
+            moreTip.setText(count + "");
+            if (count <= 0) {
+                moreTip.setVisibility(View.GONE);
+            } else {
+                moreTip.setVisibility(View.VISIBLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
+        if (bodyDescription.getDistrictListIds() != null) {
+//            areaTipTxt.setVisibility();
+            if (bodyDescription.getDistrictListIds() != null && !bodyDescription.getDistrictListIds().isEmpty()) {
+                areaTipTxt.setVisibility(View.VISIBLE);
+                areaTipTxt.setText(bodyDescription.getDistrictListIds().size() + "");
+            } else areaTipTxt.setVisibility(View.GONE);
+        }
+
+//        L.d("getSearcherAddress",bodyDescription.getSearcherAddress().toString());
+//        if (TextUtil.isEmply(bodyDescription.getSearcherAddress())) {
+//            optionTxt.setText(R.string.dialog_price_unlimit);
+//            search.setText(null);
+//            optionTip.setVisibility(View.GONE);
+//        } else {
+//            optionTxt.setText(parseData(FavoRequestParamsManager.getParams().getAddress().get(0)));
+//            optionTip.setVisibility(View.VISIBLE);
+//            optionTip.setText(FavoRequestParamsManager.getParams().getAddress().size() + "");
+//            String addStr = "";
+//            for (PropertyParamHints h : PropertyRequestParamsManager.getParams().getAddress()) {
+//                addStr = addStr + parseData(h) + ",";
+//            }
+////            search.setText(addStr.substring(0, addStr.length() - 1));
+//        }
+
+        //        L.d("getSearcherAddress",bodyDescription.getSearcherAddress().toString());
+        if (TextUtil.isEmply(bodyDescription.getSearcherAddress())) {
+            optionTxt.setText(R.string.dialog_price_unlimit);
+            search.setText(null);
+            optionTip.setVisibility(View.GONE);
+//            L.d("",);
+        } else {
+//            optionTxt.setText(parseData(PropertyRequestParamsManager.getParams().getAddress().get(0)));
+            optionTip.setVisibility(View.VISIBLE);
+            optionTip.setText(FavoRequestParamsManager.getParams().getAddress().size() + "");
+            String addStr = "";
+            for (PropertyParamHints h : FavoRequestParamsManager.getParams().getAddress()) {
+                addStr = addStr + getDeatilAddress(h) + ",";
+            }
+            optionTxt.setText(addStr);
+//            search.setText(addStr.substring(0, addStr.length() - 1));
+        }
+
+        allOptionView.getViewTreeObserver().addOnGlobalLayoutListener(onGlobalLayoutListener);
+        allOptionView.measure(0, 0);
+
     }
+
+    //    private View optionContent;
+    private ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+
+        @Override
+        public void onGlobalLayout() {
+            int width = allOptionView.getWidth();
+            L.d("optionContent_Width", width + "");
+            if (optionTxt.getWidth() + DensityUtil.dip2px(getContext(), 35) > width) {
+//            search.setText(addStr.substring(0, addStr.length() - 1));
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(width - DensityUtil.dip2px(getContext(), 35), ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams.setMargins(DensityUtil.dip2px(getContext(), 12), 0, 0, 0);
+                layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+                optionTxt.setSingleLine();
+                optionTxt.setEllipsize(TextUtils.TruncateAt.valueOf("END"));
+                optionTxt.setLayoutParams(layoutParams);
+            }
+            allOptionView.getViewTreeObserver().removeGlobalOnLayoutListener(onGlobalLayoutListener);
+        }
+    };
+
+    private String getDeatilAddress(PropertyParamHints data) {
+
+        String detailAddress = "";
+        if (!TextUtil.isEmply(data.getDistrictName()))
+            detailAddress = data.getDistrictName() + "/";
+
+        if (!TextUtil.isEmply(data.getAreaName()))
+            detailAddress = detailAddress + data.getAreaName() + "/";
+
+        if (!TextUtil.isEmply(data.getEnAddressName()))
+            detailAddress = detailAddress + data.getEnAddressName();
+
+        return detailAddress;
+    }
+
+    private String parseData(PropertyParamHints data) {
+        String labelString = null;
+        if (data.getAreaName().length() > 0) {
+            labelString = data.getAreaName();
+        } else if (data.getDistrictName().length() > 0 && data.getAreaName().length() > 0) {
+            labelString = data.getDistrictName() + "\\\\\\" + data.getAreaName();
+        } else if (data.getDistrictName().length() > 0) {
+            labelString = data.getDistrictName();
+        } else if (data.getEnAddressName().length() > 0) {
+//            labelString = data.getAreaName();
+            labelString = data.getEnAddressName();
+        }
+        L.d("parseData", labelString);
+        return labelString;
+    }
+
+//    private void setOptionCount() {
+//        try {
+//            optionTip.setText(ItemCountUtil.count(bodyDescription) + "");
+//            if (ItemCountUtil.count(bodyDescription) <= 0) {
+//                optionTip.setVisibility(View.GONE);
+//            } else {
+//                optionTip.setVisibility(View.VISIBLE);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        if (bodyDescription.getDistrictListIds() == null || bodyDescription.getDistrictListIds().isEmpty())
+//            optionTxt.setText(R.string.dialog_price_unlimit);
+//        else {
+//            optionTxt.setText(FavoRequestParamsManager.getParams().getArea().get(0).getDistrictName());
+//        }
+//    }
 }

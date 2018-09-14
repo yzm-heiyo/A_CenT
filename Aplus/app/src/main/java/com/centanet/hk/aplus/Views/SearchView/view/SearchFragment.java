@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -26,14 +27,18 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.centanet.hk.aplus.BackHandlerHelper.FragmentBackHandler;
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.DensityUtil;
+import com.centanet.hk.aplus.Utils.DialogUtil;
 import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
@@ -46,7 +51,9 @@ import com.centanet.hk.aplus.Views.SearchView.present.ISearchPresent;
 import com.centanet.hk.aplus.Views.SearchView.present.SearchPreesent;
 import com.centanet.hk.aplus.Views.basic.BaseFragment;
 import com.centanet.hk.aplus.Views.basic.BasicActivty;
+import com.centanet.hk.aplus.Widgets.ClearEditText;
 import com.centanet.hk.aplus.Widgets.LineBreakLayout;
+import com.centanet.hk.aplus.Widgets.MyRadioGroup;
 import com.centanet.hk.aplus.bean.auto_estate.PropertyParamHints;
 import com.centanet.hk.aplus.bean.district.DistrictItem;
 import com.centanet.hk.aplus.bean.http.AHeaderDescription;
@@ -77,7 +84,7 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
     private static final int VIEW_HISRORY = 0;
     private static final int VIEW_SEARCH = 1;
     public static final String FRAGMENT_TAG_SEARCH = "SEARCH";
-    private static final int VIEW_SELECT_MAX = 10;
+    private static final int VIEW_SELECT_MAX = 20;
     public static final String VIEW_SEARCH_HISTORY_SAVE = "SAVEHISTORY";
     public static final String VIEW_SEARCH_KEY_TYPE = "CONDITION";
     public static final String VIEW_SEARCH_LABEL = "LABEL";
@@ -103,7 +110,7 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
     private DataAdapter searchAdapter;
     private View mic;
 
-    private TextView areaTxt, areaTipTxt;
+    private TextView areaTxt, areaTipTxt, selectCountTxt;
     private View flootView;
 
     private TextView flootTxt, unitTxt;
@@ -111,7 +118,7 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
     private int viewType = VIEW_HISRORY;
     private String flootStr = "", unitsStr = "";
 
-    AutoSearchDescription autoSearchDescription;
+    private AutoSearchDescription autoSearchDescription;
     private DataAdapter historyAdapter;
 
     private View back;
@@ -127,6 +134,13 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
         MessageEventBus msg = new MessageEventBus();
         msg.setMsg(HIDDEN);
         EventBus.getDefault().post(msg);
+
+        searchEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                Log.d("___","..."+b);
+            }
+        });
         return view;
     }
 
@@ -134,12 +148,18 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
 
         present = new SearchPreesent(this);
         dataList = new ArrayList<>();
-//        Bundle bundle = getIntent().getExtras();
+
         Bundle bundle = null;
         headerDescription = ApplicationManager.getApplication().getHeaderDescription();
 
         //todo 要改掉
-        houseDescription = new HouseDescription();
+        if(getArguments()!=null){
+            Bundle bundle1 = getArguments();
+            HouseDescription description = (HouseDescription) bundle1.get("HOUSE_REQUEST");
+            L.d("Search_houseDescription",description.toString());
+            houseDescription = description;
+        }else houseDescription = new HouseDescription();
+
 
         searchLabelList = new ArrayList<>();
         oldHistoryList = new ArrayList<>();
@@ -150,6 +170,7 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
         searchView = view.findViewById(R.id.search_simple_view);
         historyView = view.findViewById(R.id.search_history_view);
         searchHistoryView = view.findViewById(R.id.search_history_title);
+        selectCountTxt = view.findViewById(R.id.activity_search_txt_count);
 
         areaTipTxt = view.findViewById(R.id.search_txt_areatip);
         areaTxt = view.findViewById(R.id.search_txt_area);
@@ -160,6 +181,9 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
 
         back = view.findViewById(R.id.back);
         back.setOnClickListener(v -> {
+            searchEdit.clearFocus();
+//            searchEdit.setCursorVisible(false);
+            hideKeyboard(searchEdit);
             getActivity().onBackPressed();
         });
 
@@ -182,6 +206,19 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
         flootTxt = view.findViewById(R.id.search_txt_floot);
         unitTxt = view.findViewById(R.id.search_txt_unit);
 
+        if(!TextUtil.isEmply(houseDescription.getFloors())){
+            flootTxt.setText(houseDescription.getFloors());
+        }
+
+        if(!TextUtil.isEmply(houseDescription.getUnits())){
+            unitTxt.setText(houseDescription.getUnits());
+        }
+
+        if(!TextUtil.isEmply(houseDescription.getDistrictListIds())){
+            areaTipTxt.setText(houseDescription.getDistrictListIds().size()+"");
+            areaTipTxt.setVisibility(View.VISIBLE);
+        }
+
         searchLabelGroup = view.findViewById(R.id.search_labelgroup);
         searchLabelGroup.setItemContentLayoutID(R.layout.item_label_search);
         searchLabelGroup.setItemOnclickListener(mOnItemOnclickListener);
@@ -203,10 +240,13 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
 
         searchEdit.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getActivity().getWindow().getDecorView().getWindowToken(), 0);
+//                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.hideSoftInputFromWindow(getActivity().getWindow().getDecorView().getWindowToken(), 0);
+                hideKeyboard(searchEdit);
                 historyView.setVisibility(View.GONE);
                 searchView.setVisibility(View.VISIBLE);
+                selectCountTxt.setVisibility(View.VISIBLE);
+                selectCountTxt.setText(getString(R.string.selected)+": "+newHistoryList.size());
                 viewType = VIEW_SEARCH;
             }
             return false;
@@ -236,7 +276,9 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
                     newHistoryList.add(data);
                     addSearchLabelData(data, searchLabelList);
                 }
-            }
+                selectCountTxt.setText(getString(R.string.selected) + ": " + newHistoryList.size());
+            } else
+                DialogUtil.getSimpleDialog(getString(R.string.select_max_20)).show(getFragmentManager(), "");
         });
 
         lv_history.setOnItemClickListener((parent, view1, position, id) -> {
@@ -263,11 +305,48 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
         }
     }
 
+    private void hideKeyboard(View view) {
+        if(getActivity()==null)return;
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
     @Override
     public void onHiddenChanged(boolean hidden) {
         MessageEventBus msg = new MessageEventBus();
         if (isVisible() && isResumed()) {
             msg.setMsg(HIDDEN);
+            if (getArguments() != null) {
+                boolean isMicToThis = getArguments().getBoolean("mic", false);
+                if (isMicToThis) {
+                    showVoiceInputPanel();
+                    Bundle bundle = getArguments();
+                    bundle.putBoolean("mic",false);
+                    setArguments(bundle);
+                }
+            }
+
+            if(getArguments()!=null){
+                Bundle bundle1 = getArguments();
+                HouseDescription description = (HouseDescription) bundle1.get("HOUSE_REQUEST");
+                L.d("Search_houseDescription",description.toString());
+                houseDescription = description;
+            }
+
+            if(!TextUtil.isEmply(houseDescription.getFloors())){
+                flootTxt.setText(houseDescription.getFloors());
+            }
+
+            if(!TextUtil.isEmply(houseDescription.getUnits())){
+                unitTxt.setText(houseDescription.getUnits());
+            }
+
+            if(!TextUtil.isEmply(houseDescription.getDistrictListIds())){
+                areaTipTxt.setText(houseDescription.getDistrictListIds().size()+"");
+                areaTipTxt.setVisibility(View.VISIBLE);
+            }
         } else {
             msg.setMsg(SHOW);
         }
@@ -299,30 +378,38 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
             case R.id.activity_search_confirm_btn:
                 switch (viewType) {
                     case VIEW_HISRORY:
+
+                        searchEdit.clearFocus();
+//                        searchEdit.setCursorVisible(false);
+                        hideKeyboard(searchEdit);
                         present.saveSearchHistory(newHistoryList);
                         PropertyRequestParamsManager.getParams().setAddress(newHistoryList);
                         PropertyRequestParamsManager.getParams().setArea(getSelectDistrict(ApplicationManager.getDistrictItems(), houseDescription.getDistrictListIds()));
                         houseDescription.setSearcherAddress(getKeys(newHistoryList));
-//                        getAddSimString();
                         FragmentTransaction ft = getParentFragment().getChildFragmentManager().beginTransaction();
                         Fragment house = getParentFragment().getChildFragmentManager().findFragmentByTag(HouseFragment.FRAGMENT_TAG_HOUSELIST);
                         if (house != null) {
                             ft.remove(house);
                         }
-//                        } else {
+
                         Bundle bundle = new Bundle();
                         bundle.putString(VIEW_SEARCH_LABEL, getAddSimString());
                         bundle.putSerializable("HOUSE_REQUEST", houseDescription);
+
                         house = new HouseFragment();
                         house.setArguments(bundle);
                         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                         ft.add(R.id.fragment_content, house, HouseFragment.FRAGMENT_TAG_HOUSELIST);
-//                        }
+
                         ft.hide(this).commit();
 
                         break;
                     case VIEW_SEARCH:
                         showSelectCondition();
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM );
+                        btn.setLayoutParams(params);
+                        btn.setBackgroundColor(getResources().getColor(R.color.colortheme));
                         break;
                 }
                 break;
@@ -448,15 +535,43 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
         searchView.setVisibility(View.GONE);
         searchView.setAnimation(moveToViewBottom());
         btn.setText(getString(R.string.search));
+        selectCountTxt.setVisibility(View.GONE);
     }
 
     private void showHistoryLableView() {
+
         if (searchLabelList != null && searchLabelList.isEmpty())
             selectLabelView.setVisibility(View.GONE);
         if (searchLabelList != null && !searchLabelList.isEmpty())
             selectLabelView.setVisibility(View.VISIBLE);
         historyView.setVisibility(View.VISIBLE);
         searchLabelGroup.removeAllViews();
+
+//        if(!TextUtil.isEmply(newHistoryList)){
+//            for(PropertyParamHints s:newHistoryList) {
+//                View view = LayoutInflater.from(getContext()).inflate(R.layout.item_label_detail, null, false);
+//                TextView areaTxt = view.findViewById(R.id.item_label_area);
+//                String address = "";
+//                if(!TextUtil.isEmply(s.getDistrictName())&&!TextUtil.isEmply(s.getAreaName())){
+//                    address = address + s.getDistrictName()+"/"+s.getAreaName();
+//                } else if(!TextUtil.isEmply(s.getDistrictName())){
+//                    address = address + s.getDistrictName();
+//                } else if(!TextUtil.isEmply(s.getAreaName())){
+//                    address = address +s.getAreaName();
+//                }
+//                else areaTxt.setVisibility(View.GONE);
+//                areaTxt.setText(address);
+//
+//                TextView street = view.findViewById(R.id.item_label_street);
+//                if(!TextUtil.isEmply(s.getEnAddressName())){
+//                    street.setText(s.getEnAddressName());
+//                }
+//                else street.setVisibility(View.GONE);
+//
+//                searchLabelGroup.addItem(view);
+//            }
+//        }
+
         searchLabelGroup.addItem(searchLabelList);
     }
 
@@ -477,10 +592,14 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
 
     private void addSearchLabelData(PropertyParamHints data, List<String> searchLabelList) {
         String labelString = present.changeToLabelData(data);
-        if (searchLabelList.size() < VIEW_SELECT_MAX)
+        if (searchLabelList.size() < VIEW_SELECT_MAX){
             if (!searchLabelList.contains(labelString)) {
                 searchLabelList.add(labelString);
             }
+        } else{
+            if (!searchLabelList.contains(labelString))
+                DialogUtil.getSimpleDialog(getString(R.string.select_max_20)).show(getFragmentManager(), "");
+        }
     }
 
     @Override
@@ -659,10 +778,23 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
                 historyView.setVisibility(View.VISIBLE);
                 searchView.setVisibility(View.GONE);
                 btn.setText(getString(R.string.search));
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM );
+                btn.setLayoutParams(params);
+                btn.setBackgroundColor(getResources().getColor(R.color.colortheme));
+                selectCountTxt.setVisibility(View.GONE);
                 return;
             }
+            selectCountTxt.setVisibility(View.VISIBLE);
+            selectCountTxt.setText(getString(R.string.selected)+": "+newHistoryList.size());
             viewType = VIEW_SEARCH;
+
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(DensityUtil.dip2px(getContext(),15),0,DensityUtil.dip2px(getContext(),15),DensityUtil.dip2px(getContext(),15));
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM );
+            btn.setLayoutParams(params);
             btn.setText(getString(R.string.dialog_hint_confirm));
+            btn.setBackground(getResources().getDrawable(R.drawable.shape_square_circle_3_red));
             searchView.setVisibility(View.VISIBLE);
             historyView.setVisibility(View.GONE);
         }
@@ -672,6 +804,7 @@ public class SearchFragment extends BaseFragment implements ISearchView, View.On
             String params = s.toString();
             autoSearchDescription.setName(params);
             keyword = params;
+            autoSearchDescription.setDistrictKeyIds(houseDescription.getDistrictListIds());
             present.doPost(HttpUtil.URL_AUTOSEARCH, headerDescription, autoSearchDescription);
         }
     }

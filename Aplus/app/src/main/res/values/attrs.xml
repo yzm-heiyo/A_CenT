@@ -24,7 +24,7 @@
         <attr name="titlebarTextColor" format="string" />
         <attr name="titlebarTextSize" format="string" />
         <attr name="titlebarRighttext" format="string" />
-        <attr name="titlebarShowImage_left" />
+        <attr name="titlebarShowImage_left" format="boolean" />
 
         <attr name="titleBarTextStyle">
             <enum name="normal" value="0" />

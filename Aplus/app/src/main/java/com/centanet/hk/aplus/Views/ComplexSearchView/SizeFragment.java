@@ -3,14 +3,19 @@ package com.centanet.hk.aplus.Views.ComplexSearchView;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.Views.basic.BaseFragment;
 import com.centanet.hk.aplus.Widgets.ProcessBarView;
 import com.centanet.hk.aplus.bean.params.SystemParamItems;
@@ -39,6 +44,7 @@ public class SizeFragment extends BaseFragment implements View.OnClickListener {
     private View editContenView;
     private SizeParam sizeParam;
     private OnSizeChangeLisenter onSizeChangeLisenter;
+    private boolean isProcessChange;
 
 
     @Override
@@ -76,12 +82,54 @@ public class SizeFragment extends BaseFragment implements View.OnClickListener {
 
     private void initLisenter() {
 
+        priceStartEdit.addTextChangedListener(leftTextWatcher);
+        priceEndEdit.addTextChangedListener(rightTextWatcher);
+
         useAvgSale.setOnClickListener(this);
         useAvgSaleGreen.setOnClickListener(this);
         useAvgRent.setOnClickListener(this);
         realAvgSale.setOnClickListener(this);
         realAvgSaleGreen.setOnClickListener(this);
         realAvgRent.setOnClickListener(this);
+
+        priceEndEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) {
+
+                } else {
+                    isProcessChange = true;
+//                    asdsadasd
+                    String price = priceEndEdit.getText().toString();
+                    if (price != null) {
+                        try {
+                            int priccs = Integer.parseInt(price);
+                            if (priccs > 3000) priceEndEdit.setText(null);
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }
+            }
+        });
+
+        priceEndEdit.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getActivity().getWindow().getDecorView().getWindowToken(), 0);
+                isProcessChange = true;
+                String price = priceEndEdit.getText().toString();
+                if (price != null) {
+                    try {
+                        int priccs = Integer.parseInt(price);
+                        if (priccs > 3000) priceEndEdit.setText(null);
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+            return false;
+        });
 
         processBarView.setOnProgressChangeListener(changeListener);
     }
@@ -109,9 +157,9 @@ public class SizeFragment extends BaseFragment implements View.OnClickListener {
 
     private void reCoverView(SizeParam sizeParam) {
 
-        if (sizeParam.startPrice != null)
+        if (!TextUtil.isEmply(sizeParam.startPrice))
             processBarView.setLeftValue(Integer.parseInt(sizeParam.startPrice));
-        if (sizeParam.endPrice != null)
+        if (!TextUtil.isEmply(sizeParam.endPrice))
             processBarView.setRightValue(Integer.parseInt(sizeParam.endPrice));
 //1-建築面積，2-實用面積，3-花園面積
         if (sizeParam.avgType != 0) {
@@ -139,18 +187,125 @@ public class SizeFragment extends BaseFragment implements View.OnClickListener {
         }
     }
 
+    private TextWatcher leftTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+            if(isProcessChange){
+                isProcessChange = false;
+                return;
+            }
+
+            isChangeByEdit = true;
+            sizeParam.startPrice = priceStartEdit.getText().toString();
+            if (!TextUtil.isEmply(sizeParam.startPrice)) {
+                processBarView.setLeftValue(Integer.parseInt(sizeParam.startPrice));
+//                resetView();
+            } else {
+                processBarView.setLeftValue(0);
+            }
+            if (onSizeChangeLisenter != null) onSizeChangeLisenter.onSizeChange(sizeParam);
+        }
+    };
+
+    private boolean isChangeByEdit;
+    private TextWatcher rightTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+            if(isProcessChange){
+                isProcessChange = false;
+                return;
+            }
+
+            isChangeByEdit = true;
+            sizeParam.endPrice = priceEndEdit.getText().toString();
+
+            if (!TextUtil.isEmply(sizeParam.endPrice)) {
+
+                if (Integer.parseInt(sizeParam.endPrice) > 3000) {
+                    sizeParam.endPrice = null;
+//                    priceEndEdit.setText(null);
+                    processBarView.setRightValue(3000);
+                } else processBarView.setRightValue(Integer.parseInt(sizeParam.endPrice));
+
+//                processBarView.setRightValue(Integer.parseInt(sizeParam.endPrice));
+//                resetView();
+            } else {
+                processBarView.setRightValue(3000);
+            }
+
+            if (onSizeChangeLisenter != null) onSizeChangeLisenter.onSizeChange(sizeParam);
+        }
+    };
+
+
     ProcessBarView.OnProgressChangeListener changeListener = new ProcessBarView.OnProgressChangeListener() {
         @Override
         public void onLeftProgressChange(float progress, int value) {
-            priceStartEdit.setText(((int) (value * progress) + ""));
-            sizeParam.startPrice = value + "";
+//            priceStartEdit.setText(((int) (value * progress) + ""));
+//            sizeParam.startPrice = value + "";
+
+
+            if (isChangeByEdit) {
+                isChangeByEdit = false;
+                return;
+            }
+
+            isProcessChange = true;
+
+            if (value == 0) {
+                priceStartEdit.setText(null);
+                sizeParam.startPrice = null;
+            } else {
+                priceStartEdit.setText((value + ""));
+                sizeParam.startPrice = value + "";
+            }
+
             onSizeChangeLisenter.onSizeChange(sizeParam);
         }
 
         @Override
         public void onRightProgressChange(float progress, int value) {
-            priceEndEdit.setText(((int) (value * (1 - progress)) + ""));
-            sizeParam.endPrice = value + "";
+//            priceEndEdit.setText(((int) (value * (1 - progress)) + ""));
+//            sizeParam.endPrice = value + "";
+
+
+            if (isChangeByEdit) {
+                isChangeByEdit = false;
+                return;
+            }
+
+            isProcessChange = true;
+
+            if (value == 3000) {
+                priceEndEdit.setText(null);
+                sizeParam.endPrice = null;
+            } else {
+                priceEndEdit.setText((value + ""));
+                sizeParam.endPrice = value + "";
+            }
+
             onSizeChangeLisenter.onSizeChange(sizeParam);
         }
     };
@@ -166,8 +321,21 @@ public class SizeFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {//均價類型(1:實均售,2:實均租,3:建均售,4:建均租,5:綠表價實均售,6:綠表價建均售)
+
+        if (v.isSelected()) {
+            editContenView.setVisibility(View.GONE);
+            sizeParam.avgType = 0;
+            sizeParam.endPrice = null;
+            sizeParam.startPrice = null;
+            if (onSizeChangeLisenter != null) onSizeChangeLisenter.onSizeChange(sizeParam);
+            resetView();
+            processBarView.setRightProcess(1);
+            processBarView.setLeftProcess(0);
+            return;
+        } else editContenView.setVisibility(View.VISIBLE);
+
         resetView();
-        editContenView.setVisibility(View.VISIBLE);
+//        editContenView.setVisibility(View.VISIBLE);
         v.setSelected(true);
         switch (v.getId()) {
             case R.id.size_view_use_ava_sale:

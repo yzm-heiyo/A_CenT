@@ -58,7 +58,7 @@
                     android:id="@+id/title_img_favo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/selector_favo_stroke" />
 
@@ -168,14 +168,14 @@
                     android:singleLine="true"
                     android:text="@string/start_date"
                     android:textColor="@color/color_black"
-                    android:textSize="16dp"
+                    android:textSize="13dp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:text="@string/to"
+                    android:text=" 至 "
                     android:textColor="@color/color_neutral_grey"
                     android:textSize="14dp"
                     android:textStyle="bold" />
@@ -191,7 +191,7 @@
                     android:singleLine="true"
                     android:text="@string/end_state"
                     android:textColor="@color/color_black"
-                    android:textSize="16dp"
+                    android:textSize="13dp"
                     android:textStyle="bold" />
 
             </LinearLayout>
@@ -208,30 +208,41 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
-                    android:layout_toLeftOf="@id/follow_txt_cancel"
                     android:background="@drawable/shape_square_circle_white"
                     android:drawableLeft="@drawable/ic_search"
-                    android:drawablePadding="8dp"
+                    android:layout_marginRight="50dp"
+                    android:drawablePadding="5dp"
                     android:hint="@string/keywork"
                     android:imeOptions="actionSearch"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:singleLine="true"
-                    android:textSize="14dp" />
+                    android:textSize="13dp" />
 
                 <TextView
-                    android:id="@+id/follow_txt_cancel"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/follow_txt_confirm"
+                    android:layout_width="50dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:gravity="center"
                     android:paddingLeft="10dp"
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     android:paddingRight="10dp"
                     android:text="@string/dialog_hint_confirm"
                     android:textColor="@color/color_neutral_grey"
-                    android:textSize="16dp" />
+                    android:textSize="14dp" />
+                
+                <ImageView
+                    android:id="@+id/follow_img_cancel"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:scaleType="center"
+                    android:visibility="gone"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_cancel"
+                    />
             </RelativeLayout>
         </LinearLayout>
 
@@ -254,8 +265,9 @@
                 android:layout_height="match_parent"
                 android:background="@color/color_white"
                 android:footerDividersEnabled="false"
+                android:divider="@color/color_translucent"
                 android:paddingLeft="8dp"
-                android:paddingRight="8dp"></ListView>
+                android:paddingRight="8dp"/>
 
             <com.scwang.smartrefresh.layout.footer.ClassicsFooter
                 android:layout_width="match_parent"

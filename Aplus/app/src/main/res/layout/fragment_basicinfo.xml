@@ -30,6 +30,7 @@
         android:scrollbars="none">
 
         <LinearLayout
+            android:id="@+id/detail_ll_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/color_theme_item"

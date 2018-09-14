@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="11dp"
-            android:layout_toLeftOf="@id/item_resultitem_heart_img"
+            android:layout_toLeftOf="@+id/item_resultitem_heart_img"
             android:layout_toRightOf="@+id/item_result_ico"
             android:ellipsize="end"
             android:paddingLeft="10dp"
@@ -68,7 +68,7 @@
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:layout_marginRight="60dp"-->
-            <!--android:layout_toLeftOf="@id/item_result_wan"-->
+            <!--android:layout_toLeftOf="@+id/item_result_wan"-->
             <!--android:text="售"-->
             <!--android:textColor="#BB2E2D"-->
             <!--android:textSize="14dp" />-->
@@ -77,7 +77,7 @@
             <!--android:id="@+id/item_result_price"-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
-            <!--android:layout_toLeftOf="@id/item_result_wan"-->
+            <!--android:layout_toLeftOf="@+id/item_result_wan"-->
             <!--android:text=""-->
             <!--android:textColor="#BB2E2D"-->
             <!--android:textSize="14dp" />-->
@@ -87,7 +87,7 @@
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
             <!--android:layout_marginRight="21dp"-->
-            <!--android:layout_toLeftOf="@id/item_rent"-->
+            <!--android:layout_toLeftOf="@+id/item_rent"-->
             <!--android:text="萬"-->
             <!--android:textColor="#BB2E2D"-->
             <!--android:textSize="14dp" />-->
@@ -104,7 +104,7 @@
         <!--<TextView-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content"-->
-            <!--android:layout_toLeftOf="@id/item_result_rent"-->
+            <!--android:layout_toLeftOf="@+id/item_result_rent"-->
             <!--android:text="$"-->
             <!--android:textColor="#bb842d"-->
             <!--android:textSize="14dp" />-->
@@ -164,7 +164,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:layout_marginTop="7dp"
-            android:layout_toRightOf="@id/item_question"
+            android:layout_toRightOf="@+id/item_question"
             android:textSize="12dp" />
 
         <TextView
@@ -182,7 +182,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:layout_marginTop="7dp"
-            android:layout_toRightOf="@id/item_user"
+            android:layout_toRightOf="@+id/item_user"
             android:text=""
             android:textSize="12dp" />
 
@@ -191,7 +191,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:layout_marginTop="7dp"
-            android:layout_toRightOf="@id/item_user_txt"
+            android:layout_toRightOf="@+id/item_user_txt"
             android:text="呎"
             android:textSize="12dp" />
 
@@ -200,7 +200,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="2dp"
             android:layout_marginTop="7dp"
-            android:layout_toLeftOf="@id/item_user_rev_rent_txt"
+            android:layout_toLeftOf="@+id/item_user_rev_rent_txt"
             android:text="$"
             android:textSize="12dp" />
 
@@ -210,7 +210,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="2dp"
             android:layout_marginTop="7dp"
-            android:layout_toLeftOf="@id/item_use_rent_chi"
+            android:layout_toLeftOf="@+id/item_use_rent_chi"
             android:text=""
             android:textSize="12dp" />
 
@@ -230,7 +230,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="2dp"
             android:layout_marginTop="7dp"
-            android:layout_toLeftOf="@id/item_user_rev_sale_txt"
+            android:layout_toLeftOf="@+id/item_user_rev_sale_txt"
             android:text="$"
             android:textSize="12dp" />
 
@@ -240,7 +240,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="2dp"
             android:layout_marginTop="7dp"
-            android:layout_toLeftOf="@id/item_user_rev_sale_chi"
+            android:layout_toLeftOf="@+id/item_user_rev_sale_chi"
             android:textSize="12dp" />
 
         <TextView
@@ -283,7 +283,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:layout_marginTop="2dp"
-            android:layout_toRightOf="@id/item_really"
+            android:layout_toRightOf="@+id/item_really"
             android:text=""
             android:textSize="12dp" />
 
@@ -292,7 +292,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:layout_marginTop="2dp"
-            android:layout_toRightOf="@id/item_really_txt"
+            android:layout_toRightOf="@+id/item_really_txt"
             android:text="呎"
             android:textSize="12dp" />
 
@@ -302,7 +302,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="2dp"
             android:layout_marginTop="2dp"
-            android:layout_toLeftOf="@id/item_really_rev_sale_txt"
+            android:layout_toLeftOf="@+id/item_really_rev_sale_txt"
             android:text="$"
             android:textSize="12dp" />
 
@@ -312,7 +312,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="2dp"
             android:layout_marginTop="2dp"
-            android:layout_toLeftOf="@id/item_really_rev_sale_chi"
+            android:layout_toLeftOf="@+id/item_really_rev_sale_chi"
             android:text=""
             android:textSize="12dp" />
 
@@ -331,7 +331,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="2dp"
             android:layout_marginTop="2dp"
-            android:layout_toLeftOf="@id/item_really_rev_rent_txt"
+            android:layout_toLeftOf="@+id/item_really_rev_rent_txt"
             android:text="$"
             android:textSize="12dp" />
 
@@ -341,7 +341,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="2dp"
             android:layout_marginTop="2dp"
-            android:layout_toLeftOf="@id/item_really_rev_rent_chi"
+            android:layout_toLeftOf="@+id/item_really_rev_rent_chi"
             android:text=""
             android:textSize="12dp" />
 
@@ -376,7 +376,7 @@
             android:layout_height="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="11dp"
-            android:layout_toRightOf="@id/item_icon_hot"
+            android:layout_toRightOf="@+id/item_icon_hot"
             android:scaleType="center"
             android:src="@drawable/level_icon_key" />
 
@@ -386,7 +386,7 @@
             android:layout_height="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="11dp"
-            android:layout_toRightOf="@id/item_icon_key"
+            android:layout_toRightOf="@+id/item_icon_key"
             android:scaleType="center"
             android:src="@drawable/selector_icon_o" />
 
@@ -396,7 +396,7 @@
             android:layout_height="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="11dp"
-            android:layout_toRightOf="@id/item_icon_o"
+            android:layout_toRightOf="@+id/item_icon_o"
             android:scaleType="center"
             android:src="@drawable/selector_icon_l" />
 
@@ -406,7 +406,7 @@
             android:layout_height="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="11dp"
-            android:layout_toRightOf="@id/item_icon_l"
+            android:layout_toRightOf="@+id/item_icon_l"
             android:scaleType="center"
             android:src="@drawable/selector_icon_d" />
 
@@ -416,7 +416,7 @@
             android:layout_height="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="11dp"
-            android:layout_toRightOf="@id/item_icon_d"
+            android:layout_toRightOf="@+id/item_icon_d"
             android:scaleType="center"
             android:src="@drawable/selector_icon_dujia" />
 
@@ -426,7 +426,7 @@
             android:layout_height="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="11dp"
-            android:layout_toRightOf="@id/item_icon_medal"
+            android:layout_toRightOf="@+id/item_icon_medal"
             android:gravity="center"
             android:paddingBottom="2dp"
             android:text="20"
@@ -441,7 +441,7 @@
             android:layout_height="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="11dp"
-            android:layout_toRightOf="@id/item_icon_ssd"
+            android:layout_toRightOf="@+id/item_icon_ssd"
             android:scaleType="center"
             android:src="@drawable/selector_icon_favo" />
 

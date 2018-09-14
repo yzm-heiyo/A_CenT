@@ -98,7 +98,8 @@ public class FlootUnitDialog extends DialogFragment implements View.OnClickListe
         lp = window.getAttributes();
         lp.gravity = Gravity.BOTTOM; // 紧贴底部
         lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
-        lp.height = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
+//        lp.height = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
+        lp.height = getActivity().getWindowManager().getDefaultDisplay().getHeight() * 9 / 10;
         // lp.height=getContext().getResources().getDisplayMetrics().heightPixels* 4 / 5;
         window.setAttributes(lp);
         window.setBackgroundDrawableResource(android.R.color.transparent);

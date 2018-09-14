@@ -1,6 +1,7 @@
 package com.centanet.hk.aplus.common;
 
 /**
+ * 系统参数的枚举
  * Created by yangzm4 on 2018/3/22.
  */
 

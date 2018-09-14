@@ -13,9 +13,8 @@ public interface ITransModel {
 
 
     interface OnReceiveLisenter<T> {
-        void onFailure();
+        void onFailure(int code);
 
         void onSuccess(T t);
     }
-
 }

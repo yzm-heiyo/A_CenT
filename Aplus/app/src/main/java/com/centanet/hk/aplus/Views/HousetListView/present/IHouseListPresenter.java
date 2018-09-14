@@ -11,4 +11,6 @@ public interface IHouseListPresenter {
 
     void doPost(String address, AHeaderDescription headers, Object bodys);
     void clearFlag();
+    boolean isAbleToScreen();
+    void setAbleToScreen(boolean b);
 }

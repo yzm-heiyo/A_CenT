@@ -33,7 +33,8 @@
                 android:hint="@string/dialog_price_unlimit"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:textColor="@color/colorline"
+                android:inputType="number"
+                android:textColor="@color/color_black"
                 android:textSize="14dp"
                 android:textStyle="bold" />
 
@@ -51,12 +52,13 @@
                 android:layout_height="34dp"
                 android:layout_weight="1"
                 android:singleLine="true"
+                android:inputType="number"
                 android:background="@drawable/shape_square_circle_stroke_deepgrey"
                 android:gravity="center"
                 android:hint="@string/dialog_price_unlimit"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                android:textColor="@color/colorline"
+                android:textColor="@color/color_black"
                 android:textSize="14dp"
                 android:textStyle="bold" />
 
@@ -87,6 +89,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/sale_view_unlimit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    style="@style/checkbox_circle"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:clickable="false"
+                    android:enabled="false" />
+
+                <TextView
+                    style="@style/fragment_more_status"
+                    android:text="@string/dialog_price_unlimit" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:id="@+id/sale_view_400"

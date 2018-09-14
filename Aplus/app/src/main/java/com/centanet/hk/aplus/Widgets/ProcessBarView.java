@@ -104,7 +104,7 @@ public class ProcessBarView extends View {
                 attrs, R.styleable.ProcessBarView, defStyleAttr, 0);
         color_line_normal = a.getColor(R.styleable.ProcessBarView_color_line_normal, Color.parseColor("#88efefef"));
         color_line_select = a.getColor(R.styleable.ProcessBarView_color_line_select, Color.parseColor("#BB2E2D"));
-        stroke_width_normal = a.getDimension(R.styleable.ProcessBarView_stroke_width_normal, 2f);
+        stroke_width_normal = a.getDimension(R.styleable.ProcessBarView_stroke_width_normal, 1f);
         stroke_width_select = a.getDimension(R.styleable.ProcessBarView_stroke_width_select, 4f);
 
         int text_color = a.getColor(R.styleable.ProcessBarView_text_color, color_line_select);
@@ -171,7 +171,7 @@ public class ProcessBarView extends View {
 
         paint.setColor(Color.GRAY);
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(3);
+        paint.setStrokeWidth(1);
 
 
         //按鈕邊界綫
@@ -239,6 +239,7 @@ public class ProcessBarView extends View {
     }
 
     public void setRightValue(int value) {
+        if (value > max) value = max;
         float process = (float) value / max;
         setRightProcess(process);
     }
@@ -300,7 +301,7 @@ public class ProcessBarView extends View {
 
         if (onProgressChangeListener != null) {
             float process = 1 - (rightX - radius * 3) / (width - radius * 4);
-            L.d("process", process + "  process: " + (1 - process) + " max"+max);
+            L.d("process", process + "  process: " + (1 - process) + " max" + max);
             onProgressChangeListener.onRightProgressChange(process, (int) (max * (1 - process)));
         }
     }

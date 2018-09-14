@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * 管理App所有系统参数
- * 可以通过参数枚举获取对应参数
+ * 可以通过参数枚举(APSystemParameterType.class)获取对应参数
  * Created by yangzm4 on 2018/6/28.
  */
 

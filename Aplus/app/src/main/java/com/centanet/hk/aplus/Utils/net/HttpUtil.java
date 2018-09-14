@@ -43,7 +43,7 @@ public class HttpUtil {
     public static final String URL_HomeConfig = "https://hkqasso.centanet.com/api/api/HomeConfig";//测试
     public static final String URL_UPDATE = "https://hkqasso.centanet.com/api/api/AppVersion";//测试
     public static final String URL_SSO_FEEDBACK = "https://hkqasso.centanet.com/api/api/Feedback";//测试
-
+//
 //    public static final String URL_SSO = "https://hkagencysso.centanet.com/api/api/Login";
 //    public static final String URL_HomeConfig = "https://hkagencysso.centanet.com/api/api/HomeConfig";
 //    public static final String URL_UPDATE = "https://hkagencysso.centanet.com/api/api/AppVersion";
@@ -55,17 +55,20 @@ public class HttpUtil {
     public static final String URL_USER_BEHAVIOR = "common/com-behavior";
     public static final String URL_DETAILS_LIST = "property/get-details-list";
     public static final String URL_DETAILE_NEXT_KEYID = "property/get-details-next-keyids";
+    public static final String URL_HOTLINE_INFO = "http://hk.centanet.com/apps/disclaimer/aplusapp/companyphone.htm";
 
     public static final String URL_TRAN_LIST = "property/property-tran-list";
     public static final String URL_DISTRICT = "property/get-user-district";
+    public static final String URL_SSO_CALLCOUNT = "https://hkagencysso.centanet.com/report/#/";//来电统计
 
     public static final String URL_FAST_SEARCH = "property/get-fast-searcher-tag"; // 獲取快速篩選項標籤
     public static final String URL_TAG_BUILD = "property/get-building-tag"; // 獲取棟座設施標籤
     public static final String URL_TAG_TRANLIST = "property/property-transaction-record"; // 獲取棟座設施標籤
+    public static final String URL_TAG_TRAN_DETAIL = "property/property-tran-detail"; // 獲取棟座設施標籤
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public static int READ_TIME_OUT = 10;
-    public static int CONNECT_TIME_OUT = 10;
+    public static int READ_TIME_OUT = 60;
+    public static int CONNECT_TIME_OUT = 60;
     private static Call call;
 
     public static void doPost(String address, Object bodys, Object headers, okhttp3.Callback callback) {
@@ -141,6 +144,7 @@ public class HttpUtil {
     private static Request.Builder addHedaer(Object model) throws Exception {
         Request.Builder builder = new Request.Builder();
         builder.addHeader("content-type", "application/json");
+        if (model == null) return builder;
         for (Field field : model.getClass().getDeclaredFields()) {
 
             field.setAccessible(true);
@@ -149,7 +153,6 @@ public class HttpUtil {
                 if (field.getName() == "serialVersionUID") {
                     continue;
                 }
-
                 if (field.getName().equals("UserAgent")) {
                     builder.addHeader("User-Agent", "" + field.get(model));
                     continue;

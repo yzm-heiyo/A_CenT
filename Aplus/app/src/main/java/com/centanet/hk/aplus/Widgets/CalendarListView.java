@@ -30,8 +30,10 @@ public class CalendarListView extends ScrollView {
 //    private int currentYear;
     private Calendar startCalendar;
     private Calendar endCalendar;
+    private int defaultMonth = -1;
 
     private OnItemClickLisenter onItemClickLisenter;
+    private boolean isAbleToScroll;
 
     public CalendarListView(Context context) {
         this(context, null);
@@ -53,6 +55,14 @@ public class CalendarListView extends ScrollView {
         this.addView(content);
 
         addCanlendar(Calendar.getInstance());
+        L.d("calendarListView", "calendarListView_init");
+//        if(defaultMonth!=-1){
+//        View view = findViewWithTag(defaultMonth);
+//        if(view!=null){
+////            defaultMonth = (int) view.getY();
+//            this.scrollBy(0, (int) view.getY());
+//        }
+//        }
     }
 
     public void addCanlendar(Calendar instance) {
@@ -64,6 +74,7 @@ public class CalendarListView extends ScrollView {
             time.add(Calendar.MONTH, i);
             L.d("addCanlendar", "TrueMonth: " + i + " CurrentMonth: " + time.get(Calendar.MONTH));
             View view = LayoutInflater.from(context).inflate(R.layout.calendar, null, false);
+            view.setTag(i);
             TextView month = view.findViewById(R.id.calendar_txt_month);
             month.setText(getMonthStr(time.getTime()));
             L.d("addCanlendar", getMonthStr(time.getTime()));
@@ -78,18 +89,29 @@ public class CalendarListView extends ScrollView {
                     if (startCalendar != null)
                         Log.d(TAG, "onClick: " + getMonthStr(startCalendar.getTime()));
 
+//                    if (startCalendar == null) startCalendar = calendar;
+//                    else if (startCalendar.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) && (startCalendar.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)) && (startCalendar.get(Calendar
+//                            .DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH))) { //等于表示取消选中，秒数会变，所以使用equare无效
+//                        startCalendar = endCalendar;
+//                        endCalendar = null;
+//                    } else if (endCalendar != null && endCalendar.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) && (endCalendar.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)) && (endCalendar.get(Calendar
+//                            .DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH))) {//等于表示取消选中，所以使用equare无效
+//                        endCalendar = null;
+//                    } else if (startCalendar.after(calendar)) {
+//                        endCalendar = startCalendar;
+//                        startCalendar = calendar;
+//                    } else endCalendar = calendar;
+
                     if (startCalendar == null) startCalendar = calendar;
-                    else if (startCalendar.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) && (startCalendar.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)) && (startCalendar.get(Calendar
-                            .DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH))) { //等于表示取消选中，秒数会变，所以使用equare无效
-                        startCalendar = endCalendar;
-                        endCalendar = null;
-                    } else if (endCalendar != null && endCalendar.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) && (endCalendar.get(Calendar.MONTH) == calendar.get(Calendar.MONTH)) && (endCalendar.get(Calendar
-                            .DAY_OF_MONTH) == calendar.get(Calendar.DAY_OF_MONTH))) {//等于表示取消选中，所以使用equare无效
-                        endCalendar = null;
-                    } else if (startCalendar.after(calendar)) {
+                    else if (startCalendar.after(calendar)) {
                         endCalendar = startCalendar;
                         startCalendar = calendar;
-                    } else endCalendar = calendar;
+                    } else if (startCalendar != null && endCalendar == null) {
+                        endCalendar = calendar;
+                    } else if (startCalendar != null && endCalendar != null) {
+                        startCalendar = calendar;
+                        endCalendar = null;
+                    }
 
                     if (onItemClickLisenter != null)
                         onItemClickLisenter.onClick(startCalendar, endCalendar);
@@ -120,6 +142,23 @@ public class CalendarListView extends ScrollView {
                 }
             }
         }
+    }
+
+    public void scrollToMonth(int month) {
+        isAbleToScroll = true;
+        View view = content.findViewWithTag(month);
+        if (view != null) {
+//            defaultMonth = (int) view.getY();
+            view.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
+                if (isAbleToScroll) {
+                    this.scrollTo(0, (int) view.getY());
+                    isAbleToScroll = false;
+                }
+                L.d("calendarListView", view.getY() + "");
+            });
+        }
+//        defaultMonth = month;
+        L.d("calendarListView", "calendarListView_scrollToMonth");
     }
 
     public void setOnItemClickLisenter(OnItemClickLisenter onItemClickLisenter) {

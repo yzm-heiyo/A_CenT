@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/option_view_carplace"
+        android:id="@+id/type_view_centasale"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -25,7 +25,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/option_view_congreenprice"
+        android:id="@+id/type_view_centarent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -43,7 +43,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/option_view_greenprice"
+        android:id="@+id/type_view_othersale"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -61,7 +61,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/option_view_exclusive"
+        android:id="@+id/type_view_otherrent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
@@ -81,11 +81,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/option_view_key"
+        android:id="@+id/type_view_internal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
 
         <CheckBox
             style="@style/checkbox"
@@ -93,7 +92,6 @@
             android:layout_marginRight="15dp"
             android:clickable="false"
             android:enabled="false" />
-
 
         <TextView
             style="@style/fragment_more_status"

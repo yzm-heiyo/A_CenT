@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_top_left_right_circle">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/area_bottom"
+        android:orientation="vertical">
+
+        <android.support.v4.widget.Space
+            android:layout_width="match_parent"
+            android:layout_height="18dp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="@string/current_search_option"
+                android:textColor="@android:color/black"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/close"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:scaleType="center"
+                android:src="@drawable/ic_close" />
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/userdersign_ll_area"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_sort"
+                    android:visibility="visible"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    app:title="@string/fragment_search" />
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_area"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    app:title="@string/area" />
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_transtype"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    app:title="@string/trans_type" />
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_address"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    android:layout_height="match_parent"
+                    app:title="@string/address" />
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_floot"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    app:title="@string/search_floot" />
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_unit"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    android:layout_marginTop="15dp"
+                    app:title="@string/search_units" />
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_sale"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    app:title="@string/sale" />
+
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_rent"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    app:title="@string/rent" />
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_acreage"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    app:title="@string/acreage" />
+
+                <!--<com.centanet.hk.aplus.Widgets.SmartLinBreakView-->
+                    <!--android:id="@+id/userdesign_lb_date"-->
+                    <!--style="@style/OptionDiaog_SmartLinbreak"-->
+                    <!--android:layout_marginTop="15dp"-->
+                    <!--app:title="@string/date" />-->
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_interval"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    app:title="@string/interval" />
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_tag"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    app:title="@string/laber" />
+
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_other"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    app:title="@string/other" />
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_size_price"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    app:title="@string/size_price" />
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_typesearch"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    app:title="@string/option" />
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_date"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    app:title="@string/date_scope" />
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_transdate"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    app:title="@string/record_transaction_bargain" />
+
+                <android.support.v4.widget.Space
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/area_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/layer_rim_line"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/add"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_blue_square_circle"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/add_search_option"
+            android:textColor="@color/color_blue_wathet"
+            android:textSize="15dp" />
+
+        <TextView
+            android:id="@+id/yes"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_square_circle_3_red"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/dialog_confirm_confirm"
+            android:textColor="@color/color_white"
+            android:textSize="15dp" />
+
+    </LinearLayout>
+</RelativeLayout>

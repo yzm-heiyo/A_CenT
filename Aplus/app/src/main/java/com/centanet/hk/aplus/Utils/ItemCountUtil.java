@@ -40,4 +40,28 @@ public class ItemCountUtil {
         L.d("item", "count: " + count);
         return count - 6;
     }
+
+    public static int paramsCount(Object model) throws Exception {
+        int count = 0;
+
+        //遍歷屬性類中的所有參數
+        for (Field field : model.getClass().getDeclaredFields()) {
+            String type = field.getGenericType().toString();
+            field.setAccessible(true);
+            if (field.get(model) != null && !field.get(model).equals("") && !field.get(model).equals("null")) {
+//                L.d("itemValues", "name: " + field.getName() + " value: " + field.get(model));
+                if (type.equals("java.util.List<java.lang.String>")) {
+                    if (!((List<String>) field.get(model)).isEmpty()) {
+                        count = count + ((List<String>) field.get(model)).size();
+                        L.d("listSize", ((List<String>) field.get(model)).size() + "");
+                    }
+                    continue;
+                }
+                count++;
+                L.d("itemValue", field.getName() + " : " + field.get(model));
+            }
+        }
+        L.d("item", "count: " + count);
+        return count;
+    }
 }

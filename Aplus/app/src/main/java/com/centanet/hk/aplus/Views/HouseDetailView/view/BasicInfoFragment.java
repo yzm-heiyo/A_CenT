@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.widget.NestedScrollView;
 import android.text.Spanned;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +19,13 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.DensityUtil;
 import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
@@ -38,6 +41,7 @@ import com.centanet.hk.aplus.Views.HouseDetailView.view.fragment.TrustorFragment
 import com.centanet.hk.aplus.Views.TransactView.TransactActivity;
 import com.centanet.hk.aplus.Widgets.HorizontalView;
 import com.centanet.hk.aplus.Widgets.LineBreakLayout;
+import com.centanet.hk.aplus.Widgets.MyRadioGroup;
 import com.centanet.hk.aplus.Widgets.PropertyDetail.PropertyDataInformationView;
 import com.centanet.hk.aplus.Widgets.PropertyDetail.PropertyFollowView;
 import com.centanet.hk.aplus.Widgets.PropertyDetail.PropertyPriceRecordView;
@@ -47,7 +51,9 @@ import com.centanet.hk.aplus.Widgets.SmallItemView;
 import com.centanet.hk.aplus.bean.detail.DetailBriefInfo;
 import com.centanet.hk.aplus.bean.detail.DetailHouse;
 import com.centanet.hk.aplus.bean.http.DetailListsDescription;
+import com.centanet.hk.aplus.bean.http.UserBehaviorDescription;
 import com.centanet.hk.aplus.eventbus.MessageEventBus;
+import com.centanet.hk.aplus.manager.PermissionManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -82,7 +88,7 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
     private SmallItemView useRvgPriceTxt, reallyRvgPriceTxt, useRvgRentTxt, reallyRvgRentTxt, entrust_3_txt, entrust_5_txt;
     private SmallItemView conjectureDateTxt, ssdTxt, rvdTxt, useAreaTxt, reallyAreaTxt, usePercentTxt, rvdDateTxt;
     private SmallItemView openDateTxt, houseTypeTxt, carPlaceTxt, intervalTxt, numberTxt, directionTxt, houseSumTxt, fromTxt;
-    private SmallItemView searchTxt, attentionTxt, supplementTxt, customization_1_Txt, customization_2_Txt, customization_3_Txt;
+    private SmallItemView searchTxt, attentionTxt, supplementTxt, customization_1_Txt, customization_2_Txt, customization_3_Txt, prnTxt, devTxt;
     private SmallItemView remarkTxt, moveInDateTxt, managementPriceTxt;
     private TextView tipTxt, salePriceTxt, rentPriceTxt, keyNumberTxt, greenTabPriceTxt;
     private HorizontalView navigationView;
@@ -106,6 +112,7 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
     private LineBreakLayout facilityLb;
     private LoadingDialog loadingDialog;
     private TextView transAllTxt;
+    private LinearLayout content;
     private boolean isLoadOther = false;
 
     @Override
@@ -135,11 +142,15 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         view = inflater.inflate(R.layout.fragment_basicinfo, null);
+
+        L.d("isSeeClientInfoPermission", PermissionManager.isSeeClientInfoPermission() + "");
+
         initData();
         initViews();
         initLisenter();
         return view;
     }
+
 
     @Override
     public void onResume() {
@@ -150,6 +161,7 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
 //                setViewsData((DetailHouse) bundle.get(BASIC_INFO));
 //        }
     }
+
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -195,6 +207,8 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
         remarkTxt = view.findViewById(R.id.detail_txt_remark);
         moveInDateTxt = view.findViewById(R.id.detail_txt_movein_date);
         managementPriceTxt = view.findViewById(R.id.detail_txt_management_cost);
+        prnTxt = view.findViewById(R.id.detail_txt_prn);
+        devTxt = view.findViewById(R.id.detail_txt_dev);
 
         salePriceTxt = view.findViewById(R.id.detail_txt_sale_price);
         rentPriceTxt = view.findViewById(R.id.detail_txt_rent_price);
@@ -212,6 +226,8 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
 
         followAddTxt = view.findViewById(R.id.detail_follow_txt_add);
         followAllTxt = view.findViewById(R.id.detail_follow_txt_all);
+
+        content = view.findViewById(R.id.detail_ll_content);
 
 //        dataInformationView = view.findViewById(R.id.detail_data_info);
 
@@ -237,13 +253,21 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
         clineNameTxt = view.findViewById(R.id.item_txt_client);
 
         facilityLb = view.findViewById(R.id.text_ll_facility_layout);
+        facilityLb.setItemContentLayoutID(R.layout.item_label_taps);
 
         transAllTxt = view.findViewById(R.id.trans_txt_all);
 //        showLoadingTips();
 //        if (briefInfo != null) refreshOther(briefInfo);
 //        if (detailHouseData != null) setViewsData(detailHouseData);
+
+
     }
 
+    public int getCurrentItem() {
+        navigationView.getCurrent();
+        L.d("getCurrent", navigationView.getCurrent() + "");
+        return navigationView.getCurrent() ;
+    }
 //    private void showLoadingTips() {
 //        loadingDialog = new LoadingDialog(getActivity());
 //        loadingDialog.setCancelable(false);
@@ -252,17 +276,18 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
 
     private List<String> getTitle() {
         List<String> taps = new ArrayList<>();
-        taps.add("基本资料");
+        taps.add("基本資料");
         taps.add("跟進");
         taps.add("業主資料");
         taps.add("叫價記錄");
         taps.add("成交記錄");
-        taps.add("数据资料");
+        taps.add("數據資料");
         return taps;
     }
 
     public void setBasicInfo(DetailHouse detailHouseData) {
         this.detailHouseData = detailHouseData;
+        L.d("setBasicInfo", detailHouseData.toString());
         scrollContentView.getViewTreeObserver().addOnScrollChangedListener(scrollChangedListener);
         setViewsData(detailHouseData);
         isLoadOther = true;
@@ -314,14 +339,18 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
             if (!isDoAnimation && oldScrollY != scrollContentView.getScrollY()) {
                 Log.d("Scroll", "onScrollChanged: " + scrollContentView.getScrollY());
                 getItemPosition();
+
                 oldScrollY = scrollContentView.getScrollY();
                 if (getCurrentItem(scrollContentView.getScrollY() + scrollContentView.getHeight()) >= 2 && isLoadOther) {
                     DetailListsDescription description = new DetailListsDescription();
                     isLoadOther = false;
-                    description.setKeyId(getArguments().getString(FRAGMENT_VIEW_DATA));
-                    present.doGet(HttpUtil.URL_DETAILS_LIST, ((MyApplication) getContext().getApplicationContext()).getHeaderDescription(), description);
+//                    description.setKeyId(getArguments().getString(FRAGMENT_VIEW_DATA));
+//                    L.d("onScrollChanged", getArguments().getString(FRAGMENT_VIEW_DATA));
+//                    present.doGet(HttpUtil.URL_DETAILS_LIST, ((MyApplication) getContext().getApplicationContext()).getHeaderDescription(), description);
+                    iBasicInfo.getPropertyDetailOther();
                 }
-                navigationView.selectItem(getCurrentItem(scrollContentView.getScrollY()));
+                if (getCurrentItem(scrollContentView.getScrollY()) != navigationView.getCurrent())
+                    navigationView.selectItem(getCurrentItem(scrollContentView.getScrollY()));
             }
         }
     };
@@ -407,7 +436,8 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
 
     private void setViewsData(DetailHouse detailHouseData) {
 
-        navigationView.setIndexItemTip(1, detailHouseData.getLastUpdateTime());
+        navigationView.setIndexItemTip(1, detailHouseData.getLastFollowTime());
+        L.d("getLastUpdateTime", detailHouseData.getLastFollowTime());
 
         iconSingle.setSelected(detailHouseData.isHasOnlyTrust());
         iconFavo.setSelected(detailHouseData.isFavorite());
@@ -417,6 +447,7 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
         iconHot.setSelected(detailHouseData.getHotList() == null || detailHouseData.getHotList().equals("") ? false : true);
         iconL.setSelected(!detailHouseData.isConfirmed());
         iconD.setSelected(detailHouseData.getDevelopmentEndCredits());
+        clineNameTxt.setText(detailHouseData.getPropertyBuildingOwner() == null || detailHouseData.getPropertyBuildingOwner() == "" ? " " + getString(R.string.detail_no_owner) : " " + detailHouseData.getPropertyBuildingOwner());
         clineNameTxt.setText(detailHouseData.getPropertyBuildingOwner() == null || detailHouseData.getPropertyBuildingOwner() == "" ? " " + getString(R.string.detail_no_owner) : " " + detailHouseData.getPropertyBuildingOwner());
 
         if (detailHouseData.getSSDType() != 0) {
@@ -439,7 +470,7 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
         rvdDateTxt.setContentName(formatData(detailHouseData.getProvideDate()));
         openDateTxt.setContentName(formatData(detailHouseData.getRegisterDate()));
 
-        usePercentTxt.setContentName(detailHouseData.getUtilityRatio());
+        usePercentTxt.setContentName(TextUtil.isEmply(detailHouseData.getUtilityRatio())?"":detailHouseData.getUtilityRatio()+"%");
         tipTxt.setText(detailHouseData.getPrompt());
         directionTxt.setContentName(detailHouseData.getHouseDirection());
         intervalTxt.setContentName(detailHouseData.getPropertyInterval());
@@ -452,6 +483,8 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
         customization_2_Txt.setContentName(detailHouseData.getCustomField2());
         customization_3_Txt.setContentName(detailHouseData.getCustomField3());
         remarkTxt.setContentName(detailHouseData.getRemark());
+        prnTxt.setContentName(detailHouseData.getPRN());
+        devTxt.setContentName(detailHouseData.getDeveloper());
         numberTxt.setContentName(detailHouseData.getAccessementNo());
         Log.e(TAG, "setViewsData: " + detailHouseData.getMgrFee());
         managementPriceTxt.setContentName(detailHouseData.getMgrFee() == null ? null : ((int) Float.parseFloat(detailHouseData.getMgrFee())) + "");
@@ -477,6 +510,7 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
         setSalePriceTxt(detailHouseData.getSalePrice(), detailHouseData.getSaleFloorPriceFormate());
         setRentPriceTxt(detailHouseData.getRentPrice(), detailHouseData.getRentFloorPriceFormate());
 
+        if (facilityLb != null) facilityLb.removeAllContentViews();
         facilityLb.addItem(detailHouseData.getBuildingTagInfos());
 
         if (detailHouseData.getPropertyTags() != null) {
@@ -568,8 +602,27 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
 
 //        resetFragment();
 
+        int[] location = new int[2];
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int heigth = dm.heightPixels;
+        int width = dm.widthPixels;
+        navigationView.getLocationInWindow(location);
+
+        L.d("getLocationOnScreen", "scrollContentView: " + "width: " + location[0] + " height: " + location[1]);
+        L.d("getLocationOnScreen", "Screen: " + "width: " + width + " height: " + heigth);
+
+        View view = new View(getContext());
+        int height = heigth - location[1] - DensityUtil.dip2px(getContext(), 340);
+        ViewGroup.LayoutParams params = new MyRadioGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, height);
+        view.setLayoutParams(params);
+        content.addView(view);
+
         dataInformationView.setData(data.getCentaData());
 
+        L.d("DetailActicity", data.getCentaData().toString());
+        L.d("DetailActicity", data.getErrorMsg());
 //            priceRecordView.resetSaleRBBg();
 
         if (data.getSaleTrusts() != null && !data.getSaleTrusts().isEmpty()) {
@@ -582,7 +635,6 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
         if (data.getRentTrusts() == null || data.getRentTrusts().isEmpty()) {
             priceRecordView.setRentRBClickable(false);
         }
-
 
         if (data.getSaleTrusts() == null || data.getSaleTrusts().isEmpty()) {
             priceRecordView.setSaleRBClickable(false);
@@ -616,5 +668,7 @@ public class BasicInfoFragment extends Fragment implements IPresenterManager<IDe
 
     public interface IBasicInfo {
         void turnToActivity(Intent intent);
+
+        void getPropertyDetailOther();
     }
 }

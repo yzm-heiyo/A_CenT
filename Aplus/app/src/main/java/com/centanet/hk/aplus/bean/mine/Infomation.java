@@ -20,6 +20,9 @@ public class Infomation {
     private String FullName;
     private String License;
     private String ErrorMsg;
+    private String EmployeeImgUrl;
+    private String CompanySpecialNumber;
+    private String UserAddressDetailNum;
     private String RunTime;
     private boolean Flag;
 
@@ -85,6 +88,30 @@ public class Infomation {
 
     public void setFlag(boolean flag) {
         Flag = flag;
+    }
+
+    public void setEmployeeImgUrl(String employeeImgUrl) {
+        EmployeeImgUrl = employeeImgUrl;
+    }
+
+    public void setCompanySpecialNumber(String companySpecialNumber) {
+        CompanySpecialNumber = companySpecialNumber;
+    }
+
+    public void setUserAddressDetailNum(String userAddressDetailNum) {
+        UserAddressDetailNum = userAddressDetailNum;
+    }
+
+    public String getEmployeeImgUrl() {
+        return EmployeeImgUrl;
+    }
+
+    public String getCompanySpecialNumber() {
+        return CompanySpecialNumber;
+    }
+
+    public String getUserAddressDetailNum() {
+        return UserAddressDetailNum;
     }
 
     public String getEmployeeNo() {

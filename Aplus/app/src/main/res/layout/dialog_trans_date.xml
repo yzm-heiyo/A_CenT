@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_top_left_right_circle"
+    android:orientation="vertical"
+    android:visibility="visible">
+
+    <android.support.v4.widget.Space
+        android:layout_width="match_parent"
+        android:layout_height="18dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/date"
+            android:textColor="@android:color/black"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_close" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/date_ll_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_white"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/date_view_bargain"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    style="@style/checkbox_circle"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:clickable="false"
+                    android:enabled="false" />
+
+                <TextView
+                    style="@style/fragment_more_status"
+                    android:text="@string/record_transaction_bargain" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/date_view_appointment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <CheckBox
+                    style="@style/checkbox_circle"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:clickable="false"
+                    android:enabled="false" />
+
+                <TextView
+                    style="@style/fragment_more_status"
+                    android:text="@string/record_transaction_appointment" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/date_view_official"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <CheckBox
+                    style="@style/checkbox_circle"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:clickable="false"
+                    android:enabled="false" />
+
+                <TextView
+                    style="@style/fragment_more_status"
+                    android:text="@string/record_transaction_official" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/date_view_finish"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+
+                <CheckBox
+                    style="@style/checkbox_circle"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:clickable="false"
+                    android:enabled="false" />
+
+                <TextView
+                    style="@style/fragment_more_status"
+                    android:text="@string/record_transaction_finish" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/date_view_rentdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    style="@style/checkbox_circle"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:clickable="false"
+                    android:enabled="false" />
+
+                <TextView
+                    style="@style/fragment_more_status"
+                    android:text="@string/record_transaction_rentdate" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+
+
+</LinearLayout>

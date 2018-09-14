@@ -33,14 +33,14 @@
         android:id="@+id/levelline"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/tips_dialoa_contentview"
+        android:layout_below="@+id/tips_dialoa_contentview"
         android:background="#efefef" />
 
     <LinearLayout
         android:id="@+id/dialog_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/levelline"
+        android:layout_below="@+id/levelline"
         android:orientation="horizontal">
 
         <Button

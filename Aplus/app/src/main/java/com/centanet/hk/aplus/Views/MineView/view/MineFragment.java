@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,8 +16,8 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
-import com.centanet.hk.aplus.Views.Dialog.DialogFactory;
 import com.centanet.hk.aplus.Views.Dialog.LogoutDialog;
 import com.centanet.hk.aplus.Views.LoginView.view.LoginActivity;
 import com.centanet.hk.aplus.Views.MineView.present.FeedBackPresent;
@@ -29,7 +28,6 @@ import com.githang.statusbar.StatusBarCompat;
 
 import static com.centanet.hk.aplus.MyApplication.getContext;
 import static com.centanet.hk.aplus.Views.Dialog.LogoutDialog.DIALOG_YES;
-import static com.centanet.hk.aplus.common.CommandField.DialogType.LOGOUT;
 
 /**
  * Created by mzh1608258 on 2018/1/4.
@@ -41,8 +39,9 @@ public class MineFragment extends Fragment implements IMineView, View.OnClickLis
     private View question, logout;
     private View about, clause;
     private IFeedBackPresent present;
-    private TextView name, fullname, position, departname, number;
+    private TextView name, fullname, position, departname, number, hotline, addCount, hotlineNum;
     private ImageView icoView;
+    private String companySpecialNumber;
 
 
     @Override
@@ -52,23 +51,36 @@ public class MineFragment extends Fragment implements IMineView, View.OnClickLis
     }
 
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         view = inflater.inflate(R.layout.fragment_mine, null);
+        initView(view);
+        initLisenter();
+        return view;
+    }
+
+    private void initView(View view) {
         question = view.findViewById(R.id.fragment_mine_question);
-        question.setOnClickListener(this);
         logout = view.findViewById(R.id.fragment_mine_logout);
-        logout.setOnClickListener(this);
         about = view.findViewById(R.id.mine_txt_about);
-        about.setOnClickListener(this);
         clause = view.findViewById(R.id.mine_txt_clause);
-        clause.setOnClickListener(this);
         name = view.findViewById(R.id.mine_txt_name);
+        hotline = view.findViewById(R.id.mine_txt_hotline);
         fullname = view.findViewById(R.id.mine_txt_fullname);
         number = view.findViewById(R.id.mine_txt_number);
         position = view.findViewById(R.id.mine_txt_position);
+        addCount = view.findViewById(R.id.mine_txt_addresscount);
         departname = view.findViewById(R.id.mine_txt_departname);
         icoView = view.findViewById(R.id.mine_img_ico);
-        return view;
+        hotlineNum = view.findViewById(R.id.mine_txt_hotlinenum);
+    }
+
+    private void initLisenter() {
+
+        hotline.setOnClickListener(this);
+        clause.setOnClickListener(this);
+        about.setOnClickListener(this);
+        logout.setOnClickListener(this);
+        question.setOnClickListener(this);
+
     }
 
     @Override
@@ -107,7 +119,17 @@ public class MineFragment extends Fragment implements IMineView, View.OnClickLis
                 startActivity(new Intent(getContext(), AboutActivity.class));
                 break;
             case R.id.mine_txt_clause:
-                startActivity(new Intent(getContext(), UseClauseActivity.class));
+                Intent intent = new Intent(getContext(), WebExhibitionActivity.class);
+                intent.putExtra(WebExhibitionActivity.WEB_TITLE, getString(R.string.app_use_clause));
+                intent.putExtra(WebExhibitionActivity.WEB_URL, HttpUtil.URL_USERLAUSE);
+                startActivity(intent);
+                break;
+
+            case R.id.mine_txt_hotline:
+                Intent hotIntent = new Intent(getContext(), HotLineActivity.class);
+                hotIntent.putExtra(HotLineActivity.HOTLINE_NUMBER, companySpecialNumber);
+                startActivity(hotIntent);
+                break;
             default:
                 break;
         }
@@ -115,7 +137,7 @@ public class MineFragment extends Fragment implements IMineView, View.OnClickLis
 
     @Override
     public void refreshView(final Infomation infomation) {
-        if(getActivity()==null)return;
+        if (getActivity() == null) return;
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -124,8 +146,17 @@ public class MineFragment extends Fragment implements IMineView, View.OnClickLis
                 fullname.setText(infomation.getFullName());
                 departname.setText(infomation.getDepartmentName());
                 position.setText(infomation.getPosition());
-                if (infomation.getPhotoPath() != null && !infomation.getPhotoPath().equals(""))
-                    Glide.with(getActivity()).load(infomation.getPhotoPath()).into(icoView);
+
+                L.d("ImageUrl", infomation.getEmployeeImgUrl());
+                if (infomation.getEmployeeImgUrl() != null && !infomation.getEmployeeImgUrl().equals(""))
+                    Glide.with(getActivity()).load(infomation.getEmployeeImgUrl()).into(icoView);
+                String count = infomation.getUserAddressDetailNum();
+
+                if (count == null || count.equals("")) count = "0";
+                addCount.setText("剩餘 " + count + " 個");
+                companySpecialNumber = infomation.getCompanySpecialNumber();
+                hotlineNum.setText(companySpecialNumber);
+                L.d("companySpecialNumber", companySpecialNumber);
             }
         });
     }

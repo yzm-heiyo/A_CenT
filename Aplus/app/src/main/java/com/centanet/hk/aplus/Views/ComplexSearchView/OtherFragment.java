@@ -52,16 +52,17 @@ public class OtherFragment extends BaseFragment implements View.OnClickListener 
 
     public static String ARGUMENT = "SysItemFragment";
     private ClearEditText ownerEdit, phoneEdit;
-    private TextView staStartTxt, staEndTxt;
+    //    private TextView staStartTxt, staEndTxt;
     private OnOtherChangeLisenter onOtherChangeLisenter;
     private List<String> staBeginSelectList;
     private List<String> staEndSelectList;
     private HouseDescription houseDescription;
-    private TextView dateTypeTxt, yearStaTxt, yearEndTxt, choiceDateTxt, dateStaTxt, dateEndTxt;
+    private TextView dateTypeTxt, yearStaTxt, yearEndTxt;
+    //    choiceDateTxt, dateStaTxt, dateEndTxt;
     private int openDataType;
-    private View statuView;
+    //    private View statuView;
     private View finishYearContent;
-    private View dateContent;
+//    private View dateContent;
 
 
     @Override
@@ -104,62 +105,61 @@ public class OtherFragment extends BaseFragment implements View.OnClickListener 
     private void reCoverView(HouseDescription description) {
         ownerEdit.setText(description.getTrustorName());
         phoneEdit.setText(description.getMobile());
-//        finishYearEdit.setText(houseDescription.getCom);
 
-        if (houseDescription.getPropertyDateType() != null && !houseDescription.getPropertyDateType().equals(""))
-            switch (Integer.parseInt(houseDescription.getPropertyDateType())) {
-                case registDate:
-                    openDataType = R.id.dialog_opendate_rb_default;
-                    dateTypeTxt.setText("開盤日期");
-                    break;
-                case lasetUpdate:
-                    openDataType = R.id.dialog_opendate_rb_modification_last;
-                    dateTypeTxt.setText("最后修改日期");
-                    break;
-                case lastFollowDate:
-                    openDataType = R.id.dialog_opendate_rb_follow;
-                    dateTypeTxt.setText("最后修改日期");
-                    break;
-                case changePriceDate:
-                    openDataType = R.id.dialog_opendate_rb_price;
-                    dateTypeTxt.setText("最后修改日期");
-                    break;
-                case onlyTrustStartDate:
-                    openDataType = R.id.dialog_opendate_rb_entrust_start;
-                    dateTypeTxt.setText("委託書開始日");
-                    break;
-                case onlyTrustEndDate:
-                    openDataType = R.id.dialog_opendate_rb_entrust_end;
-                    dateTypeTxt.setText("委託書到期日");
-                    break;
-                case estimatedDate:
-                    openDataType = R.id.dialog_opendate_rb_anticipate;
-                    dateTypeTxt.setText("估計日期");
-                    break;
-                case statusChangedDate:
-                    openDataType = R.id.dialog_opendate_rb_changehouse;
-                    dateTypeTxt.setText("改盤日期");
-                    statuView.setVisibility(View.VISIBLE);
-                    if (houseDescription.getIncludedPropertyStatusFrom() != null) {
-
-                        L.d("getValue", houseDescription.getIncludedPropertyStatusFrom().toString());
-
-                        for (String s : AppSystemParamsManager.getValue(APSystemParameterType.propertyStatusCategory, houseDescription.getIncludedPropertyStatusFrom())) {
-                            L.d("getValue", s);
-                        }
-                        staStartTxt.setText(getSelectStatusText(AppSystemParamsManager.getValue(APSystemParameterType.propertyStatusCategory, houseDescription.getIncludedPropertyStatusFrom())));
-                    }
-                    if (houseDescription.getIncludedPropertyStatusTo() != null)
-                        staEndTxt.setText(getSelectStatusText(AppSystemParamsManager.getValue(APSystemParameterType.propertyStatusCategory, houseDescription.getIncludedPropertyStatusTo())));
-                    break;
-            }
-
-        if ((houseDescription.getPropertyDateFrom() != null && !houseDescription.getPropertyDateFrom().equals("")) ||
-                (houseDescription.getPropertyDateTo() != null && !houseDescription.getPropertyDateTo().equals(""))) {
-            choiceDateTxt.setVisibility(View.GONE);
-            dateEndTxt.setText(houseDescription.getPropertyDateTo());
-            dateStaTxt.setText(houseDescription.getPropertyDateFrom());
-        }
+//        if (houseDescription.getPropertyDateType() != null && !houseDescription.getPropertyDateType().equals(""))
+//            switch (Integer.parseInt(houseDescription.getPropertyDateType())) {
+//                case registDate:
+//                    openDataType = R.id.dialog_opendate_rb_default;
+//                    dateTypeTxt.setText("開盤日期");
+//                    break;
+//                case lasetUpdate:
+//                    openDataType = R.id.dialog_opendate_rb_modification_last;
+//                    dateTypeTxt.setText("最后修改日期");
+//                    break;
+//                case lastFollowDate:
+//                    openDataType = R.id.dialog_opendate_rb_follow;
+//                    dateTypeTxt.setText("最后修改日期");
+//                    break;
+//                case changePriceDate:
+//                    openDataType = R.id.dialog_opendate_rb_price;
+//                    dateTypeTxt.setText("最后修改日期");
+//                    break;
+//                case onlyTrustStartDate:
+//                    openDataType = R.id.dialog_opendate_rb_entrust_start;
+//                    dateTypeTxt.setText("委託書開始日");
+//                    break;
+//                case onlyTrustEndDate:
+//                    openDataType = R.id.dialog_opendate_rb_entrust_end;
+//                    dateTypeTxt.setText("委託書到期日");
+//                    break;
+//                case estimatedDate:
+//                    openDataType = R.id.dialog_opendate_rb_anticipate;
+//                    dateTypeTxt.setText("估計日期");
+//                    break;
+//                case statusChangedDate:
+//                    openDataType = R.id.dialog_opendate_rb_changehouse;
+//                    dateTypeTxt.setText("改盤日期");
+//                    statuView.setVisibility(View.VISIBLE);
+//                    if (houseDescription.getIncludedPropertyStatusFrom() != null) {
+//
+//                        L.d("getValue", houseDescription.getIncludedPropertyStatusFrom().toString());
+//
+//                        for (String s : AppSystemParamsManager.getValue(APSystemParameterType.propertyStatusCategory, houseDescription.getIncludedPropertyStatusFrom())) {
+//                            L.d("getValue", s);
+//                        }
+//                        staStartTxt.setText(getSelectStatusText(AppSystemParamsManager.getValue(APSystemParameterType.propertyStatusCategory, houseDescription.getIncludedPropertyStatusFrom())));
+//                    }
+//                    if (houseDescription.getIncludedPropertyStatusTo() != null)
+//                        staEndTxt.setText(getSelectStatusText(AppSystemParamsManager.getValue(APSystemParameterType.propertyStatusCategory, houseDescription.getIncludedPropertyStatusTo())));
+//                    break;
+//            }
+//
+//        if ((houseDescription.getPropertyDateFrom() != null && !houseDescription.getPropertyDateFrom().equals("")) ||
+//                (houseDescription.getPropertyDateTo() != null && !houseDescription.getPropertyDateTo().equals(""))) {
+//            choiceDateTxt.setVisibility(View.GONE);
+//            dateEndTxt.setText(houseDescription.getPropertyDateTo());
+//            dateStaTxt.setText(houseDescription.getPropertyDateFrom());
+//        }
 
         if (houseDescription.getCompleteYearFrom() != null && !houseDescription.getCompleteYearFrom().equals(""))
             yearStaTxt.setText(houseDescription.getCompleteYearFrom());
@@ -169,11 +169,11 @@ public class OtherFragment extends BaseFragment implements View.OnClickListener 
 
     private void initLisenter() {
 
-        staEndTxt.setOnClickListener(this);
-        staStartTxt.setOnClickListener(this);
-        dateTypeTxt.setOnClickListener(this);
+//        staEndTxt.setOnClickListener(this);
+//        staStartTxt.setOnClickListener(this);
+//        dateTypeTxt.setOnClickListener(this);
 //        choiceDateTxt.setOnClickListener(this);
-        dateContent.setOnClickListener(this);
+//        dateContent.setOnClickListener(this);
 //        yearStaTxt.setOnClickListener(this);
 //        yearEndTxt.setOnClickListener(this);
 
@@ -226,19 +226,19 @@ public class OtherFragment extends BaseFragment implements View.OnClickListener 
         yearStaTxt = view.findViewById(R.id.other_txt_yearsta);
         yearEndTxt = view.findViewById(R.id.other_txt_yearend);
 
-        choiceDateTxt = view.findViewById(R.id.other_txt_choicedate);
-        dateStaTxt = view.findViewById(R.id.other_txt_datesta);
-        dateEndTxt = view.findViewById(R.id.other_txt_dateend);
+//        choiceDateTxt = view.findViewById(R.id.other_txt_choicedate);
+//        dateStaTxt = view.findViewById(R.id.other_txt_datesta);
+//        dateEndTxt = view.findViewById(R.id.other_txt_dateend);
 
         finishYearContent = view.findViewById(R.id.other_ll_finishyear);
 
-        staStartTxt = view.findViewById(R.id.other_txt_stastart);
-        staEndTxt = view.findViewById(R.id.other_txt_staend);
+//        staStartTxt = view.findViewById(R.id.other_txt_stastart);
+//        staEndTxt = view.findViewById(R.id.other_txt_staend);
 
         dateTypeTxt = view.findViewById(R.id.other_txt_date);
-        statuView = view.findViewById(R.id.other_ll_statuchange);
+//        statuView = view.findViewById(R.id.other_ll_statuchange);
 
-        dateContent = view.findViewById(R.id.other_ll_choicedate);
+//        dateContent = view.findViewById(R.id.other_ll_choicedate);
     }
 
     //開盤日期
@@ -248,9 +248,9 @@ public class OtherFragment extends BaseFragment implements View.OnClickListener 
             dialog.dismiss();
             openDataType = viewId;
             dateTypeTxt.setText((String) result);
-            if (viewId == R.id.dialog_opendate_rb_changehouse) {
-                statuView.setVisibility(View.VISIBLE);
-            } else statuView.setVisibility(View.GONE);
+//            if (viewId == R.id.dialog_opendate_rb_changehouse) {
+//                statuView.setVisibility(View.VISIBLE);
+//            } else statuView.setVisibility(View.GONE);
 //                    Calendar calendar = Calendar.getInstance();
 //                    textDateOpenDateBegin.setText(calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH)) + "-" + calendar.get(Calendar.DAY_OF_MONTH));
 //                    textDateOpenDateEnd.setText(calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH));
@@ -311,7 +311,7 @@ public class OtherFragment extends BaseFragment implements View.OnClickListener 
         statusEndDialog.setOnDialogOnclikeLisenter((v, viewID, viewList, content) -> {
             v.dismiss();
             staEndSelectList = viewList;
-            staEndTxt.setText(getSelectStatusText(content));
+//            staEndTxt.setText(getSelectStatusText(content));
             houseDescription.setIncludedPropertyStatusTo(getStatusCodes(content));
 //            for (String s : content) L.d("showStatusEndDialog", s);
             L.d("showStatusEndDialog", viewList.toString());
@@ -327,7 +327,7 @@ public class OtherFragment extends BaseFragment implements View.OnClickListener 
             v.dismiss();
             staBeginSelectList = viewList;
             L.d("showStatusBeginDialog", viewList.toString());
-            staStartTxt.setText(getSelectStatusText(content));
+//            staStartTxt.setText(getSelectStatusText(content));
             houseDescription.setIncludedPropertyStatusFrom(getStatusCodes(content));
             onOtherChangeLisenter.onOtherChange(houseDescription);
         });
@@ -355,10 +355,10 @@ public class OtherFragment extends BaseFragment implements View.OnClickListener 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.other_txt_stastart:
-                showStatusBeginDialog();
+//                showStatusBeginDialog();
                 break;
             case R.id.other_txt_staend:
-                showStatusEndDialog();
+//                showStatusEndDialog();
                 break;
             case R.id.other_txt_date:
                 openDate();
@@ -367,7 +367,7 @@ public class OtherFragment extends BaseFragment implements View.OnClickListener 
                 showYearDialog(houseDescription.getCompleteYearFrom(), houseDescription.getCompleteYearTo());
                 break;
             case R.id.other_ll_choicedate:
-                showDateDialog("", "");
+//                showDateDialog("", "");
                 break;
         }
     }
@@ -380,11 +380,11 @@ public class OtherFragment extends BaseFragment implements View.OnClickListener 
         dialog.setStartCl(calendar);
         dialog.setOnDialogOnclikeLisenter((dialog1, view, start1, end1) -> {
             dialog1.dismiss();
-            choiceDateTxt.setVisibility(View.GONE);
+//            choiceDateTxt.setVisibility(View.GONE);
             String dateStar = start1.get(Calendar.YEAR) + "-" + start1.get(Calendar.MONTH) + "-" + start1.get(Calendar.DAY_OF_MONTH);
             String dateEnd = end1.get(Calendar.YEAR) + "-" + end1.get(Calendar.MONTH) + "-" + end1.get(Calendar.DAY_OF_MONTH);
-            dateStaTxt.setText(dateStar);
-            dateEndTxt.setText(dateEnd);
+//            dateStaTxt.setText(dateStar);
+//            dateEndTxt.setText(dateEnd);
             houseDescription.setPropertyDateFrom(dateStar);
             houseDescription.setPropertyDateTo(dateEnd);
 
@@ -399,10 +399,25 @@ public class OtherFragment extends BaseFragment implements View.OnClickListener 
         dialog.setStarYear(start);
         dialog.setOnDialogClickLisenter((dialog1, years) -> {
             dialog1.dismiss();
+
+            if (years[0].equals(getString(R.string.dialog_price_unlimit))) {
+                houseDescription.setCompleteYearFrom(null);
+            }
+
+            if (years[1].equals(getString(R.string.dialog_price_unlimit))) {
+                houseDescription.setCompleteYearTo(null);
+            }
+            if (!years[1].equals(getString(R.string.dialog_price_unlimit)) && !years[0].equals(getString(R.string.dialog_price_unlimit))) {
+                if (Integer.parseInt(years[1]) < Integer.parseInt(years[0])) {
+                    years[0] = years[1];
+                }
+                houseDescription.setCompleteYearFrom(years[0]);
+                houseDescription.setCompleteYearTo(years[1]);
+            }
+
             yearStaTxt.setText(years[0]);
             yearEndTxt.setText(years[1]);
-            houseDescription.setCompleteYearFrom(years[0]);
-            houseDescription.setCompleteYearTo(years[1]);
+
             onOtherChangeLisenter.onOtherChange(houseDescription);
         });
         dialog.show(getActivity().getFragmentManager(), "");

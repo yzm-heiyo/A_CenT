@@ -36,7 +36,7 @@
             android:layout_height="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="11dp"
-            android:layout_toRightOf="@id/item_icon_hot"
+            android:layout_toRightOf="@+id/item_icon_hot"
             android:scaleType="center"
             android:src="@drawable/level_icon_key" />
 
@@ -46,7 +46,7 @@
             android:layout_height="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="11dp"
-            android:layout_toRightOf="@id/item_icon_key"
+            android:layout_toRightOf="@+id/item_icon_key"
             android:scaleType="center"
             android:src="@drawable/selector_icon_o" />
 
@@ -56,7 +56,7 @@
             android:layout_height="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="11dp"
-            android:layout_toRightOf="@id/item_icon_o"
+            android:layout_toRightOf="@+id/item_icon_o"
             android:scaleType="center"
             android:src="@drawable/selector_icon_l" />
 
@@ -66,7 +66,7 @@
             android:layout_height="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="11dp"
-            android:layout_toRightOf="@id/item_icon_l"
+            android:layout_toRightOf="@+id/item_icon_l"
             android:scaleType="center"
             android:src="@drawable/selector_icon_d" />
 
@@ -76,7 +76,7 @@
             android:layout_height="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="11dp"
-            android:layout_toRightOf="@id/item_icon_d"
+            android:layout_toRightOf="@+id/item_icon_d"
             android:scaleType="center"
             android:src="@drawable/selector_icon_dujia" />
 
@@ -86,7 +86,7 @@
             android:layout_height="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="11dp"
-            android:layout_toRightOf="@id/item_icon_medal"
+            android:layout_toRightOf="@+id/item_icon_medal"
             android:gravity="center"
             android:paddingBottom="2dp"
             android:text="20"
@@ -101,14 +101,14 @@
             android:layout_height="15dp"
             android:layout_marginLeft="5dp"
             android:layout_marginTop="11dp"
-            android:layout_toRightOf="@id/item_icon_ssd"
+            android:layout_toRightOf="@+id/item_icon_ssd"
             android:scaleType="center"
             android:src="@drawable/selector_icon_favo" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/item_icon_favo">
+            android:layout_toRightOf="@+id/item_icon_favo">
 
             <TextView
                 android:id="@+id/item_txt_client"
@@ -129,7 +129,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="11dp"
-                android:layout_toLeftOf="@id/item_txt_client"
+                android:layout_toLeftOf="@+id/item_txt_client"
                 android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/client" />

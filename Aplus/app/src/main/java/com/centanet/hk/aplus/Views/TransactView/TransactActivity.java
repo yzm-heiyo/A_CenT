@@ -1,10 +1,14 @@
 package com.centanet.hk.aplus.Views.TransactView;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +20,9 @@ import android.widget.TextView;
 
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Utils.MD5Util;
+import com.centanet.hk.aplus.Utils.TextUtil;
+import com.centanet.hk.aplus.Utils.TimeLimitUtil;
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Widgets.SmallItemView;
@@ -27,8 +34,10 @@ import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 import com.centanet.hk.aplus.bean.http.FavoriteDescription;
 import com.centanet.hk.aplus.bean.http.PropertyAddDescription;
 import com.centanet.hk.aplus.bean.http.TransListDescription;
+import com.centanet.hk.aplus.bean.http.UserBehaviorDescription;
 import com.centanet.hk.aplus.bean.transrecord_list.TranListResponse;
 import com.centanet.hk.aplus.manager.ApplicationManager;
+import com.centanet.hk.aplus.manager.ScreenShotListenManager;
 import com.githang.statusbar.StatusBarCompat;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
@@ -47,7 +56,7 @@ import okhttp3.Response;
 public class TransactActivity extends AppCompatActivity {
 
     private ListView listView;
-    List<PropertyTransaction> transactions;
+    private List<PropertyTransaction> transactions;
     private TranstractAdapter adapter;
     private AHeaderDescription aHeaderDescription;
     private TransListDescription transListDescription;
@@ -57,8 +66,10 @@ public class TransactActivity extends AppCompatActivity {
     private TextView addChTxt, addEnTxt;
     private DetailHouse houseData;
     private TextView title;
-    private ImageView favoImg, backImg;
+    private ImageView favoImg, backImg, tranStatuImg;
     private String thiz = getClass().getSimpleName();
+    private int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 123;
+    private ScreenShotListenManager screenShotListenManager;
 
 
     @Override
@@ -69,6 +80,13 @@ public class TransactActivity extends AppCompatActivity {
         initView();
         init();
         initLisenter();
+        startScreenListen();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        screenShotListenManager.stopListen();
     }
 
     private void init() {
@@ -97,7 +115,53 @@ public class TransactActivity extends AppCompatActivity {
         favoImg = findViewById(R.id.title_img_favo);
         backImg = findViewById(R.id.title_backicon);
 
+        tranStatuImg = findViewById(R.id.trans_img_icon_statu);
+
     }
+
+    private void startScreenListen() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            //申请WRITE_EXTERNAL_STORAGE权限
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
+        }
+
+        screenShotListenManager = ScreenShotListenManager.newInstance(this);
+        screenShotListenManager.setListener((imagePath) -> onScreenShot());
+        screenShotListenManager.startListen();
+    }
+
+    private void onScreenShot() {
+
+//        if (!TimeLimitUtil.isAchieveLimitTime(1000)) return;
+
+        UserBehaviorDescription userBehaviorDescription = new UserBehaviorDescription();
+        userBehaviorDescription.setAction(1);
+        userBehaviorDescription.setPage(9);
+        userBehaviorDescription.setExtras("{" + "\"PropertyKeyId\"" + ":" + "[" + "\"" + keyId + "\"" + "]}");
+        L.d(thiz, "\"HouseShot\"" + "{" + "PropertyKeyId" + ":" + keyId + "}");
+
+        String number = System.currentTimeMillis() / 1000 + "";
+        L.d("time", number);
+        aHeaderDescription.setNumber(number);
+        aHeaderDescription.setSign(MD5Util.getMD5Str("CYDAP_com-group~Centa@" + number + aHeaderDescription.getStaffno()));
+
+//        presenter.doAddRequest(HttpUtil.URL_USER_BEHAVIOR, headerDescription, userBehaviorDescription);
+        HttpUtil.doPost(HttpUtil.URL_USER_BEHAVIOR, userBehaviorDescription, aHeaderDescription, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                L.d("TransActivity_OnScreen",response.body().string().toString());
+            }
+        });
+
+    }
+
 
     private void initLisenter() {
 
@@ -242,6 +306,7 @@ public class TransactActivity extends AppCompatActivity {
 
     private void reFreshAdd(DetailAddressResponse address) {
         runOnUiThread(() -> {
+            addTxt.setVisibility(View.GONE);
             addEnTxt.setText(address.getDetailAddressEnInfo());
             addChTxt.setText(address.getDetailAddressChInfo());
             houseData.setUserIsShowDetailFloor(true);
@@ -251,6 +316,8 @@ public class TransactActivity extends AppCompatActivity {
     }
 
     public void setViewData(DetailHouse viewData) {
+
+        setIconViewLevel(viewData.getPropertyStatus());
 
         favoImg.setSelected(viewData.isFavorite());
         if (!viewData.isUserIsShowDetailFloor()) {
@@ -268,6 +335,33 @@ public class TransactActivity extends AppCompatActivity {
             addChTxt.setText(viewData.getDetailAddressChInfo());
             addEnTxt.setText(viewData.getDetailAddressEnInfo());
         }
+    }
+
+    private void setIconViewLevel(String properties) {
+        int level = 0;
+        if (properties == null) return;
+        switch (properties.substring(0, 1)) {
+            case "N":
+                level = 1;
+                break;
+            case "P":
+                level = 2;
+                break;
+            case "S":
+                level = 6;
+                break;
+            case "T":
+                level = 4;
+                break;
+            case "G":
+                level = 5;
+                break;
+            default:
+                level = 3;
+                break;
+        }
+        tranStatuImg.setImageResource(R.drawable.level_list_propertystatus);
+        tranStatuImg.setImageLevel(level);
     }
 
     @Override
@@ -317,10 +411,12 @@ public class TransactActivity extends AppCompatActivity {
                 viewHolder.appointmentDateTxt = view.findViewById(R.id.detail_transact_txt_appointmentdate);
                 viewHolder.officeDateTxt = view.findViewById(R.id.detail_transact_txt_officedate);
                 viewHolder.finishDateTxt = view.findViewById(R.id.detail_transact_txt_finishdate);
+
                 viewHolder.realSizeTxt = view.findViewById(R.id.detail_transact_txt_realysize);
                 viewHolder.realPriceTxt = view.findViewById(R.id.detail_transact_txt_reallyprice);
                 viewHolder.useSizeTxt = view.findViewById(R.id.detail_transact_txt_usesize);
                 viewHolder.usePriceTxt = view.findViewById(R.id.detail_transact_txt_useprice);
+
                 viewHolder.bargainStxt = view.findViewById(R.id.detail_transact_stxt_bargain);
                 viewHolder.rentDateToStxt = view.findViewById(R.id.detail_transact_stxt_rentdateto);
                 viewHolder.stateImg = view.findViewById(R.id.detail_transact_img_state);
@@ -334,22 +430,26 @@ public class TransactActivity extends AppCompatActivity {
 
             if (transactions != null && !transactions.isEmpty()) {
                 PropertyTransaction data = transactions.get(position);
+                L.d("TransDetail", data.toString());
                 viewHolder.createTimeTxt.setText("建立日期 " + data.getCreateTime());
                 viewHolder.proxyTxt.setText(data.getAgency());
-                viewHolder.transactPriceTxt.setText("$ " + data.getPrice() + getUnit(data.getStatus()));
+                viewHolder.transactPriceTxt.setSelected(!data.isGreen());
+                viewHolder.transactPriceTxt.setText("$ " + TextUtil.getInteger(data.getPrice()) + " " + getUnit(data.getStatus()));
                 viewHolder.managerTxt.setText(data.getAgent());
-                viewHolder.bargainStxt.setContentName(data.getTransactionDate());
-                viewHolder.rentDateToStxt.setContentName(data.getRentEndDate());
+                viewHolder.bargainStxt.setText(data.getTransactionDate());
+                viewHolder.rentDateToStxt.setText(data.getRentEndDate());
                 viewHolder.appointmentDateTxt.setText(data.getPrelimDate());
                 viewHolder.officeDateTxt.setText(data.getFormalDate());
                 viewHolder.finishDateTxt.setText(data.getCompleteDate());
-                viewHolder.realSizeTxt.setText(data.getBuildSquareFoot());
-                viewHolder.realPriceTxt.setText("$" + data.getGrossAveragePrice());
-                viewHolder.useSizeTxt.setText(data.getUseSquareFoot());
-                viewHolder.usePriceTxt.setText("$" + data.getAveragePrice());
+
+                viewHolder.realSizeTxt.setText(TextUtil.getInteger(data.getBuildSquareFoot()));
+                viewHolder.realPriceTxt.setText("$" + TextUtil.getInteger(data.getGrossAveragePrice()));
+                viewHolder.useSizeTxt.setText(TextUtil.getInteger(data.getUseSquareFoot()));
+                viewHolder.usePriceTxt.setText("$" + TextUtil.getInteger(data.getAveragePrice()));
+
                 viewHolder.stateImg.setImageLevel(data.getStatus());
-                viewHolder.statuTxt.setText(data.isTranferToConfirm() ? "已確認" : "未確認");
-                viewHolder.statuTxt.setSelected(data.isTranferToConfirm());
+                viewHolder.statuTxt.setText(data.isNotConfirmed() ? "已確認" : "未確認");
+                viewHolder.statuTxt.setSelected(data.isNotConfirmed());
                 L.d(thiz, "TransConfirm: " + data.isTranferToConfirm());
                 viewHolder.confirmTxt.setText(getStatuTxt(data.getStatus()));
             }
@@ -398,7 +498,7 @@ public class TransactActivity extends AppCompatActivity {
             private TextView proxyTxt, transactPriceTxt, managerTxt, confirmTxt, statuTxt;
             private TextView createTimeTxt, appointmentDateTxt, officeDateTxt, finishDateTxt;
             private TextView realSizeTxt, useSizeTxt, realPriceTxt, usePriceTxt;
-            private SmallItemView bargainStxt, rentDateToStxt;
+            private TextView bargainStxt, rentDateToStxt;
             private ImageView stateImg;
         }
     }

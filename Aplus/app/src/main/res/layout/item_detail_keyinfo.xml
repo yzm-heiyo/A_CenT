@@ -61,16 +61,17 @@
                 app:SmallItemTitle="間隔"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
             <com.centanet.hk.aplus.Widgets.SmallItemView
+                android:id="@+id/detail_txt_prn"
+                style="@style/smallitem_style"
+                app:SmallItemContent=""
+                app:SmallItemTitle="PRN"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
+            <com.centanet.hk.aplus.Widgets.SmallItemView
                 android:id="@+id/detail_txt_number"
                 style="@style/smallitem_style"
                 app:SmallItemContent=""
                 app:SmallItemTitle="差餉編號"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
-            <com.centanet.hk.aplus.Widgets.SmallItemView
-                android:id="@+id/detail_txt_search"
-                style="@style/smallitem_style"
-                app:SmallItemContent=""
-                app:SmallItemTitle="土地查冊"></com.centanet.hk.aplus.Widgets.SmallItemView>
 
         </LinearLayout>
 
@@ -97,6 +98,12 @@
                 style="@style/smallitem_style"
                 app:SmallItemContent=""
                 app:SmallItemTitle="來源"></com.centanet.hk.aplus.Widgets.SmallItemView>
+            <com.centanet.hk.aplus.Widgets.SmallItemView
+                android:id="@+id/detail_txt_search"
+                style="@style/smallitem_style"
+                app:SmallItemContent=""
+                app:SmallItemTitle="土地查冊"></com.centanet.hk.aplus.Widgets.SmallItemView>
+
         </LinearLayout>
 
     </LinearLayout>
@@ -112,7 +119,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="標籤"
+            android:textColor="@color/color_french_gray"
+            android:text="@string/laber"
             android:textSize="@dimen/themeSizesmall" />
 
         <LinearLayout

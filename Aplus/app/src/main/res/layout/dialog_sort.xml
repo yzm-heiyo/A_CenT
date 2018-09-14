@@ -1,12 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_top_left_right_circle">
+
+
+    <android.support.v4.widget.Space
+        android:id="@+id/space"
+        android:layout_width="match_parent"
+        android:layout_height="18dp" />
+
+    <RelativeLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_below="@id/space"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/sort"
+            android:textColor="@android:color/black"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/close"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:scaleType="center"
+            android:src="@drawable/ic_close" />
+    </RelativeLayout>
+
 
     <ScrollView
         android:id="@+id/dialog_sort_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/top"
         android:background="#ffffff">
 
         <RelativeLayout
@@ -51,6 +87,16 @@
                     android:layout_weight="1"
                     android:button="@null"
                     android:text="@string/dialog_rent"
+                    android:textColor="@color/textcolor" />
+
+                <RadioButton
+                    android:id="@+id/sort_txt_green"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="22dp"
+                    android:layout_weight="1"
+                    android:button="@null"
+                    android:text="@string/green_price"
                     android:textColor="@color/textcolor" />
 
                 <RadioButton
@@ -106,6 +152,14 @@
                     android:button="@null" />
 
                 <RadioButton
+                    android:id="@+id/sort_rb_green_up"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_up"
+                    android:button="@null" />
+
+                <RadioButton
                     android:id="@+id/sort_rb_use_up"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
@@ -150,6 +204,14 @@
 
                 <RadioButton
                     android:id="@+id/sort_rb_rent_down"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/selector_sort_down"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/sort_rb_green_down"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_marginTop="8dp"

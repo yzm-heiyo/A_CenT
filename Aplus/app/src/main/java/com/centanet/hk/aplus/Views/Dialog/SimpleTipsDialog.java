@@ -141,7 +141,6 @@ public class SimpleTipsDialog extends DialogFragment implements View.OnClickList
             int width = windowManager.getDefaultDisplay().getWidth();
             lp.width = (int) (width * dialogWidthPercent);
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-//            content.measure(0,0);
             window.setAttributes(lp);
             window.setBackgroundDrawableResource(android.R.color.transparent);
 

@@ -16,9 +16,13 @@ public interface IDetailModel {
 
     void setOnPropertOtherReceiveListener(DetailModel.OnReceiveListener onReceiveListener);
 
+    void setOnPropertNextReceiveListener(DetailModel.OnReceiveListener onReceiveListener);
+
     void clearNetFlag();
 
     void getPropertyDetail(int index);
+
+    void getPropertDetailOther(int index);
 
     String getPropertyKey(int index);
 

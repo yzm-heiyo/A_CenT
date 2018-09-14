@@ -5,6 +5,10 @@
     android:background="@android:color/transparent"
     android:layout_height="match_parent">
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:focusableInTouchMode="true"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -48,6 +52,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="8dp"
+                            android:textStyle="bold"
                             android:text="@string/area"
                             android:textColor="@color/color_black" />
 
@@ -91,6 +96,7 @@
                         android:gravity="center_vertical"
                         android:background="@null"
                         android:hint="@string/fragment_hints"
+                        android:textStyle="bold"
                         android:imeOptions="actionSearch"
                         android:paddingLeft="4dp"
                         android:singleLine="true"
@@ -129,6 +135,7 @@
                             android:maxLength="5"
                             android:singleLine="true"
                             android:text="@string/search_floot"
+                            android:textStyle="bold"
                             android:textColor="@color/color_black"
                             android:textSize="12dp" />
 
@@ -139,19 +146,35 @@
                             android:maxLength="3"
                             android:singleLine="true"
                             android:text="@string/search_units"
+                            android:textStyle="bold"
                             android:textColor="@color/color_black"
                             android:textSize="12dp" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/list_img_moreoption"
+                <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_weight="1"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:scaleType="center"
-                    android:src="@drawable/ic_filtering"/>
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/list_img_moreoption"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:scaleType="center"
+                        android:src="@drawable/ic_filtering"/>
+
+                    <com.centanet.hk.aplus.Widgets.CircleTipsView
+                        android:id="@+id/more_tip"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:visibility="gone"
+                        android:layout_alignTop="@id/list_img_moreoption"
+                        android:layout_alignRight="@id/list_img_moreoption"/>
+
+                </RelativeLayout>
             </LinearLayout>
 
 
@@ -171,36 +194,49 @@
                     android:layout_toLeftOf="@id/line"
                     android:layout_height="match_parent">
 
-                    <TextView
-                        android:id="@+id/list_txt_proselter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:textColor="@color/color_black"
-                        android:layout_marginLeft="12dp"
-                        android:text="不限"
-                        android:textSize="14dp"/>
-
-                    <TextView
-                        android:id="@+id/house_txt_option_tip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/shape_circle_red"
-                        android:layout_marginTop="2dp"
-                        android:layout_toRightOf="@id/list_txt_proselter"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
-                        android:visibility="gone"
-                        android:textColor="@color/color_white"
-                        android:textSize="10dp" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/property_rl_option_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:scaleType="center"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="10dp"
-                        android:src="@drawable/ic_arrow_down_black"/>
+                        android:layout_toLeftOf="@+id/down">
+
+                        <TextView
+                            android:id="@+id/list_txt_proselter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:textColor="@color/color_black"
+                            android:layout_marginLeft="12dp"
+                            android:text="不限"
+                            android:singleLine="true"
+                            android:ellipsize="end"
+                            android:textStyle="bold"
+                            android:textSize="14dp"/>
+
+                        <TextView
+                            android:id="@+id/house_txt_option_tip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/shape_circle_red"
+                            android:layout_marginTop="2dp"
+                            android:layout_toRightOf="@id/list_txt_proselter"
+                            android:paddingLeft="4dp"
+                            android:paddingRight="4dp"
+                            android:visibility="gone"
+                            android:layout_marginRight="5dp"
+                            android:textColor="@color/color_white"
+                            android:textSize="10dp" />
+
+                        <ImageView
+                            android:id="@+id/down"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:scaleType="center"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="10dp"
+                            android:src="@drawable/ic_arrow_down_black"/>
+
+                    </RelativeLayout>
 
                 </RelativeLayout>
 
@@ -223,6 +259,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@id/list_img_sort"
                     android:textColor="@color/color_black"
+                    android:textStyle="bold"
                     android:paddingTop="14dp"
                     android:layout_marginRight="20dp"
                     android:text="@string/save_option"

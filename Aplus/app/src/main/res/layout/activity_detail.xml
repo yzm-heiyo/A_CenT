@@ -58,7 +58,7 @@
                     android:id="@+id/title_img_favo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
+                    android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/selector_favo_stroke" />
 
@@ -149,6 +149,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/layer_top_shade"
             android:layout_gravity="bottom">
 
             <ImageView
@@ -164,6 +165,7 @@
                 android:id="@+id/detail_txt_currentitem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/color_black"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true" />
 

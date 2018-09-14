@@ -139,7 +139,7 @@
     <ImageView
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_above="@id/about_txt"
+        android:layout_above="@+id/about_txt"
         android:layout_centerHorizontal="true"
         android:src="@drawable/logo_centaline" />
 

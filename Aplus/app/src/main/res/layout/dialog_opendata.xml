@@ -3,16 +3,15 @@
     android:id="@+id/dialog_opendate_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@drawable/shape_top_left_right_circle"
     android:gravity="top"
     android:orientation="vertical"
-    android:padding="16dp"
+
     android:visibility="visible">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="25dp">
+        android:layout_height="wrap_content">
 
         <RadioGroup
             android:id="@+id/dialog_opendate_radiogroup"
@@ -21,14 +20,45 @@
             android:gravity="center"
             android:orientation="vertical">
 
+            <android.support.v4.widget.Space
+                android:layout_width="match_parent"
+                android:layout_height="18dp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/date"
+                    android:textColor="@android:color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/close"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_close" />
+            </RelativeLayout>
+
             <RadioButton
                 android:id="@+id/dialog_opendate_rb_default"
                 style="@style/dialog_opendata_item_style"
+                android:drawableLeft="@drawable/selector_checkbox_circle"
                 android:text="@string/dialog_opendate_opendate" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
+                android:layout_marginLeft="35dp"
                 android:background="#EFEFEF" />
 
             <RadioButton
@@ -38,7 +68,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
+                android:layout_marginLeft="35dp"
                 android:background="#EFEFEF" />
 
             <RadioButton
@@ -48,7 +79,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
+                android:layout_marginLeft="35dp"
                 android:background="#EFEFEF" />
 
             <RadioButton
@@ -58,7 +90,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
+                android:layout_marginLeft="35dp"
                 android:background="#EFEFEF" />
 
             <RadioButton
@@ -68,7 +101,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
+                android:layout_marginLeft="35dp"
                 android:background="#EFEFEF" />
 
             <RadioButton
@@ -78,7 +112,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
+                android:layout_marginLeft="35dp"
                 android:background="#EFEFEF" />
 
             <RadioButton
@@ -88,7 +123,8 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="1px"
+                android:layout_marginLeft="35dp"
                 android:background="#EFEFEF" />
 
             <RadioButton

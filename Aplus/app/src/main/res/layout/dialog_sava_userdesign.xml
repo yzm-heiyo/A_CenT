@@ -30,8 +30,15 @@
         android:layout_gravity="center_horizontal"
         android:text="方便日後於 “首頁” 隨時翻查紀錄"
         android:textColor="@color/color_black"
-        android:textSize="13dp"
-        android:textStyle="bold" />
+        android:textSize="13dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="（最多保存5個）"
+        android:textColor="@color/color_black"
+        android:textSize="13dp"/>
 
     <android.support.v4.widget.Space
         android:layout_width="match_parent"
@@ -43,7 +50,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:background="@drawable/shape_square_circle_white"
+        android:imeOptions="actionDone"
+        android:background="@drawable/shape_square_circle_white_stroke"
         android:hint="請輸入自訂搜尋條件名稱"
         android:padding="5dp"
         android:textSize="13dp" />
@@ -88,7 +96,7 @@
             android:textSize="17dp"
             android:textStyle="bold"
             android:text="@string/feedback_save"
-            android:textColor="#007AFF"
+            android:textColor="@color/colortheme"
             android:paddingTop="11dp"
             android:paddingBottom="11dp"
             android:gravity="center"

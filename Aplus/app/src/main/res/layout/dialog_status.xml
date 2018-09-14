@@ -1,119 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dialog_status_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#ffffff"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_top_left_right_circle"
+    android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/dialog_status_confirm"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true">
 
-        <com.centanet.hk.aplus.Widgets.SmartCheckBoxLayout
-            android:id="@+id/dialog_status_confirm_layout"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/dialog_status_all"
-                style="@style/dialog_status_item_style"
-                android:text="@string/dialog_status_ALL" />
-
-            <View
+            <android.support.v4.widget.Space
                 android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_marginLeft="25dp"
-                android:background="#efefef" />
+                android:layout_height="18dp" />
 
-            <CheckBox
-                android:id="@+id/dialog_status_N"
-                style="@style/dialog_status_item_style"
-                android:tag="100"
-                android:text="@string/dialog_status_N" />
-
-            <View
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_marginLeft="25dp"
-                android:background="#efefef" />
+                android:layout_height="wrap_content">
 
-            <CheckBox
-                android:id="@+id/dialog_status_WT"
-                style="@style/dialog_status_item_style"
-                android:tag="500"
-                android:text="@string/dialog_status_WT" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/statu_change"
+                    android:textColor="@android:color/black"
+                    android:textSize="18dp"
+                    android:textStyle="bold" />
 
-            <View
+                <ImageView
+                    android:id="@+id/close"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="16dp"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_close" />
+            </RelativeLayout>
+
+            <android.support.v4.widget.Space
                 android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_marginLeft="25dp"
-                android:background="#efefef" />
+                android:layout_height="10dp" />
 
-            <CheckBox
-                android:id="@+id/dialog_status_P"
-                style="@style/dialog_status_item_style"
-                android:tag="200"
-                android:text="@string/dialog_status_P" />
-
-            <View
+            <com.centanet.hk.aplus.Widgets.SmartCheckBoxLayout
+                android:id="@+id/dialog_status_confirm_layout"
                 android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_marginLeft="25dp"
-                android:background="#efefef" />
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
 
-            <CheckBox
-                android:id="@+id/dialog_status_TP"
-                style="@style/dialog_status_item_style"
-                android:tag="600"
-                android:text="@string/dialog_status_TP" />
+                <CheckBox
+                    android:id="@+id/dialog_status_all"
+                    style="@style/dialog_status_item_style"
+                    android:text="@string/dialog_status_ALL"
+                    android:visibility="gone" />
 
-            <View
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="25dp"
+                    android:background="#efefef"
+                    android:visibility="gone" />
+
+                <CheckBox
+                    android:id="@+id/dialog_status_N"
+                    style="@style/dialog_status_item_style"
+                    android:tag="100"
+                    android:text="@string/dialog_status_N" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="25dp"
+                    android:background="#efefef" />
+
+                <CheckBox
+                    android:id="@+id/dialog_status_WT"
+                    style="@style/dialog_status_item_style"
+                    android:tag="500"
+                    android:text="@string/dialog_status_WT" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="25dp"
+                    android:background="#efefef" />
+
+                <CheckBox
+                    android:id="@+id/dialog_status_P"
+                    style="@style/dialog_status_item_style"
+                    android:tag="200"
+                    android:text="@string/dialog_status_P" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="25dp"
+                    android:background="#efefef" />
+
+                <CheckBox
+                    android:id="@+id/dialog_status_TP"
+                    style="@style/dialog_status_item_style"
+                    android:tag="600"
+                    android:text="@string/dialog_status_TP" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="25dp"
+                    android:background="#efefef" />
+
+                <CheckBox
+                    android:id="@+id/dialog_status_G"
+                    style="@style/dialog_status_item_style"
+                    android:tag="400"
+                    android:text="@string/dialog_status_G" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="25dp"
+                    android:background="#efefef" />
+
+                <CheckBox
+                    android:id="@+id/dialog_status_search"
+                    style="@style/dialog_status_item_style"
+                    android:tag="700"
+                    android:text="@string/dialog_status_S" />
+
+            </com.centanet.hk.aplus.Widgets.SmartCheckBoxLayout>
+
+            <android.support.v4.widget.Space
                 android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_marginLeft="25dp"
-                android:background="#efefef" />
+                android:layout_height="20dp" />
 
-            <CheckBox
-                android:id="@+id/dialog_status_G"
-                style="@style/dialog_status_item_style"
-                android:tag="400"
-                android:text="@string/dialog_status_G" />
+        </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:layout_marginLeft="25dp"
-                android:background="#efefef" />
-
-            <CheckBox
-                android:id="@+id/dialog_status_search"
-                style="@style/dialog_status_item_style"
-                android:tag="700"
-                android:text="@string/dialog_status_S" />
-
-        </com.centanet.hk.aplus.Widgets.SmartCheckBoxLayout>
 
     </ScrollView>
 
-    <Button
-        android:id="@+id/dialog_status_confirm"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/area_bottom"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/shape_item_search_btn"
-        android:paddingLeft="80dp"
-        android:paddingRight="80dp"
-        android:text="@string/dialog_status_confirm"
-        android:textColor="@color/colorBackground"
-        android:textSize="@dimen/themeSizeplus" />
+        android:background="@drawable/layer_rim_line">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/dialog_status_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/shape_square_circle_3_red"
+            android:gravity="center"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/dialog_confirm_confirm"
+            android:textColor="@color/color_white"
+            android:textSize="16dp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

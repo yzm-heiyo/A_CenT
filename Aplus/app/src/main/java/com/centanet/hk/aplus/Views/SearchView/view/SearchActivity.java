@@ -1,8 +1,6 @@
 package com.centanet.hk.aplus.Views.SearchView.view;
 
 import android.Manifest;
-import android.annotation.TargetApi;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewManager;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
@@ -29,10 +26,14 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.DensityUtil;
+import com.centanet.hk.aplus.Utils.DialogUtil;
+import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.Views.Dialog.AreaDialog;
@@ -43,13 +44,18 @@ import com.centanet.hk.aplus.Views.SearchView.present.SearchPreesent;
 import com.centanet.hk.aplus.Views.basic.BasicActivty;
 import com.centanet.hk.aplus.Widgets.LineBreakLayout;
 import com.centanet.hk.aplus.bean.auto_estate.PropertyParamHints;
+import com.centanet.hk.aplus.bean.district.DistrictItem;
 import com.centanet.hk.aplus.bean.http.AutoSearchDescription;
 import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 import com.centanet.hk.aplus.manager.ApplicationManager;
+import com.centanet.hk.aplus.manager.FavoRequestParamsManager;
+import com.centanet.hk.aplus.manager.PropertyRequestParamsManager;
 import com.githang.statusbar.StatusBarCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.centanet.hk.aplus.MyApplication.getContext;
 
 
 /**
@@ -60,10 +66,11 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
 
     private static final int VIEW_HISRORY = 0;
     private static final int VIEW_SEARCH = 1;
-    private static final int VIEW_SELECT_MAX = 10;
+    private static final int VIEW_SELECT_MAX = 20;
     public static final String VIEW_SEARCH_HISTORY_SAVE = "SAVEHISTORY";
     public static final String VIEW_SEARCH_KEY_TYPE = "CONDITION";
     public static final String VIEW_SEARCH_LABEL = "LABEL";
+    public static final String VIEW_SEARCH_AREA = "AREA";
     public static final String VIEW_SEARCH_FLOOT = "FLOOT";
     public static final String VIEW_SEARCH_UNIT = "UNIT";
     private ListView lv_history, lv_search;
@@ -76,12 +83,12 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
     private List<PropertyParamHints> dataList;
     private List<String> selectList;
 
-    private TextView btn, clearSelectTxt, clearHistoryTxt;
+    private TextView btn, clearSelectTxt, clearHistoryTxt, selectCountTxt;
 
     private View finish, selectLabelView, searchView, historyView, searchHistoryView;
     private LineBreakLayout searchLabelGroup;
     private String thiz = getClass().getSimpleName();
-    private EditText searchEdit, flootEdit, unitEdit;
+    private EditText searchEdit;
     private ISearchPresent present;
     private DataAdapter searchAdapter;
     private View mic;
@@ -97,6 +104,10 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
     AutoSearchDescription autoSearchDescription;
     private DataAdapter historyAdapter;
     private TextView areatip;
+    private TextView areaTipTxt;
+    private List<String> districtItems;
+    private String[] flootUnit;
+    private TextView flootTxt, unitTxt;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,6 +118,12 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
     }
 
     protected void init() {
+
+//        if(FavoRequestParamsManager.getParams().)
+
+//        districtItems = new ArrayList<>();
+
+        flootUnit = new String[2];
 
         present = new SearchPreesent(this);
         dataList = new ArrayList<>();
@@ -122,7 +139,9 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
         searchView = findViewById(R.id.search_simple_view);
         historyView = findViewById(R.id.search_history_view);
         searchHistoryView = findViewById(R.id.search_history_title);
+        selectCountTxt = findViewById(R.id.activity_search_txt_count);
         areaTxt = findViewById(R.id.search_txt_area);
+        areaTipTxt = findViewById(R.id.search_txt_areatip);
         areaTxt.setOnClickListener(this);
 
         flootView = this.findViewById(R.id.search_ll_floot);
@@ -132,7 +151,6 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
         mic.setOnClickListener(this);
 
         areatip = this.findViewById(R.id.search_txt_areatip);
-
 
         back = this.findViewById(R.id.back);
         back.setOnClickListener(v -> {
@@ -152,9 +170,8 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
         clearSelectTxt.setOnClickListener(this);
 
 
-//        flootEdit = findViewById(R.id.search_txt_floot);
-//        unitEdit = findViewById(R.id.search_txt_unit);
-
+        flootTxt = findViewById(R.id.search_txt_floot);
+        unitTxt = findViewById(R.id.search_txt_unit);
 
 
         back.setOnClickListener(v -> finish());
@@ -168,12 +185,26 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
         searchLabelGroup.setLeftRightSpace(20);
 
         if (bundle != null) {
+            districtItems = (List<String>) bundle.get(VIEW_SEARCH_AREA);
+            if (!TextUtil.isEmply(districtItems)) {
+                areatip.setText(districtItems.size() + "");
+                areatip.setVisibility(View.VISIBLE);
+            }
+
+            flootUnit[0] = bundle.getString(VIEW_SEARCH_FLOOT);
+            flootUnit[1] = bundle.getString(VIEW_SEARCH_UNIT);
+            if (!TextUtil.isEmply(flootUnit[0]))
+                flootTxt.setText(flootUnit[0]);
+            if (!TextUtil.isEmply(flootUnit[1]))
+                unitTxt.setText(flootUnit[1]);
+
             selectList = (List<String>) bundle.get(VIEW_SEARCH_HISTORY_SAVE);
             if (selectList != null)
                 present.recoverLabelHistiry(selectList);
             else selectList = new ArrayList<>();
         } else {
             selectList = new ArrayList<>();
+            districtItems = new ArrayList<>();
         }
 
         btn.setOnClickListener(this);
@@ -186,6 +217,8 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
                 imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
                 historyView.setVisibility(View.GONE);
                 searchView.setVisibility(View.VISIBLE);
+                selectCountTxt.setVisibility(View.VISIBLE);
+                selectCountTxt.setText(getString(R.string.selected) + ": " + newHistoryList.size());
                 viewType = VIEW_SEARCH;
             }
             return false;
@@ -215,7 +248,9 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
                     newHistoryList.add(data);
                     addSearchLabelData(data, searchLabelList);
                 }
-            }
+                selectCountTxt.setText(getString(R.string.selected) + ": " + newHistoryList.size());
+            } else
+                DialogUtil.getSimpleDialog(getString(R.string.select_max_20)).show(getSupportFragmentManager(), "");
         });
 
         lv_history.setOnItemClickListener((parent, view, position, id) -> {
@@ -258,6 +293,17 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
         return super.onKeyDown(keyCode, event);
     }
 
+    private List<DistrictItem> getSelectDistrict(List<DistrictItem> items, List<String> keys) {
+        List<DistrictItem> districtItems = new ArrayList<>();
+        if (keys == null) return null;
+        for (DistrictItem item : items) {
+            if (keys.indexOf(item.getDistrictKeyId()) != -1) {
+                districtItems.add(item);
+            }
+        }
+        return districtItems;
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -265,10 +311,17 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
                 switch (viewType) {
                     case VIEW_HISRORY:
                         SearchActivity.this.setResult(1, getSearchOption());
+                        FavoRequestParamsManager.getParams().setAddress(newHistoryList);
+                        L.d("VIEW_HISRORY", newHistoryList.toString());
+                        FavoRequestParamsManager.getParams().setArea(getSelectDistrict(ApplicationManager.getDistrictItems(), districtItems));
                         finish();
                         break;
                     case VIEW_SEARCH:
                         showSelectCondition();
+                        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM );
+                        btn.setLayoutParams(params);
+                        btn.setBackgroundColor(getResources().getColor(R.color.colortheme));
                         break;
                 }
                 break;
@@ -295,18 +348,23 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
                 break;
             case R.id.search_txt_area:
                 AreaDialog areaDialog = new AreaDialog();
-                areaDialog.setItem(ApplicationManager.getDistrictItems(), new ArrayList<>());
+                areaDialog.setItem(ApplicationManager.getDistrictItems(), districtItems);
                 areaDialog.setOnItemClickLisenter((dialog, v1, list) -> {
-//                    if (list != null && !list.isEmpty()) {
-//                        areaTipTxt.setVisibility(View.VISIBLE);
-//                    } else areaTipTxt.setVisibility(View.GONE);
+                    if (list != null && !list.isEmpty()) {
+                        areaTipTxt.setVisibility(View.VISIBLE);
+                    } else areaTipTxt.setVisibility(View.GONE);
 //                    houseDescription.setDistrictListIds(list);
-//                    areaTipTxt.setText(list.size() + "");
+                    districtItems.addAll(list);
+                    areaTipTxt.setText(list.size() + "");
                 });
                 areaDialog.show(getSupportFragmentManager(), "");
                 break;
             case R.id.search_ll_floot:
                 FlootUnitDialog dialog = new FlootUnitDialog();
+                dialog.setData(flootUnit);
+                dialog.setOnItemClickLisenter((dialog1, v1, list) -> {
+                    flootUnit = list;
+                });
                 dialog.show(getSupportFragmentManager(), "");
 
                 break;
@@ -345,10 +403,12 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
             }
             String labelString = builder.toString();
             bundle.putString(VIEW_SEARCH_LABEL, labelString.substring(0, labelString.length() - 1));
+            bundle.putStringArrayList(VIEW_SEARCH_AREA, (ArrayList<String>) districtItems);
+
         }
 
-        bundle.putString(VIEW_SEARCH_FLOOT, flootStr);
-        bundle.putString(VIEW_SEARCH_UNIT, unitsStr);
+        bundle.putString(VIEW_SEARCH_FLOOT, flootUnit[0]);
+        bundle.putString(VIEW_SEARCH_UNIT, flootUnit[1]);
         intent.putExtras(bundle);
         return intent;
     }
@@ -369,6 +429,7 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
         searchView.setVisibility(View.GONE);
         searchView.setAnimation(moveToViewBottom());
         btn.setText(getString(R.string.search));
+        selectCountTxt.setVisibility(View.GONE);
     }
 
     private void showHistoryLableView() {
@@ -397,11 +458,21 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
     }
 
     private void addSearchLabelData(PropertyParamHints data, List<String> searchLabelList) {
+//        String labelString = present.changeToLabelData(data);
+//        if (searchLabelList.size() < VIEW_SELECT_MAX)
+//            if (!searchLabelList.contains(labelString)) {
+//                searchLabelList.add(labelString);
+//            }
+
         String labelString = present.changeToLabelData(data);
-        if (searchLabelList.size() < VIEW_SELECT_MAX)
+        if (searchLabelList.size() < VIEW_SELECT_MAX) {
             if (!searchLabelList.contains(labelString)) {
                 searchLabelList.add(labelString);
             }
+        } else {
+            if (!searchLabelList.contains(labelString))
+                DialogUtil.getSimpleDialog(getString(R.string.select_max_20)).show(getSupportFragmentManager(), "");
+        }
     }
 
     @Override
@@ -558,11 +629,29 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
                 viewType = VIEW_HISRORY;
                 historyView.setVisibility(View.VISIBLE);
                 searchView.setVisibility(View.GONE);
+
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM );
+                btn.setLayoutParams(params);
+                btn.setBackgroundColor(getResources().getColor(R.color.colortheme));
+
                 btn.setText(getString(R.string.search));
+                selectCountTxt.setVisibility(View.GONE);
                 return;
             }
+            selectCountTxt.setVisibility(View.VISIBLE);
+            selectCountTxt.setText(getString(R.string.selected) + ": " + newHistoryList.size());
             viewType = VIEW_SEARCH;
+
+//            btn.setText(getString(R.string.dialog_hint_confirm));
+
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(DensityUtil.dip2px(getContext(),15),0,DensityUtil.dip2px(getContext(),15),DensityUtil.dip2px(getContext(),15));
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM );
+            btn.setLayoutParams(params);
             btn.setText(getString(R.string.dialog_hint_confirm));
+            btn.setBackground(getResources().getDrawable(R.drawable.shape_square_circle_3_red));
+
             searchView.setVisibility(View.VISIBLE);
             historyView.setVisibility(View.GONE);
         }
@@ -572,6 +661,7 @@ public class SearchActivity extends BasicActivty implements ISearchView, View.On
             String params = s.toString();
             autoSearchDescription.setName(params);
             keyword = params;
+            autoSearchDescription.setDistrictKeyIds(districtItems);
             present.doPost(HttpUtil.URL_AUTOSEARCH, headerDescription, autoSearchDescription);
         }
     }

@@ -15,10 +15,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -32,18 +34,23 @@ import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.AnSystemParamUtil;
 import com.centanet.hk.aplus.Utils.DownloadUtil;
 import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Utils.MD5Util;
+import com.centanet.hk.aplus.Utils.PreferenceUtils;
+import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.Dialog.LoadingDialog;
 import com.centanet.hk.aplus.Views.Dialog.LogoutDialog;
 import com.centanet.hk.aplus.Views.Dialog.SimpleTipsDialog;
 import com.centanet.hk.aplus.Views.FavoListView.view.FavHouseFragment;
-import com.centanet.hk.aplus.Views.TransHomePagerView.HomeContentFragment;
+import com.centanet.hk.aplus.Views.HomePageView.HomeContentFragment;
 import com.centanet.hk.aplus.Views.LoginView.view.LoginActivity;
 import com.centanet.hk.aplus.Views.MainActivity.presenter.IMainPresenter;
 import com.centanet.hk.aplus.Views.MainActivity.presenter.MainPresenter;
 import com.centanet.hk.aplus.Views.MineView.view.MineFragment;
-import com.centanet.hk.aplus.Views.TransListFragment.view.TransListFragment;
+import com.centanet.hk.aplus.Views.MineView.view.WebExhibitionActivity;
+import com.centanet.hk.aplus.Views.TransHomePagerView.TransHomeContentFragment;
 import com.centanet.hk.aplus.Views.basic.BaseFragment;
 import com.centanet.hk.aplus.Views.basic.BasicActivty;
+import com.centanet.hk.aplus.Widgets.CustomViewPager;
 import com.centanet.hk.aplus.eventbus.MessageEventBus;
 import com.centanet.hk.aplus.manager.ApplicationManager;
 import com.githang.statusbar.StatusBarCompat;
@@ -54,10 +61,13 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static com.centanet.hk.aplus.MyApplication.getContext;
 import static com.centanet.hk.aplus.Views.Dialog.LogoutDialog.DIALOG_YES;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.HomePager.PAGER_HOME;
+import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.HomePager.TRANSPAGER_HOME;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.HouseNavigation.HIDDEN;
 import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.HouseNavigation.SHOW;
 
@@ -65,10 +75,10 @@ import static com.centanet.hk.aplus.eventbus.BUS_MESSAGE.HouseNavigation.SHOW;
  * Created by mzh1608258 on 2018/1/2.
  */
 
-public class MainActivity extends BasicActivty implements IMainView, BaseFragment.OnFragmentInteractionListener {
+public class MainActivity extends BasicActivty implements View.OnClickListener, IMainView, BaseFragment.OnFragmentInteractionListener {
 
 
-    private ViewPager pager;
+    private CustomViewPager pager;
     private RadioGroup rg;
     private List<Fragment> fragments;
     private FragmentPagerAdapter adapter;
@@ -85,7 +95,7 @@ public class MainActivity extends BasicActivty implements IMainView, BaseFragmen
 
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
-
+        isFirstLogin();
         initViews();
         init();
 
@@ -95,12 +105,24 @@ public class MainActivity extends BasicActivty implements IMainView, BaseFragmen
     private void initViews() {
         rg = this.findViewById(R.id.main_navigationbar);
         pager = this.findViewById(R.id.main_viewpager);
+        pager.setScanScroll(false);
         naviContent = findViewById(R.id.main_bottom);
         rbs = new ArrayList<>();
-        rbs.add((RadioButton) rg.findViewById(R.id.activity_main_manager));
-        rbs.add((RadioButton) rg.findViewById(R.id.activity_main_collect));
-        rbs.add((RadioButton) rg.findViewById(R.id.activity_main_tran));
-        rbs.add((RadioButton) rg.findViewById(R.id.activity_main_user));
+
+        RadioButton manager = rg.findViewById(R.id.activity_main_manager);
+        manager.setOnClickListener(this);
+        RadioButton collect = rg.findViewById(R.id.activity_main_collect);
+        collect.setOnClickListener(this);
+        RadioButton tran = rg.findViewById(R.id.activity_main_tran);
+        tran.setOnClickListener(this);
+        RadioButton user = rg.findViewById(R.id.activity_main_user);
+        user.setOnClickListener(this);
+
+        rbs.add(manager);
+        rbs.add(collect);
+        rbs.add(tran);
+        rbs.add(user);
+
     }
 
     private void init() {
@@ -120,18 +142,24 @@ public class MainActivity extends BasicActivty implements IMainView, BaseFragmen
         } catch (Exception e) {
             e.printStackTrace();
         }
-        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//
+//                for (int i = 0; i < rbs.size(); i++) {
+//                    if (checkedId == rbs.get(i).getId()) {
+//                        pager.setCurrentItem(i);
+//                        return;
+//                    }
+//                }
+//            }
+//        });
 
-                for (int i = 0; i < rbs.size(); i++) {
-                    if (checkedId == rbs.get(i).getId()) {
-                        pager.setCurrentItem(i);
-                        return;
-                    }
-                }
-            }
-        });
+//        rg.setOnClickListener(view -> {
+//            L.d("getIdOnClickListener", view.getId()+"");
+//        });
+
+
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -161,6 +189,7 @@ public class MainActivity extends BasicActivty implements IMainView, BaseFragmen
 
         List<Fragment> fragments = new ArrayList<>();
 //        fragments.add(new HouseListFragment());
+
         fragments.add(new HomeContentFragment());
 //        fragments.add(new HouseFragment());
 //        fragments.add(new HomePagerFragment());
@@ -170,7 +199,8 @@ public class MainActivity extends BasicActivty implements IMainView, BaseFragmen
         bundle.putBoolean("FAVO", true);
         favoriteFragment.setArguments(bundle);
         fragments.add(favoriteFragment);
-        fragments.add(new TransListFragment());
+
+        fragments.add(new TransHomeContentFragment());
         fragments.add(new MineFragment());
 
         return fragments;
@@ -245,7 +275,15 @@ public class MainActivity extends BasicActivty implements IMainView, BaseFragmen
                     }
                 }
             });
-            simpleTipsDialog.show(getSupportFragmentManager(), "");
+            FragmentTransaction s = getSupportFragmentManager().beginTransaction();
+            Fragment fragment = getSupportFragmentManager().findFragmentByTag("UpdateDialog");
+            if (fragment == null)
+                simpleTipsDialog.show(getSupportFragmentManager(), "UpdateDialog");
+            else {
+                if(fragment.isHidden())
+                    s.show(fragment).commit();
+            }
+//            simpleTipsDialog.show(getSupportFragmentManager(), "");
         }
     }
 
@@ -271,6 +309,10 @@ public class MainActivity extends BasicActivty implements IMainView, BaseFragmen
                 Toast.makeText(MainActivity.this, " 網絡連結出現問題，再次嘗試更新...", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public int getCurrentItem() {
+        return pager.getCurrentItem();
     }
 
     @Override
@@ -383,5 +425,69 @@ public class MainActivity extends BasicActivty implements IMainView, BaseFragmen
     @Override
     public void onInteraction(String fragmentType, Object viewData) {
 
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        switch (view.getId()) {
+            case R.id.activity_main_manager:
+                if (pager.getCurrentItem() == 0) {
+                    L.d("", "OnButtonClick");
+                    MessageEventBus msg = new MessageEventBus();
+                    msg.setMsg(PAGER_HOME);
+                    EventBus.getDefault().post(msg);
+                }
+                pager.setCurrentItem(0);
+                break;
+            case R.id.activity_main_collect:
+                pager.setCurrentItem(1);
+                break;
+            case R.id.activity_main_tran:
+                if (pager.getCurrentItem() == 2) {
+                    L.d("", "OnButtonClick");
+                    MessageEventBus msg = new MessageEventBus();
+                    msg.setMsg(TRANSPAGER_HOME);
+                    EventBus.getDefault().post(msg);
+                    return;
+                }
+                pager.setCurrentItem(2);
+                break;
+            case R.id.activity_main_user:
+                pager.setCurrentItem(3);
+                break;
+        }
+    }
+
+
+
+    public void isFirstLogin() {
+
+        Calendar calendar = Calendar.getInstance();
+        String cueerntDay = calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH);
+        String time = PreferenceUtils.getValue("loginTime");
+
+        if (!cueerntDay.equals(time)) {
+            String url = HttpUtil.URL_SSO_CALLCOUNT + "?StaffNo=";
+
+            String staff = ApplicationManager.getApplication().getHeaderDescription().getStaffno();
+            L.d("staff", staff);
+            url = url + staff + "&Timestamp=";
+            String number = System.currentTimeMillis() + "";
+            L.d("mine_txt_callcount", number);
+            url = url + number + "&Token=";
+            String token = MD5Util.getMD5Str(staff + "qwolxcb45" + number);
+            token = token.toLowerCase();
+            url = url + token;
+//                turnToWebView("","http://10.29.204.2?StaffNo=00272&Timestamp=1534744891.06127&Token=358b0fd20567f0eebda19211e4b6efb5");
+            turnToWebView(getString(R.string.call_count), url);
+        }
+    }
+
+    private void turnToWebView(String title, String url) {
+        Intent intent = new Intent(MainActivity.this, WebExhibitionActivity.class);
+        intent.putExtra(WebExhibitionActivity.WEB_TITLE, title);
+        intent.putExtra(WebExhibitionActivity.WEB_URL, url);
+        startActivity(intent);
     }
 }

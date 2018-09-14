@@ -267,7 +267,7 @@ public class TagFragment extends BaseFragment implements View.OnClickListener {
                         try {
                             method = data.getClass().getMethod("set" + field.getName(), List.class);
                             List<String> list = new ArrayList<>();
-                            list.add(value);
+                            list.add(value.toLowerCase());
                             method.invoke(data, list);
 
                         } catch (NoSuchMethodException e) {

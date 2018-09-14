@@ -4,18 +4,27 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.DensityUtil;
+import com.centanet.hk.aplus.Utils.DialogUtil;
 import com.centanet.hk.aplus.Utils.FileUtil;
 import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Widgets.LineBreakLayout;
 import com.centanet.hk.aplus.Widgets.SmartLinBreakView;
@@ -76,6 +85,11 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
     private HouseDescription description = new HouseDescription();
     private PropertyRequestSaveParams paramsManager;
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        L.d("SearchOptionDialog", "");
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +106,17 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
         add.setOnClickListener(this);
 
         paramsManager = PropertyRequestParamsManager.getParams();
+
+        sort.setOnItemChangeLisenter((view, contentView, position) -> {
+            description.setSortField(null);
+            description.setAscending(false);
+        });
+
+        address.setOnItemChangeLisenter((view, contentView, position) -> {
+            PropertyParamHints s = paramsManager.getAddress().get(position);
+            description.getSearcherAddress().remove(s.getKeyIdType() + ":" + s.getKeyId());
+            paramsManager.getAddress().remove(position);
+        });
 
         statu.setOnItemChangeLisenter((view, contentView, position) -> {
             description.getPropertyStatus().remove(paramsManager.getStatulist().get(position).getItemValue());
@@ -124,12 +149,19 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
         unit.setOnItemChangeLisenter((v, c, p) -> {
             description.setUnits(null);
         });
-        area.setOnItemChangeLisenter((v, c, p) -> {
+        acereage.setOnItemChangeLisenter((v, c, p) -> {
             description.setSquareUseTo(null);
             description.setSquareUseFrom(null);
             description.setSquareTo(null);
             description.setSquareFrom(null);
             description.setPropertySquareType(null);
+        });
+
+        area.setOnItemChangeLisenter((view, contentView, position) -> {
+
+            description.getDistrictListIds().remove(position);
+            paramsManager.getArea().remove(position);
+            L.d("getArea", paramsManager.getArea().toString());
         });
 
         sale.setOnItemChangeLisenter((v, c, p) -> {
@@ -145,6 +177,16 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
             description.setPriceUnitType(null);
             description.setPriceUnitFrom(null);
             description.setPriceUnitTo(null);
+        });
+
+        date.setOnItemChangeLisenter((view, contentView, position) -> {
+            description.setPropertyDateType(null);
+            description.setPropertyDateFrom(null);
+            description.setPropertyDateTo(null);
+        });
+
+        keyword.setOnItemChangeLisenter((view, contentView, position) -> {
+            description.setKeywords(null);
         });
 
         other.setOnItemChangeLisenter((view, contentView, position) -> {
@@ -192,10 +234,20 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
             String s = ((TextView) view).getText().toString();
             if (s.equals(getString(R.string.car_place)))
                 description.setHasParkingNumber(null);
-            if (s.equals(getString(R.string.connect_green_price)))
+            if (s.equals(getString(R.string.connect_green_price))) {
                 description.setHasSalePricePremiumUnpaid(null);
-            if (s.equals(getString(R.string.green_price)))
+                if (!TextUtil.isEmply(description.getSortField()) && description.getSortField().equals("SalePricePremiumUnpaid")) {
+                    description.setSortField(null);
+                    description.setAscending(false);
+                }
+            }
+            if (s.equals(getString(R.string.green_price))) {
                 description.setShowSalePricePremiumUnpaid(null);
+                if (!TextUtil.isEmply(description.getSortField()) && description.getSortField().equals("SalePricePremiumUnpaid")) {
+                    description.setSortField(null);
+                    description.setAscending(false);
+                }
+            }
             if (s.equals(getString(R.string.exclusive)))
                 description.setOnlyTrust(null);
             if (s.equals(getString(R.string.hotlist)))
@@ -224,6 +276,7 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
     public void setData(HouseDescription description) {
         this.description = description;
     }
+
 
     public void initData(HouseDescription description) {
 
@@ -273,7 +326,32 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
         if (hints != null && !hints.isEmpty()) {
             for (PropertyParamHints hint : hints) {
                 address.setVisibility(View.VISIBLE);
-                address.addItem(hint.getAddressName());
+
+                View view = LayoutInflater.from(getContext()).inflate(R.layout.item_label_detail, null, false);
+                TextView dis = view.findViewById(R.id.item_label_area);
+                TextView street = view.findViewById(R.id.item_label_street);
+                View content = view.findViewById(R.id.label);
+
+                MyGlobalLayoutListener listener = new MyGlobalLayoutListener(content, view);
+
+                view.getViewTreeObserver().addOnGlobalLayoutListener(listener);
+
+                if (hint.getDistrictName() != null)
+                    dis.setText(hint.getDistrictName() + "/" + hint.getAreaName());
+                else {
+                    dis.setText(hint.getAreaName());
+                }
+
+                if (!TextUtil.isEmply(hint.getEnAddressName())) {
+                    street.setText(hint.getEnAddressName());
+                    address.addItem(view);
+                }else {
+                    street.setVisibility(View.GONE);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, DensityUtil.dip2px(getContext(), 40));
+                    dis.setLayoutParams(params);
+                    address.addItem(dis.getText().toString());
+                }
+
             }
         }
 
@@ -288,26 +366,26 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
 
         if (description.getSalePriceFrom() != null || description.getSalePriceTo() != null) {
             String str = "";
-            if (description.getSalePriceFrom() == null || description.getSalePriceFrom().equals("")) {
+            if (description.getSalePriceFrom() == null || description.getSalePriceFrom().equals("") || description.getSalePriceFrom().equals("0")) {
                 str = str + "不限";
-            } else str = str + description.getSalePriceFrom() + "萬";
-            str = str + "-";
+            } else str = str + "$" + description.getSalePriceFrom() + "萬";
+            str = str + " - ";
             if (description.getSalePriceTo() == null || description.getSalePriceTo().equals("")) {
                 str = str + "不限";
-            } else str = str + description.getSalePriceTo() + "萬";
+            } else str = str + "$" + description.getSalePriceTo() + "萬";
             sale.setVisibility(View.VISIBLE);
             sale.addItem(str);
         }
 
         if (description.getRentPriceFrom() != null || description.getRentPriceTo() != null) {
             String str = "";
-            if (description.getRentPriceFrom() == null || description.getRentPriceFrom().equals("")) {
+            if (description.getRentPriceFrom() == null || description.getRentPriceFrom().equals("") || description.getRentPriceFrom().equals("0")) {
                 str = str + "不限";
-            } else str = str + "$" + description.getRentPriceFrom() + "000";
-            str = str + "-";
+            } else str = str + "$" + description.getRentPriceFrom() + ",000";
+            str = str + " - ";
             if (description.getRentPriceTo() == null || description.getRentPriceTo().equals("")) {
                 str = str + "不限";
-            } else str = str + "$" + description.getRentPriceTo() + "000";
+            } else str = str + "$" + description.getRentPriceTo() + ",000";
             rent.setVisibility(View.VISIBLE);
             rent.addItem(str);
         }
@@ -329,11 +407,11 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
             String str = "建築面積:";
             if (description.getSquareFrom() == null) {
                 str = str + "不限";
-            } else str = str + description.getSquareFrom() + "呎";
-            str = str + "-";
+            } else str = str + description.getSquareFrom() + " 呎";
+            str = str + " - ";
             if (description.getSquareTo() == null) {
                 str = str + "不限";
-            } else str = str + description.getSquareTo() + "呎";
+            } else str = str + description.getSquareTo() + " 呎";
             acereage.setVisibility(View.VISIBLE);
             acereage.addItem(str);
         }
@@ -341,13 +419,13 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
         //todo 清除的时候清楚五个参数
         if ((description.getSquareUseFrom() != null && !description.getSquareUseFrom().equals("")) || (description.getSquareUseTo() != null && !description.getSquareUseTo().equals(""))) {
             String str = "實用面積:";
-            if (description.getSquareUseFrom() == null && !description.getSquareUseFrom().equals("")) {
+            if (description.getSquareUseFrom() == null || description.getSquareUseFrom().equals("")) {
                 str = str + "不限";
-            } else str = str + description.getSquareUseFrom() + "呎";
-            str = str + "-";
-            if (description.getSquareUseTo() == null && !description.getSquareUseTo().equals("")) {
+            } else str = str + description.getSquareUseFrom() + " 呎";
+            str = str + " - ";
+            if (description.getSquareUseTo() == null || description.getSquareUseTo().equals("")) {
                 str = str + "不限";
-            } else str = str + description.getSquareUseTo() + "呎";
+            } else str = str + description.getSquareUseTo() + " 呎";
             acereage.setVisibility(View.VISIBLE);
             acereage.addItem(str);
         }
@@ -419,42 +497,45 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
 
         if (description.getTrustorName() != null && !description.getTrustorName().equals("")) {
             other.setVisibility(View.VISIBLE);
-            other.addItem(getString(R.string.owner) + ":" + description.getTrustorName());
+            other.addItem(getString(R.string.owner) + ": " + description.getTrustorName());
         }
 
         if (description.getMobile() != null && !description.getMobile().equals("")) {
             other.setVisibility(View.VISIBLE);
-            other.addItem(getString(R.string.phone) + ":" + description.getMobile());
+            other.addItem(getString(R.string.phone) + ": " + description.getMobile());
         }
 
         L.d("onOtherChange", description.getPropertyDateFrom() + "   " + description.getPropertyDateFrom());
         if ((description.getPropertyDateFrom() != null && !description.getPropertyDateFrom().equals("")) || (description.getPropertyDateTo() != null && !description.getPropertyDateTo().equals(""))) {
 
+            L.d("Property_Da", description.getPropertyDateFrom() + " 至 " + description.getPropertyDateTo());
+
+
             String str = "";
             switch (Integer.parseInt(description.getPropertyDateType())) {
                 case statusChangedDate:
-                    str = "改盤日期:";
+                    str = "改盤日期: ";
                     break;
                 case lasetUpdate:
-                    str = "最后修改日期:";
+                    str = "最后修改日期: ";
                     break;
                 case lastFollowDate:
-                    str = "最后修改日期:";
+                    str = "最后修改日期: ";
                     break;
                 case registDate:
-                    str = "開盤日期:";
+                    str = "開盤日期: ";
                     break;
                 case estimatedDate:
-                    str = "估計日期:";
+                    str = "估計日期: ";
                     break;
                 case changePriceDate:
-                    str = "最后修改日期:";
+                    str = "最后修改日期: ";
                     break;
                 case onlyTrustStartDate:
-                    str = "委託書開始日:";
+                    str = "委託書開始日: ";
                     break;
                 case onlyTrustEndDate:
-                    str = "委託書到期日:";
+                    str = "委託書到期日: ";
                     break;
             }
 
@@ -462,14 +543,14 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
                 str = str + "不限";
             } else str = str + description.getPropertyDateFrom();
 
-            str = str + "至";
+            str = str + " 至 ";
 
             if (description.getPropertyDateTo() == null && description.getPropertyDateTo().equals("")) {
                 str = str + "不限";
             } else str = str + description.getPropertyDateTo();
             L.d("onOtherChange", str);
-            other.setVisibility(View.VISIBLE);
-            other.addItem(str);
+            date.setVisibility(View.VISIBLE);
+            date.addItem(str);
 
             if (Integer.parseInt(description.getPropertyDateType()) == statusChangedDate && (description.getIncludedPropertyStatusFrom() != null || description.getIncludedPropertyStatusTo() != null)) {
                 String s = "";
@@ -486,17 +567,44 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
                     }
                     s = s.substring(0, s.length() - 1);
                 } else s = s + "不限";
-                other.addItem(s);
+                date.addItem(s);
             }
         }
 
+        if (!TextUtil.isEmply(description.getSortField())) {
+            String tip = "";
+            switch (description.getSortField()) {
+                case "SalePrice":
+                    tip = "售價: ";
+                    break;
+                case "RentPrice":
+                    tip = "租價: ";
+                    break;
+                case "SquareUseFoot":
+                    tip = "實用面積: ";
+                    break;
+                case "SquareFoot":
+                    tip = "建築面積: ";
+                    break;
+                case "SalePricePremiumUnpaid":
+                    tip = "綠表價: ";
+                    break;
+            }
+
+            if (description.isAscending()) {
+                tip = tip + "由高至低";
+            } else tip = tip + "由低至高";
+            sort.addItem(tip);
+
+        } else sort.addItem("預設排序:由高至低");
+
 //        if (description.getCompleteYearFrom() != null)
         if ((description.getCompleteYearFrom() != null && !description.getCompleteYearFrom().equals("")) || (description.getCompleteYearTo() != null && !description.getCompleteYearTo().equals(""))) {
-            String str = getString(R.string.finish_year) + ":";
+            String str = getString(R.string.finish_year) + ": ";
             if (description.getCompleteYearFrom() == null || description.getCompleteYearFrom().equals("")) {
                 str = str + "不限";
             } else str = str + description.getCompleteYearFrom();
-            str = str + "-";
+            str = str + " 至 ";
             if (description.getCompleteYearTo() == null || description.getCompleteYearTo().equals("")) {
                 str = str + "不限";
             } else str = str + description.getCompleteYearTo();
@@ -509,28 +617,28 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
             L.d("SizeParam_dialog", description.getPriceUnitType());
             switch (Integer.parseInt(description.getPriceUnitType())) {
                 case AVG_USE_SALE:
-                    str = getString(R.string.use_aver_sale) + ":";
+                    str = getString(R.string.use_aver_sale) + ": ";
                     break;
                 case AVG_USE_RENT:
-                    str = getString(R.string.use_aver_rent) + ":";
+                    str = getString(R.string.use_aver_rent) + ": ";
                     break;
                 case AVG_REALLY_SALE:
-                    str = getString(R.string.really_aver_sale) + ":";
+                    str = getString(R.string.really_aver_sale) + ": ";
                     break;
                 case AVG_REALLY_RENT:
-                    str = getString(R.string.really_aver_rent) + ":";
+                    str = getString(R.string.really_aver_rent) + ": ";
                     break;
                 case AVG_GREEN_USE_SALE:
-                    str = getString(R.string.really_aver_sale_green) + ":";
+                    str = getString(R.string.really_aver_sale_green) + ": ";
                     break;
                 case AVG_GREEN_REALLY_SALE:
-                    str = getString(R.string.use_aver_sale_green) + ":";
+                    str = getString(R.string.use_aver_sale_green) + ": ";
                     break;
             }
             if (description.getPriceUnitFrom() == null || description.getPriceUnitFrom().equals("")) {
                 str = str + "不限";
             } else str = str + description.getPriceUnitFrom();
-            str = str + "-";
+            str = str + " - ";
             if (description.getPriceUnitTo() == null || description.getPriceUnitTo().equals("")) {
                 str = str + "不限";
             } else str = str + description.getPriceUnitTo();
@@ -539,7 +647,7 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
         }
     }
 
-    private SmartLinBreakView area, address, floot, unit, keyword, statu, sale, rent, ssd, direction, interval, tag, option, acereage, size, facility, other;
+    private SmartLinBreakView area, address, floot, unit, keyword, statu, sale, rent, ssd, direction, interval, tag, option, acereage, size, facility, other, date, sort;
 
 
     @NonNull
@@ -555,16 +663,22 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
         dialog.setContentView(R.layout.dialog_userdesign);
 
         area = dialog.findViewById(R.id.userdesign_lb_area);
+
         address = dialog.findViewById(R.id.userdesign_lb_address);
+        address.setLayoutId(R.layout.item_dialog_option_two);
+
         floot = dialog.findViewById(R.id.userdesign_lb_floot);
         unit = dialog.findViewById(R.id.userdesign_lb_unit);
         keyword = dialog.findViewById(R.id.userdesign_lb_keywork);
         statu = dialog.findViewById(R.id.userdesign_lb_statu);
         sale = dialog.findViewById(R.id.userdesign_lb_sale);
         rent = dialog.findViewById(R.id.userdesign_lb_rent);
+        sort = dialog.findViewById(R.id.userdesign_lb_sort);
+        sort.enablieToClick(false);
         ssd = dialog.findViewById(R.id.userdesign_lb_ssd);
         direction = dialog.findViewById(R.id.userdesign_lb_direction);
         interval = dialog.findViewById(R.id.userdesign_lb_interval);
+        date = dialog.findViewById(R.id.userdesign_lb_date);
         tag = dialog.findViewById(R.id.userdesign_lb_tag);
         option = dialog.findViewById(R.id.userdesign_lb_typesearch);
         acereage = dialog.findViewById(R.id.userdesign_lb_acreage);
@@ -581,10 +695,56 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
         lp = window.getAttributes();
         lp.gravity = Gravity.BOTTOM; // 紧贴底部
         lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
-        lp.height = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
+        lp.height = getActivity().getWindowManager().getDefaultDisplay().getHeight() * 8 / 10;
+//        lp.height = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
         window.setAttributes(lp);
         window.setBackgroundDrawableResource(android.R.color.transparent);
 
+    }
+
+    public void ableToSaveOption(boolean able) {
+        if (able)
+            add.setVisibility(View.GONE);
+        else add.setVisibility(View.VISIBLE);
+    }
+
+    private String parseData(PropertyParamHints s) {
+        String labelString = null;
+
+        String address = "";
+        String street = "";
+        String area = s.getAreaName();
+
+        if (area.length() > 18) {
+            area = area.substring(0, 17) + "...";
+        }
+
+        if (!TextUtil.isEmply(s.getDistrictName()) && !TextUtil.isEmply(s.getAreaName())) {
+            address = address + s.getDistrictName() + "/" + area;
+
+            if (address.length() > 24) {
+                address = address.substring(0, 20) + "...";
+            }
+
+        } else if (!TextUtil.isEmply(s.getDistrictName())) {
+            address = address + s.getDistrictName();
+        } else if (!TextUtil.isEmply(s.getAreaName())) {
+            address = address + area;
+        }
+
+        if (!TextUtil.isEmply(s.getEnAddressName())) {
+            street = s.getEnAddressName();
+        }
+
+        if (!TextUtil.isEmply(address) && !TextUtil.isEmply(street)) {
+            labelString = address + "\n" + street;
+        } else if (!TextUtil.isEmply(address)) {
+            labelString = address;
+        } else if (!TextUtil.isEmply(street)) {
+            labelString = street;
+        }
+
+        return labelString;
     }
 
 
@@ -604,16 +764,32 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
                 UserDesignNameDialog userDesignNameDialog = new UserDesignNameDialog();
                 userDesignNameDialog.setOnItemclickListener((dialog1, s, type) -> {
                     dialog1.dismiss();
-                    if(type == UserDesignNameDialog.DIALOG_YES){
+                    if (type == UserDesignNameDialog.DIALOG_YES) {
                         saveOption(s);
                     }
                 });
-                userDesignNameDialog.show(getFragmentManager(),"");
+                userDesignNameDialog.show(getFragmentManager(), "");
                 break;
         }
     }
 
-    private void saveOption(String name){
+//    private String parseData(PropertyParamHints data) {
+//        String labelString = null;
+//        if (data.getAreaName().length() > 0) {
+//            labelString = data.getAreaName();
+//        }
+////        else if (data.getDistrictName().length() > 0 && data.getAreaName().length() > 0) {
+////            labelString = data.getDistrictName() + "\\\\\\" + data.getAreaName();
+////        }
+//        else if (data.getDistrictName().length() > 0) {
+//            labelString = data.getDistrictName();
+//        } else if (data.getEnAddressName().length() > 0) {
+//            labelString = data.getEnAddressName();
+//        }
+//        return labelString;
+//    }
+
+    private void saveOption(String name) {
         new Thread(() -> {
             String path = MyApplication.getContext().getFilesDir().getAbsolutePath() + "userDesign.txt";
             String gson = null;
@@ -640,7 +816,39 @@ public class SearchOptionDialog extends DialogFragment implements View.OnClickLi
                 L.d("SearchHis_Single", new Gson().toJson(history));
             }
             FileUtil.saveFile(gson, file);
+            if (getActivity() != null) showSaveFinishDialog();
         }).start();
+    }
+
+    class MyGlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
+
+        private View view;
+        private View content;
+
+        public MyGlobalLayoutListener(View view, View content) {
+            this.view = view;
+            this.content = content;
+        }
+
+        @Override
+        public void onGlobalLayout() {
+
+            if (view.getWidth() + DensityUtil.dip2px(getContext(), 30) > content.getWidth()) {
+
+                RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(content.getWidth() - DensityUtil.dip2px(getContext(), 30), ViewGroup.LayoutParams.WRAP_CONTENT);
+                layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+                view.setLayoutParams(layoutParams);
+
+            }
+            view.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+        }
+    }
+
+    private void showSaveFinishDialog() {
+        getActivity().runOnUiThread(() -> {
+            dialog.dismiss();
+            DialogUtil.getSimpleDialog(getString(R.string.success_to_save)).show(getFragmentManager(), "");
+        });
     }
 
     public void setOnItemClickLisenter(OnItemClickLisenter onItemClickLisenter) {

@@ -24,6 +24,7 @@ import com.centanet.hk.aplus.MyApplication;
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.AnSystemParamUtil;
 import com.centanet.hk.aplus.Utils.DialogUtil;
+import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.PreferenceUtils;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.Dialog.LoadingDialog;
@@ -36,6 +37,8 @@ import com.centanet.hk.aplus.bean.http.SSOHeaderDescription;
 import com.centanet.hk.aplus.bean.http.SSOLoginDescription;
 import com.centanet.hk.aplus.bean.login.Permisstions;
 import com.githang.statusbar.StatusBarCompat;
+
+import java.util.Calendar;
 
 import static com.centanet.hk.aplus.MyApplication.getContext;
 
@@ -57,10 +60,8 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         initViews();
         init();
-
     }
 
     private void init() {
@@ -114,6 +115,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
         }
     }
 
+
     private void showPermissionDialog() {
         View view = View.inflate(getContext(), R.layout.item_dialog_note, null);
         SimpleTipsDialog simpleTipsDialog = new SimpleTipsDialog(view, 0.8, 0.50, R.id.item_tips_owner);
@@ -159,8 +161,7 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
 
     public void login(View v) {
-//        CalendarDialog calendarDialog = new CalendarDialog();
-//        calendarDialog.show(getFragmentManager(),"");
+
         String account = accountEdit.getText().toString();
         String password = passwordEdit.getText().toString();
         this.account = account;
@@ -233,6 +234,17 @@ public class LoginActivity extends AppCompatActivity implements ILoginView {
 
     private void saveAccount() {
         PreferenceUtils.addParams("account", account.trim());
+
+        Calendar calendar = Calendar.getInstance();
+
+        L.d("PreferenceUtils", PreferenceUtils.getValue("loginTime"));
+        if (PreferenceUtils.getValue("loginTime") == null || PreferenceUtils.getValue("loginTime").equals("")) {
+            PreferenceUtils.addParams("loginTime", "0");
+        } else {
+            String s = calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH);
+            PreferenceUtils.addParams("loginTime", s);
+        }
+
     }
 
 

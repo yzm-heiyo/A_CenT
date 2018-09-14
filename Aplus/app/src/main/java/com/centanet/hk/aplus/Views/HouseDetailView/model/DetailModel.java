@@ -2,6 +2,7 @@ package com.centanet.hk.aplus.Views.HouseDetailView.model;
 
 import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Utils.MD5Util;
+import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.bean.detail.DetailAddressResponse;
@@ -23,6 +24,7 @@ import com.centanet.hk.aplus.manager.PermissionManager;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -61,6 +63,10 @@ public class DetailModel extends BaseClass implements IDetailModel {
     private List<String> keyIds;
 
     private int pageIndex;
+
+    private OnReceiveListener onPropertyNextReceiveListener;
+
+    private CountDownLatch countDownLatch = new CountDownLatch(1);
 
     public static synchronized DetailModel getInstance() {
         return detailModel;
@@ -126,6 +132,8 @@ public class DetailModel extends BaseClass implements IDetailModel {
         try {
             DetaileNextKeyIdResponse nextKeyIdResponse = GsonUtil.parseJson(dataBack, DetaileNextKeyIdResponse.class);
             keyIds = nextKeyIdResponse.getKeyIds();
+            if(onPropertyNextReceiveListener!=null)onPropertyNextReceiveListener.onReceive(null);
+            L.d("parseNextKeyIds",keyIds.toString());
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -142,7 +150,6 @@ public class DetailModel extends BaseClass implements IDetailModel {
         headers.setNumber(number);
         headers.setSign(MD5Util.getMD5Str("CYDAP_com-group~Centa@" + number + headers.getStaffno()));
 
-
         HttpUtil.doGet(finalAddress, headers, bodys, new Callback() {
 
             @Override
@@ -152,7 +159,8 @@ public class DetailModel extends BaseClass implements IDetailModel {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-
+//                String dataBack = response.body().string().toString();
+//                L.d("get_MoreList",dataBack);
                 if (response.isSuccessful()) {
                     switch (address) {
                         case HttpUtil.URL_DETAILS_LIST:
@@ -163,6 +171,7 @@ public class DetailModel extends BaseClass implements IDetailModel {
                             L.d(thiz, dataBack);
                             pageIndex = ((DetaileNextKeyIdDescription) bodys).getPageIndex();
                             parseNextKeyIds(dataBack);
+                            countDownLatch.countDown();
                             break;
                     }
                 }
@@ -178,6 +187,11 @@ public class DetailModel extends BaseClass implements IDetailModel {
     @Override
     public void setOnPropertOtherReceiveListener(OnReceiveListener onReceiveListener) {
         onPropertyOtherReceiveListener = onReceiveListener;
+    }
+
+    @Override
+    public void setOnPropertNextReceiveListener(OnReceiveListener onReceiveListener) {
+        this.onPropertyNextReceiveListener = onPropertyNextReceiveListener;
     }
 
     private void getDetailLists(InputStream dataBack) {
@@ -334,18 +348,37 @@ public class DetailModel extends BaseClass implements IDetailModel {
         isEnd = false;
     }
 
+
     @Override
     public void getPropertyDetail(int index) {
 
 //        if(index)
 
         PropertyAddDescription detailsDescription = new PropertyAddDescription();
+        if(TextUtil.isEmply(keyIds)){
+            notifyEmptyBusMessage(BUS_MESSAGE.NetWorkState.NETWORK_STATE_FAIL);
+            return;
+        }
         detailsDescription.setKeyId(keyIds.get(index));
         doPost(HttpUtil.URL_DETAIL, ApplicationManager.getApplication().getHeaderDescription(), detailsDescription);
 
         DetailListsDescription description = new DetailListsDescription();
         description.setKeyId(keyIds.get(index));
 //        doGet(HttpUtil.URL_DETAILS_LIST, ApplicationManager.getApplication().getHeaderDescription(), description);
+    }
+
+    @Override
+    public void getPropertDetailOther(int index) {
+//        new Thread(() -> {
+//            try {
+//                countDownLatch.await();
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+            DetailListsDescription description = new DetailListsDescription();
+            description.setKeyId(keyIds.get(index));
+            doGet(HttpUtil.URL_DETAILS_LIST, ApplicationManager.getApplication().getHeaderDescription(), description);
+//        }).start();
     }
 
     @Override

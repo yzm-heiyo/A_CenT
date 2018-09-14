@@ -37,6 +37,16 @@ public class HouseListPresenter implements IHouseListPresenter {
         resultModel.clearFlag();
     }
 
+    @Override
+    public boolean isAbleToScreen() {
+        return resultModel.isAbleToScreen();
+    }
+
+    @Override
+    public void setAbleToScreen(boolean b) {
+        resultModel.setAbleToScreen(b);
+    }
+
     public void refreshData(List<Properties> properties) {
         resultFragment.refreshListData(properties);
     }

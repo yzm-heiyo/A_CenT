@@ -1,6 +1,7 @@
 package com.centanet.hk.aplus.Views.SearchView.model;
 
 import com.centanet.hk.aplus.Utils.MD5Util;
+import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Utils.L;
@@ -28,6 +29,7 @@ public class SearchModel implements ISearchModel {
     private final String thiz = getClass().getSimpleName();
     private static SearchModel resultModel = new SearchModel();
     private OnReceiveListener onReceiveListener;
+    private int SEARCH_HISTORY_MAX = 20;
 
     public static synchronized SearchModel getInstance() {
         return resultModel;
@@ -89,13 +91,13 @@ public class SearchModel implements ISearchModel {
             for (PropertyParamHints his : history) {
                 LitePal.deleteAll(PropertyParamHints.class, "KeyId = ?", his.getKeyId());
             }
-            if (historySize + getSearchHistory().size() <= 10) {
+            if (historySize + getSearchHistory().size() <= SEARCH_HISTORY_MAX) {
                 for (PropertyParamHints data : history) {
                     data.clearSavedState();
                     data.save();
                 }
             } else {
-                int len = historySize + getSearchHistory().size() - 10;
+                int len = historySize + getSearchHistory().size() - SEARCH_HISTORY_MAX;
                 for (int i = 0; i < len; i++) {
                     PropertyParamHints first = LitePal.findFirst(PropertyParamHints.class);
                     LitePal.deleteAll(PropertyParamHints.class, "KeyId = ?", first.getKeyId());
@@ -150,17 +152,40 @@ public class SearchModel implements ISearchModel {
         return labelHistory;
     }
 
-    private String parseData(PropertyParamHints data) {
+    private String parseData(PropertyParamHints s) {
         String labelString = null;
-        if (data.getEnAddressName().length() > 0) {
-            labelString = data.getEnAddressName();
-        } else if (data.getDistrictName().length() > 0 && data.getAreaName().length() > 0) {
-            labelString = data.getDistrictName() + "\\\\\\" + data.getAreaName();
-        } else if (data.getDistrictName().length() > 0) {
-            labelString = data.getDistrictName();
-        } else if (data.getAreaName().length() > 0) {
-            labelString = data.getAreaName();
+//        if (data.getEnAddressName().length() > 0) {
+//            labelString = data.getEnAddressName();
+//        } else if (data.getDistrictName().length() > 0 && data.getAreaName().length() > 0) {
+//            labelString = data.getDistrictName() + "\\\\\\" + data.getAreaName();
+//        } else if (data.getDistrictName().length() > 0) {
+//            labelString = data.getDistrictName();
+//        } else if (data.getAreaName().length() > 0) {
+//            labelString = data.getAreaName();
+//        }
+
+        String address = "";
+        String street = "";
+        if (!TextUtil.isEmply(s.getDistrictName()) && !TextUtil.isEmply(s.getAreaName())) {
+            address = address + s.getDistrictName() + "/" + s.getAreaName();
+        } else if (!TextUtil.isEmply(s.getDistrictName())) {
+            address = address + s.getDistrictName();
+        } else if (!TextUtil.isEmply(s.getAreaName())) {
+            address = address + s.getAreaName();
         }
+
+        if (!TextUtil.isEmply(s.getEnAddressName())) {
+            street = s.getEnAddressName();
+        }
+
+        if (!TextUtil.isEmply(address) && !TextUtil.isEmply(street)) {
+            labelString = address + "\n" + street;
+        } else if (!TextUtil.isEmply(address)) {
+            labelString = address;
+        } else if (!TextUtil.isEmply(street)) {
+            labelString = street;
+        }
+
         return labelString;
     }
 

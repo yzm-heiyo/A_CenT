@@ -262,6 +262,7 @@ public class BaseHouseFragment extends Fragment {
 
         public void setShowGreenTabView(boolean showGreenTabView) {
             this.showGreenTabView = showGreenTabView;
+            L.d("setShowGreenTabView",showGreenTabView+"");
         }
 
         public void updateView(int position, ListView listView, boolean b) {

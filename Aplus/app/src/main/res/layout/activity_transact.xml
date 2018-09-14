@@ -54,6 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                android:visibility="gone"
                 android:src="@drawable/selector_favo_stroke" />
 
         </RelativeLayout>
@@ -72,6 +73,11 @@
             android:orientation="horizontal"
             android:padding="15dp">
 
+            <ImageView
+                android:id="@+id/trans_img_icon_statu"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+            
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -144,6 +150,7 @@
         <ListView
             android:id="@+id/transact_list"
             android:layout_width="match_parent"
+            android:divider="@color/color_translucent"
             android:layout_height="match_parent" />
 
         <com.scwang.smartrefresh.layout.footer.ClassicsFooter

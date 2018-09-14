@@ -16,10 +16,18 @@
         android:textSize="16dp" />
 
     <com.centanet.hk.aplus.Widgets.LineBreakLayout
-        android:id="@+id/linebreaklayout"
+        android:id="@+id/addresslb"
+        android:layout_width="match_parent"
         android:layout_marginTop="10dp"
+        android:layout_height="wrap_content"
+        android:visibility="visible" />
+
+    <com.centanet.hk.aplus.Widgets.LineBreakLayout
+        android:id="@+id/linebreaklayout"
+        android:layout_marginTop="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible" />
+
 
 </LinearLayout>

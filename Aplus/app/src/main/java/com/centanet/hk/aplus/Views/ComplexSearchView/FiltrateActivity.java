@@ -19,7 +19,9 @@ import android.widget.TextView;
 
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.Views.basic.BaseFragment;
+import com.centanet.hk.aplus.Views.basic.BasicActivty;
 import com.centanet.hk.aplus.Widgets.ClearEditText;
 import com.centanet.hk.aplus.bean.build_tag.TagCategory;
 import com.centanet.hk.aplus.bean.build_tag.TagInfo;
@@ -35,6 +37,7 @@ import com.githang.statusbar.StatusBarCompat;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static com.centanet.hk.aplus.common.CommandField.PropertySquareType.AREA_USE;
@@ -43,15 +46,15 @@ import static com.centanet.hk.aplus.common.CommandField.PropertySquareType.AREA_
  * Created by yangzm4 on 2018/7/24.
  */
 
-public class FiltrateActivity extends AppCompatActivity implements BaseFragment.OnFragmentInteractionListener, View.OnClickListener, StatuFragment.OnStatuChangeLisenter, OptionFragment.OnOptionChangeLisenter,
+public class FiltrateActivity extends BasicActivty implements BaseFragment.OnFragmentInteractionListener, View.OnClickListener, StatuFragment.OnStatuChangeLisenter, OptionFragment.OnOptionChangeLisenter,
         SSDFragment.OnSSDChangeLisenter, DirectionFragment.OnDirectionChangeLisenter, IntervalFragment.OnIntervalChangeLisenter, TagFragment.OnTagChangeLisenter, SaleFragment.OnSaleChangeLisenter, RentFragment.OnRentChangeLisenter,
-        OtherFragment.OnOtherChangeLisenter, FacilityFragment.OnFacilityChangeLisenter, SizeFragment.OnSizeChangeLisenter, AreaFragment.OnAreaChangeLisenter {
+        OtherFragment.OnOtherChangeLisenter, FacilityFragment.OnFacilityChangeLisenter, SizeFragment.OnSizeChangeLisenter, AreaFragment.OnAreaChangeLisenter, DateFragment.OnDateChangeLisenter {
 
     public static final String HOUSE_PARAMS = "HOUSE_PARAMS";
     public static final int CODE_FILTRATE = 100;
 
-    private View status, salePrice, rentPrice, sizePrice, area, ssd, direction, interval, label, factility, other, option;
-    private TextView statusCount, salePriceCount, rentPriceCount, sizePriceCount, areaCount, ssdCount, directionCount, intervalCount, labelCount, factilityCount, otherCount, optionCount;
+    private View status, salePrice, rentPrice, sizePrice, area, ssd, direction, interval, label, factility, other, option, date;
+    private TextView statusCount, salePriceCount, rentPriceCount, sizePriceCount, areaCount, ssdCount, directionCount, intervalCount, labelCount, factilityCount, otherCount, optionCount, dateCount;
     private LinearLayout navigation;
     private ClearEditText keyEditTxt;
     private List<SystemParamItems> statulist;
@@ -92,18 +95,6 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
             houseDescription = new HouseDescription();
         }
 
-        L.d("Option_filtrate", "getHasPropertyKey: " + houseDescription.getHasPropertyKey() + "");
-        L.d("Option_filtrate", "isOnlyTrust: " + houseDescription.isOnlyTrust() + "");
-        L.d("Option_filtrate", "isHasSalePricePremiumUnpaid: " + houseDescription.isHasSalePricePremiumUnpaid() + "");
-        L.d("Option_filtrate", "isShowSalePricePremiumUnpaid: " + houseDescription.isShowSalePricePremiumUnpaid() + "");
-        L.d("Option_filtrate", "isProxy: " + houseDescription.isProxy() + "");
-        L.d("Option_filtrate", "isNoneSSD: " + houseDescription.isNoneSSD() + "");
-        L.d("Option_filtrate", "isHotlist: " + houseDescription.isHotlist() + "");
-        L.d("Option_filtrate", "isHasParkingNumber: " + houseDescription.isHasParkingNumber() + "");
-        L.d("Option_filtrate", "isHasConfirmTransaction: " + houseDescription.isHasConfirmTransaction() + "");
-        L.d("Option_filtrate", "isHasDevelopmentEndCredits: " + houseDescription.isHasDevelopmentEndCredits() + "");
-        L.d("Option_filtrate", "isHasOptout: " + houseDescription.isHasOptout() + "");
-
         sysOptions.hasParkingNumber = houseDescription.isHasParkingNumber();
         sysOptions.hasOptout = houseDescription.isHasOptout();
         sysOptions.isHotlist = houseDescription.isHotlist();
@@ -122,8 +113,7 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
         rentPrices.startPrice = houseDescription.getRentPriceFrom();
         rentPrices.endPrice = houseDescription.getRentPriceTo();
 
-        SaleFragment saleFragment = SaleFragment.newInstance(null);
-        salePrices = saleFragment.new SalePrice();
+        salePrices = new SaleFragment.SalePrice();
 
         salePrices.endPrice = houseDescription.getSalePriceTo();
         salePrices.startPrice = houseDescription.getSalePriceFrom();
@@ -131,16 +121,26 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
         salePrices.isShowGreen = houseDescription.isShowSalePricePremiumUnpaid();
 
         areaParam = new AreaFragment.AreaParam();
-        if (houseDescription.getPropertySquareType() != null && !houseDescription.getPropertySquareType().equals("")) {
-            if (Integer.parseInt(houseDescription.getPropertySquareType()) == 1) {
-                areaParam.areaFrom = houseDescription.getSquareFrom();
-                areaParam.areaTo = houseDescription.getSquareTo();
-                areaParam.areaType = CommandField.PropertySquareType.AREA_REALLY;
-            } else {
-                areaParam.areaFrom = houseDescription.getSquareUseFrom();
-                areaParam.areaTo = houseDescription.getSquareUseTo();
-                areaParam.areaType = CommandField.PropertySquareType.AREA_USE;
-            }
+//        if (houseDescription.getPropertySquareType() != null && !houseDescription.getPropertySquareType().equals("")) {
+//            if (Integer.parseInt(houseDescription.getPropertySquareType()) == 1) {
+//                areaParam.areaFrom = houseDescription.getSquareFrom();
+//                areaParam.areaTo = houseDescription.getSquareTo();
+//                areaParam.areaType = CommandField.PropertySquareType.AREA_REALLY;
+//            } else {
+//                areaParam.areaFrom = houseDescription.getSquareUseFrom();
+//                areaParam.areaTo = houseDescription.getSquareUseTo();
+//                areaParam.areaType = CommandField.PropertySquareType.AREA_USE;
+//            }
+//        }
+
+        if (houseDescription.getSquareFrom() != null && houseDescription.getSquareTo() != null) {
+            areaParam.areaFrom = houseDescription.getSquareFrom();
+            areaParam.areaTo = houseDescription.getSquareTo();
+            areaParam.areaType = CommandField.PropertySquareType.AREA_REALLY;
+        } else if (houseDescription.getSquareUseFrom() != null || houseDescription.getSquareUseTo() != null) {
+            areaParam.areaFrom = houseDescription.getSquareUseFrom();
+            areaParam.areaTo = houseDescription.getSquareUseTo();
+            areaParam.areaType = CommandField.PropertySquareType.AREA_USE;
         }
 
         sizeParam = new SizeFragment.SizeParam();
@@ -164,6 +164,8 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
     }
 
     private void reCoverView(HouseDescription houseDescription) {
+
+        L.d("DateChange_Filter_recover",houseDescription.getPropertyDateFrom()+" "+houseDescription.getPropertyDateTo());
 
         if (houseDescription.getPropertyStatus() != null && !houseDescription.getPropertyStatus().isEmpty()) {
             statusCount.setText(houseDescription.getPropertyStatus().size() + "");
@@ -210,6 +212,8 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
         onAreaChange(areaParam);
         onSaleChange(salePrices);
         onRentChange(rentPrices);
+        onDateChange(houseDescription);
+        onOtherChange(houseDescription);
 
     }
 
@@ -228,6 +232,7 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
         other.setOnClickListener(this);
         option.setOnClickListener(this);
         yes.setOnClickListener(this);
+        date.setOnClickListener(this);
 
         keyEditTxt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -267,6 +272,7 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
         other = findViewById(R.id.more_view_other);
         option = findViewById(R.id.more_view_option);
         back = findViewById(R.id.back);
+        date = findViewById(R.id.more_view_date);
 
         statusCount = findViewById(R.id.more_txt_stacount);
         salePriceCount = findViewById(R.id.more_txt_salecount);
@@ -280,6 +286,7 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
         factilityCount = findViewById(R.id.more_txt_faccount);
         otherCount = findViewById(R.id.more_txt_othercount);
         optionCount = findViewById(R.id.more_txt_optioncount);
+        dateCount = findViewById(R.id.more_txt_date);
 
         yes = findViewById(R.id.yes);
 
@@ -347,6 +354,10 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
             case R.id.more_view_interval:
                 turnToFragment(IntervalFragment.newInstance(intervalList, houseDescription.getPropertyTypes()));
                 break;
+            case R.id.more_view_date:
+                turnToFragment(DateFragment.newInstance(houseDescription));
+//                turnToFragment(DateDemoFragment.newInstance(houseDescription));
+                break;
             case R.id.yes:
                 PropertyRequestSaveParams params = PropertyRequestParamsManager.getParams();
                 if (houseDescription.getPropertyStatus() != null)
@@ -360,11 +371,22 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
                 if (houseDescription.getBuildingTags() != null)
                     params.setTagInfos(getBuildginTag(houseDescription.getBuildingTags()));
                 if (houseDescription.getIncludedPropertyStatusFrom() != null) {
-                    params.setStatuFrom(getStatuCodeOption(statulist,houseDescription.getIncludedPropertyStatusFrom()));
+                    params.setStatuFrom(getStatuCodeOption(statulist, houseDescription.getIncludedPropertyStatusFrom()));
                 }
                 if (houseDescription.getIncludedPropertyStatusTo() != null) {
-                    params.setStatuTo(getStatuCodeOption(statulist,houseDescription.getIncludedPropertyStatusTo()));
+                    params.setStatuTo(getStatuCodeOption(statulist, houseDescription.getIncludedPropertyStatusTo()));
                 }
+
+
+//                if (!TextUtil.isEmply(houseDescription.getPropertyDateFrom())) {
+//                    houseDescription.setPropertyDateFrom(changeToDate(houseDescription.getPropertyDateFrom()));
+//                }
+//
+//                if (!TextUtil.isEmply(houseDescription.getPropertyDateTo())) {
+//                    houseDescription.setPropertyDateTo(changeToDate(houseDescription.getPropertyDateTo()));
+//                }
+
+
                 PropertyRequestParamsManager.setParams(params);
                 Intent intent = new Intent();
                 Bundle bundle = new Bundle();
@@ -396,7 +418,7 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
                 paramItems.add(item);
             }
         }
-        L.d("showStatus",paramItems.toString());
+        L.d("showStatus", paramItems.toString());
         return paramItems;
     }
 
@@ -407,7 +429,7 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
                 paramItems.add(item);
             }
         }
-        L.d("showStatus",paramItems.toString());
+        L.d("showStatus", paramItems.toString());
         return paramItems;
     }
 
@@ -455,6 +477,8 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
                 // 点击的是输入框区域，保留点击EditText的事件
                 return false;
             } else {
+                if (v instanceof EditText)
+                    v.clearFocus();
                 return true;
             }
         }
@@ -529,7 +553,7 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
             field.setAccessible(true);
             try {
                 if (field.get(option) != null) {
-                    if (type == "boolean") {
+                    if (type.equals("boolean")) {
                         L.d("OptionChange", field.get(option) + "");
                         if ((boolean) field.get(option))
                             count++;
@@ -588,6 +612,9 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
             rentPriceCount.setVisibility(View.VISIBLE);
             rentPriceCount.setText("1");
             rentPrices = rentPrice;
+        } else {
+            rentPriceCount.setVisibility(View.GONE);
+            rentPriceCount.setText(null);
         }
 
         houseDescription.setRentPriceFrom(rentPrice.startPrice);
@@ -621,6 +648,9 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
         if ((salePrice.startPrice != null && !salePrice.startPrice.equals("") || (salePrice.endPrice != null && !salePrice.endPrice.equals("")))) {
             salePriceCount.setVisibility(View.VISIBLE);
             salePriceCount.setText("1");
+        } else {
+            salePriceCount.setVisibility(View.GONE);
+            salePriceCount.setText(null);
         }
 
         salePrices = salePrice;
@@ -637,6 +667,26 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
     @Override
     public void onOtherChange(HouseDescription description) {
         houseDescription = description;
+
+        int count = 0;
+        if (!TextUtil.isEmply(houseDescription.getTrustorName())) count++;
+        if (!TextUtil.isEmply(houseDescription.getMobile())) count++;
+        if (!TextUtil.isEmply(houseDescription.getCompleteYearFrom())) count++;
+        if (!TextUtil.isEmply(houseDescription.getCompleteYearTo())) count++;
+
+        if (!TextUtil.isEmply(houseDescription.getCompleteYearTo()) && !TextUtil.isEmply(houseDescription.getCompleteYearFrom())) {
+            count--;
+        }
+//        if (!TextUtil.isEmply(houseDescription.getIncludedPropertyStatusFrom()))
+//            count = count + houseDescription.getIncludedPropertyStatusFrom().size();
+//        if (!TextUtil.isEmply(houseDescription.getIncludedPropertyStatusTo()))
+//            count = count + houseDescription.getIncludedPropertyStatusTo().size();
+
+        if (count == 0) otherCount.setVisibility(View.GONE);
+        if (count != 0) {
+            otherCount.setVisibility(View.VISIBLE);
+            otherCount.setText(count + "");
+        }
         L.d("onOtherChange", houseDescription.getPropertyDateFrom() + "   " + houseDescription.getPropertyDateFrom());
     }
 
@@ -654,10 +704,21 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
     @Override
     public void onSizeChange(SizeFragment.SizeParam sizeParam) {
         this.sizeParam = sizeParam;
-        if (sizeParam.avgType != 0) {
+//        if (sizeParam.avgType != 0) {
+//            sizePriceCount.setVisibility(View.VISIBLE);
+//            sizePriceCount.setText("1");
+//        }else {
+//
+//        }
+
+        if ((sizeParam.startPrice != null && !sizeParam.startPrice.equals("") || (sizeParam.endPrice != null && !sizeParam.endPrice.equals("")))) {
             sizePriceCount.setVisibility(View.VISIBLE);
             sizePriceCount.setText("1");
+        } else {
+            sizePriceCount.setVisibility(View.GONE);
+            sizePriceCount.setText(null);
         }
+
         houseDescription.setPriceUnitFrom(sizeParam.startPrice);
         houseDescription.setPriceUnitTo(sizeParam.endPrice);
         houseDescription.setPriceUnitType(sizeParam.avgType + "");
@@ -667,12 +728,23 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
     public void onAreaChange(AreaFragment.AreaParam areaParam) {
 
         this.areaParam = areaParam;
+//
+//        if (areaParam.areaType != 0) {
+//            houseDescription.setPropertySquareType(areaParam.areaType + "");
+//            areaCount.setVisibility(View.VISIBLE);
+//            areaCount.setText("1");
+//        }
 
-        if (areaParam.areaType != 0) {
-            houseDescription.setPropertySquareType(areaParam.areaType + "");
+        L.d("onAreaChange", areaParam.areaType + "");
+
+        if ((areaParam.areaFrom != null && !areaParam.areaFrom.equals("") || (areaParam.areaTo != null && !areaParam.areaTo.equals("")))) {
             areaCount.setVisibility(View.VISIBLE);
             areaCount.setText("1");
+        } else {
+            areaCount.setVisibility(View.GONE);
+            areaCount.setText(null);
         }
+
         if (areaParam.areaType == AREA_USE) {
             houseDescription.setSquareUseFrom(areaParam.areaFrom);
             houseDescription.setSquareUseTo(areaParam.areaTo);
@@ -683,6 +755,81 @@ public class FiltrateActivity extends AppCompatActivity implements BaseFragment.
             houseDescription.setSquareTo(areaParam.areaTo);
             houseDescription.setSquareUseFrom(null);
             houseDescription.setSquareUseTo(null);
+        }
+    }
+
+    private String changeToDate(String date) {
+        if (date == null) return null;
+        if (date.equals("")) return null;
+
+        int year = 0;
+        int month = 0;
+        int day = 0;
+        int index = 0;
+
+        if (date.indexOf("年") != -1) {
+            year = Integer.parseInt(date.substring(index, date.indexOf("年")));
+            index = date.indexOf("年") + 1;
+        }
+
+        if (date.indexOf("月") != -1) {
+            month = Integer.parseInt(date.substring(index, date.indexOf("月"))) - 1;
+            index = date.indexOf("月") + 1;
+        }
+
+        if (date.indexOf("日") != -1) {
+            day = Integer.parseInt(date.substring(index, date.indexOf("日")));
+            index = date.indexOf("日");
+        }
+
+        L.d("wahahah", year + "-" + month + "-" + day);
+
+        return year + "-" + month + "-" + day;
+
+    }
+
+    @Override
+    public void onDateChange(HouseDescription description) {
+
+//        L.d("Filter_onDateChange", description.getPropertyDateFrom() + "  " + description.getPropertyDateTo());
+
+        if (TextUtil.isEmply(description.getPropertyDateType())) return;
+
+//        if (!TextUtil.isEmply(description.getPropertyDateFrom())) {
+//            description.setPropertyDateFrom(changeToDate(description.getPropertyDateFrom()));
+//        }
+//
+//        if (!TextUtil.isEmply(description.getPropertyDateTo())) {
+//            description.setPropertyDateTo(changeToDate(description.getPropertyDateTo()));
+//        }
+
+
+        houseDescription = description;
+        L.d("DateChange_Filter",description.getPropertyDateFrom()+" "+description.getPropertyDateTo());
+//        dateCount
+
+        int count = 0;
+
+        if (!TextUtil.isEmply(houseDescription.getPropertyDateFrom())) {
+            count++;
+        }
+        if (!TextUtil.isEmply(houseDescription.getPropertyDateTo())) {
+            count++;
+        }
+
+        if (!TextUtil.isEmply(houseDescription.getPropertyDateFrom()) && !TextUtil.isEmply(houseDescription.getPropertyDateTo())) {
+            count--;
+        }
+
+        if (!TextUtil.isEmply(houseDescription.getIncludedPropertyStatusFrom()))
+            count = count + houseDescription.getIncludedPropertyStatusFrom().size();
+        if (!TextUtil.isEmply(houseDescription.getIncludedPropertyStatusTo()))
+            count = count + houseDescription.getIncludedPropertyStatusTo().size();
+
+        if (count == 0) dateCount.setVisibility(View.GONE);
+        if (count != 0) {
+            dateCount.setVisibility(View.VISIBLE);
+            dateCount.setText(count + "");
         }
     }
 }

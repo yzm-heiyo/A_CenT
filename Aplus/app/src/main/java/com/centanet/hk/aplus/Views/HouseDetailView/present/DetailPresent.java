@@ -27,6 +27,7 @@ public class DetailPresent implements IDetailPresent {
         detailModel = DetailModel.getInstance();
         detailModel.setOnPropertDetailReceiveListener(onProDetailReceiveListener);
         detailModel.setOnPropertOtherReceiveListener(onProOtherReceiveListener);
+        detailModel.setOnPropertNextReceiveListener(onProNextReceiveListener);
 //        this.detailView = detailView;
         mViewRef = new WeakReference<IDetailView>(detailView);
         this.detailView = mViewRef.get();
@@ -59,6 +60,11 @@ public class DetailPresent implements IDetailPresent {
     }
 
     @Override
+    public void getPropertyDetailOther(int index) {
+        detailModel.getPropertDetailOther(index);
+    }
+
+    @Override
     public String getPropertyKey(int index) {
         return detailModel.getPropertyKey(index);
     }
@@ -68,6 +74,18 @@ public class DetailPresent implements IDetailPresent {
         public void onReceive(DetailHouse dataBack) {
             if (detailView != null)
                 detailView.refreshListData(dataBack);
+        }
+
+        @Override
+        public void onReceivelFinish() {
+
+        }
+    };
+
+    private DetailModel.OnReceiveListener onProNextReceiveListener = new DetailModel.OnReceiveListener() {
+        @Override
+        public void onReceive(Object dataBack) {
+            detailView.closeLoading();
         }
 
         @Override

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.DensityUtil;
 import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.bean.auto_estate.PropertyParamHints;
 import com.centanet.hk.aplus.bean.build_tag.TagInfo;
 import com.centanet.hk.aplus.bean.district.DistrictItem;
@@ -73,7 +74,7 @@ public class UserDesignView extends LinearLayout {
     }
 
     public void addItem(List<PropertySearchHistory> propertySearchHistories) {
-        for (int i = propertySearchHistories.size()-1; i >= 0; i--) {
+        for (int i = propertySearchHistories.size() - 1; i >= 0; i--) {
             addItem(propertySearchHistories.get(i), i);
             L.d("UserDesignView", i + "");
         }
@@ -81,9 +82,6 @@ public class UserDesignView extends LinearLayout {
 
     public void addItem(PropertySearchHistory propertySearchHistory, int position) {
 
-//        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, MyRadioGroup.LayoutParams.WRAP_CONTENT);
-//        params.setLayoutDirection(VERTICAL);
-//        this.setLayoutParams(params);
 
         View view = LayoutInflater.from(context).inflate(R.layout.item_list_userdesign, null, false);
         view.setTag(position);
@@ -91,7 +89,19 @@ public class UserDesignView extends LinearLayout {
             if (onClickListener != null) onClickListener.onClick(v, position);
         });
         LineBreakLayout lineBreakLayout = view.findViewById(R.id.linebreaklayout);
+        LineBreakLayout addresslb = view.findViewById(R.id.addresslb);
         lineBreakLayout.setItemContentLayoutID(R.layout.item_userdesign);
+
+        addresslb.setItemContentLayoutID(R.layout.item_dialog_usedesign_double);
+        lineBreakLayout.setRowSpace(DensityUtil.dip2px(getContext(),8));
+        addresslb.setRowSpace(DensityUtil.dip2px(getContext(),8));
+
+        addresslb.setItemOnclickListener((view1, contentView, position1) -> {
+            if (onClickListener != null) onClickListener.onClick(view1, position);
+        });
+        lineBreakLayout.setItemOnclickListener((view1, contentView, position1) -> {
+            if (onClickListener != null) onClickListener.onClick(view1, position);
+        });
 
         ((TextView) (view.findViewById(R.id.title))).setText(propertySearchHistory.getOptionMame());
 
@@ -99,6 +109,8 @@ public class UserDesignView extends LinearLayout {
 //            PropertyRequestSaveParams paramsManager = new PropertyRequestSaveParams();
         HouseDescription description = propertySearchHistory.getHouseDescription();
 //            HouseDescription description = new HouseDescription();
+
+        if (description == null) return;
 
         List<String> list = new ArrayList<>();
 
@@ -113,6 +125,7 @@ public class UserDesignView extends LinearLayout {
                 list.add(item.getItemText());
             }
         }
+
         List<SystemParamItems> directions = paramsManager.getDirectionList();
         L.d("ParamValue", "Directions: " + status.toString());
         if (directions != null && !directions.isEmpty()) {
@@ -120,6 +133,7 @@ public class UserDesignView extends LinearLayout {
                 list.add(item.getItemText());
             }
         }
+
         List<SystemParamItems> intervals = paramsManager.getIntervalList();
         L.d("ParamValue", "Intervals: " + status.toString());
         if (intervals != null && !intervals.isEmpty()) {
@@ -140,7 +154,8 @@ public class UserDesignView extends LinearLayout {
         L.d("ParamValue", "Hints: " + status.toString());
         if (hints != null && !hints.isEmpty()) {
             for (PropertyParamHints hint : hints) {
-                list.add(hint.getAddressName());
+//                list.add(hint.getAddressName());
+                addresslb.addItem(parseData(hint));
             }
         }
 
@@ -148,6 +163,7 @@ public class UserDesignView extends LinearLayout {
         L.d("ParamValue", "DistrictItems: " + status.toString());
         if (districtItems != null && !districtItems.isEmpty()) {
             for (DistrictItem item : districtItems) {
+//                addresslb.addItem(parseData(item));
                 list.add(item.getDistrictName());
             }
         }
@@ -168,11 +184,11 @@ public class UserDesignView extends LinearLayout {
             String str = "";
             if (description.getRentPriceFrom() == null || description.getRentPriceFrom().equals("")) {
                 str = str + "不限";
-            } else str = str + "$" + description.getRentPriceFrom() + "000";
+            } else str = str + "$" + description.getRentPriceFrom() + ",000";
             str = str + "-";
             if (description.getRentPriceTo() == null || description.getRentPriceTo().equals("")) {
                 str = str + "不限";
-            } else str = str + "$" + description.getRentPriceTo() + "000";
+            } else str = str + "$" + description.getRentPriceTo() + ",000";
             list.add(str);
         }
 
@@ -388,6 +404,33 @@ public class UserDesignView extends LinearLayout {
 
     }
 
+    private String parseData(PropertyParamHints s) {
+        String labelString = null;
+
+        String address = "";
+        String street = "";
+        if (!TextUtil.isEmply(s.getDistrictName()) && !TextUtil.isEmply(s.getAreaName())) {
+            address = address + s.getDistrictName() + "/" + s.getAreaName();
+        } else if (!TextUtil.isEmply(s.getDistrictName())) {
+            address = address + s.getDistrictName();
+        } else if (!TextUtil.isEmply(s.getAreaName())) {
+            address = address + s.getAreaName();
+        }
+
+        if (!TextUtil.isEmply(s.getEnAddressName())) {
+            street = s.getEnAddressName();
+        }
+
+        if (!TextUtil.isEmply(address) && !TextUtil.isEmply(street)) {
+            labelString = address + "\n" + street;
+        } else if (!TextUtil.isEmply(address)) {
+            labelString = address;
+        } else if (!TextUtil.isEmply(street)) {
+            labelString = street;
+        }
+
+        return labelString;
+    }
 
     public interface OnItemClickLisenter {
         void onClick(View v, int position);

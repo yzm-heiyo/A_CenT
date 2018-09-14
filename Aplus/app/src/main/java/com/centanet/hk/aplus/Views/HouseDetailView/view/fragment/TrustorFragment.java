@@ -101,6 +101,10 @@ public class TrustorFragment extends Fragment implements IDataManager<DetailTrus
 
         contentView.removeAllViews();
 
+        isCallHiddenPhone = PermissionManager.isCallHiddenPhonePermission();
+        isAbleToSeeObuliding = PermissionManager.isSeeOBuildPermission();
+        isAbleToSeeClientInfo = PermissionManager.isSeeClientInfoPermission();
+
         if (!isAbleToSeeClientInfo) {
             tipsTxt.setText("没有查看權限");
             tipsTxt.setVisibility(VISIBLE);
@@ -116,6 +120,8 @@ public class TrustorFragment extends Fragment implements IDataManager<DetailTrus
     }
 
     private void addClientInfo(DetailTrustor data) {
+
+        L.d("","isAbleToSeeClientInfo: "+ isAbleToSeeClientInfo+" isAbleToSeeObuliding:" +isAbleToSeeObuliding + " isAbleToSeeClientInfo: "+isAbleToSeeClientInfo);
 
         if (data.getTrustors() != null && !data.getTrustors().isEmpty()) {
             List<Trustor> trustors = data.getTrustors();
@@ -193,7 +199,7 @@ public class TrustorFragment extends Fragment implements IDataManager<DetailTrus
 //            if (trustorDetail.getDirectSellTyp() == CommandField.APPropertyTrustorDirectSell.NOTALLOW)
             TextView directTxt = phoneTitleView.findViewById(R.id.phone_ly_tips);
             directTxt.setVisibility(VISIBLE);
-
+            L.d("getDirectSellTyp",trustorDetail.getDirectSellTyp()+"");
             switch (trustorDetail.getDirectSellTyp()) {
                 case 0:
                     directTxt.setText("直銷:不反對");

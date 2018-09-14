@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:background="@color/color_white"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
+
     android:orientation="vertical">
 
     <LinearLayout
@@ -29,6 +28,8 @@
             android:layout_centerInParent="true"
             android:layout_marginBottom="6dp"
             android:layout_marginTop="6dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:layout_weight="6"
             android:background="@drawable/search_background"
             android:orientation="horizontal">
@@ -41,10 +42,12 @@
                 <TextView
                     android:id="@+id/search_txt_area"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="8dp"
                     android:text="@string/area"
+                    android:textStyle="bold"
                     android:textColor="@color/color_black" />
 
                 <ImageView
@@ -79,12 +82,14 @@
                 android:layout_marginLeft="12dp"
                 android:src="@drawable/ic_search" />
 
-            <EditText
+            <com.centanet.hk.aplus.Widgets.ClearEditText
                 android:id="@+id/search_edit"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="4"
                 android:background="@null"
+                android:textStyle="bold"
+                android:layout_marginRight="5dp"
                 android:hint="@string/fragment_hints"
                 android:imeOptions="actionSearch"
                 android:paddingLeft="4dp"
@@ -123,6 +128,7 @@
                     android:layout_height="wrap_content"
                     android:maxLength="5"
                     android:singleLine="true"
+                    android:textStyle="bold"
                     android:text="@string/search_floot"
                     android:textColor="@color/color_black"
                     android:textSize="12dp" />
@@ -132,6 +138,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:maxLength="3"
+                    android:textStyle="bold"
                     android:singleLine="true"
                     android:text="@string/search_units"
                     android:textColor="@color/color_black"
@@ -149,7 +156,7 @@
 
 
     <!-- 智能搜索界面 -->
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:background="@color/color_white"
         android:layout_height="match_parent">
@@ -255,7 +262,7 @@
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="10dp"
                             android:layout_toRightOf="@id/search_history_img"
-                            android:text="搜索記錄"
+                            android:text="@string/record_history"
                             android:textColor="@color/colortheme"
                             android:textStyle="bold" />
 
@@ -307,12 +314,33 @@
         </LinearLayout>
 
         <TextView
+            android:id="@+id/activity_search_txt_count"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/color_white"
+            android:text="已選: 0"
+            android:singleLine="true"
+            android:paddingTop="3dp"
+            android:paddingLeft="20dp"
+            android:gravity="center_horizontal"
+            android:layout_gravity="center"
+            android:paddingRight="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:paddingBottom="3dp"
+            android:visibility="gone"
+            android:layout_above="@id/activity_search_confirm_btn"
+            android:background="@drawable/shape_square_circle_transparent_grey"
+            />
+
+        <TextView
             android:id="@+id/activity_search_confirm_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center|bottom"
             android:background="@color/colortheme"
-            android:gravity="center"
+            android:layout_alignParentBottom="true"
+            android:gravity="center_horizontal"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
             android:text="@string/search"
@@ -335,6 +363,6 @@
 
         </LinearLayout>
 
-    </FrameLayout>
+    </RelativeLayout>
 
 </LinearLayout>

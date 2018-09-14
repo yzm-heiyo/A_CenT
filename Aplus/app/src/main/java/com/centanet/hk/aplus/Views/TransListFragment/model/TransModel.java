@@ -42,20 +42,21 @@ public class TransModel implements ITransModel {
         HttpUtil.doPost(address, body, headers, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-
+                transListLisenter.onFailure(404);
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String resp = response.body().string().toString();
-                L.d("TransResp", resp);
+
                 if (response.isSuccessful()) {
+                    String resp = response.body().string().toString();
+                    L.d("TransResp", resp);
                     switch (address) {
-                        case URL_TRAN_LIST:
+                        case URL_TAG_TRANLIST:
                             parseTransList(resp);
                             break;
                     }
-                }
+                }else transListLisenter.onFailure(500);
             }
         });
     }
@@ -76,6 +77,4 @@ public class TransModel implements ITransModel {
             e.printStackTrace();
         }
     }
-
-
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 管理A+所有的静态变量
  * Created by yangzm4 on 2018/3/20.
  */
 

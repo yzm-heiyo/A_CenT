@@ -295,6 +295,7 @@ public class HouseListFragment extends BaseHouseFragment implements IHouseListFr
                 micIntent.putExtra("mic", true);
                 if (!searchHistory.isEmpty()) {
                     Bundle micBundle = new Bundle();
+                    micBundle.putSerializable("HOUSE_REQUEST",bodyDescription);
                     micBundle.putStringArrayList(VIEW_SEARCH_HISTORY_SAVE, (ArrayList<String>) searchHistory);
                     micIntent.putExtras(micBundle);
                 }

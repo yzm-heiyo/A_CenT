@@ -36,10 +36,11 @@
                     android:background="@drawable/shape_square_circle_stroke_deepgrey"
                     android:gravity="center"
                     android:singleLine="true"
+                    android:inputType="number"
                     android:hint="@string/dialog_price_unlimit"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:textColor="@color/colorline"
+                    android:textColor="@color/color_black"
                     android:textSize="14dp"
                     android:textStyle="bold" />
 
@@ -58,12 +59,13 @@
                     android:layout_height="34dp"
                     android:singleLine="true"
                     android:layout_weight="1"
+                    android:inputType="number"
                     android:background="@drawable/shape_square_circle_stroke_deepgrey"
                     android:gravity="center"
                     android:hint="@string/dialog_price_unlimit"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:textColor="@color/colorline"
+                    android:textColor="@color/color_black"
                     android:textSize="14dp"
                     android:textStyle="bold" />
 

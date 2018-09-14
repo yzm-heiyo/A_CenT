@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.Views.HouseDetailView.view.IDataManager;
 import com.centanet.hk.aplus.Widgets.SmallItemView;
 import com.centanet.hk.aplus.bean.detail.PropertyFollow;
@@ -78,7 +79,8 @@ public class TransRecordFragment extends Fragment implements IDataManager<List<P
             View view = inflater.inflate(R.layout.item_list_transtractrecord, null, false);
 
             ((TextView) view.findViewById(R.id.detail_transact_txt_proxy)).setText(trans.getAgency());
-            ((TextView) view.findViewById(R.id.detail_transact_txt_transactprice)).setText("$ " + trans.getPrice() + getUnit(trans.getStatus()));
+            ((TextView) view.findViewById(R.id.detail_transact_txt_transactprice)).setSelected(!trans.isGreen());
+            ((TextView) view.findViewById(R.id.detail_transact_txt_transactprice)).setText("$ " + TextUtil.getInteger(trans.getPrice()) +" "+ getUnit(trans.getStatus()));
             ((TextView) view.findViewById(R.id.detail_transact_txt_manager)).setText(trans.getAgent());
             ((TextView) view.findViewById(R.id.detail_transact_txt_createtime)).setText("建立日期 " + trans.getCreateTime());
 
@@ -86,19 +88,18 @@ public class TransRecordFragment extends Fragment implements IDataManager<List<P
 
             ((TextView) view.findViewById(R.id.detail_transact_txt_officedate)).setText(trans.getFormalDate());
             ((TextView) view.findViewById(R.id.detail_transact_txt_finishdate)).setText(trans.getCompleteDate());
-            ((TextView) view.findViewById(R.id.detail_transact_txt_realysize)).setText(trans.getBuildSquareFoot());
+            ((TextView) view.findViewById(R.id.detail_transact_txt_realysize)).setText(TextUtil.getInteger(trans.getBuildSquareFoot()));
             ((TextView) view.findViewById(R.id.detail_transact_txt_reallyprice)).setText("$" + trans.getGrossAveragePrice());
-            ((TextView) view.findViewById(R.id.detail_transact_txt_usesize)).setText(trans.getUseSquareFoot());
+            ((TextView) view.findViewById(R.id.detail_transact_txt_usesize)).setText(TextUtil.getInteger(trans.getUseSquareFoot()));
 
             ((TextView) view.findViewById(R.id.detail_transact_txt_useprice)).setText("$" + trans.getAveragePrice());
-            ((SmallItemView) view.findViewById(R.id.detail_transact_stxt_bargain)).setContentName(trans.getTransactionDate());
-            ((SmallItemView) view.findViewById(R.id.detail_transact_stxt_rentdateto)).setContentName(trans.getRentEndDate());
+            ((TextView) view.findViewById(R.id.detail_transact_stxt_bargain)).setText(trans.getTransactionDate());
+            ((TextView) view.findViewById(R.id.detail_transact_stxt_rentdateto)).setText(trans.getRentEndDate());
             ((ImageView) view.findViewById(R.id.detail_transact_img_state)).setImageLevel(trans.getStatus());
 
             ((TextView) view.findViewById(R.id.trans_txt_status)).setText(getStatuTxt(trans.getStatus()));
-            ((TextView) view.findViewById(R.id.trans_txt_confirm)).setText(trans.isTranferToConfirm() ? "已確認" : "未確認");
-            view.findViewById(R.id.trans_txt_confirm).setSelected(trans.isTranferToConfirm());
-
+            ((TextView) view.findViewById(R.id.trans_txt_confirm)).setText(trans.isNotConfirmed() ? "已確認" : "未確認");
+            view.findViewById(R.id.trans_txt_confirm).setSelected(trans.isNotConfirmed());
 
             contentView.addView(view);
         }

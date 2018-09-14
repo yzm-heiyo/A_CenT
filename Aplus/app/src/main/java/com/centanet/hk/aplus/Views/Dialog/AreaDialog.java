@@ -72,8 +72,6 @@ public class AreaDialog extends DialogFragment implements View.OnClickListener {
     }
 
     private void init() {
-//        data = new ArrayList<>();
-//        selects = new ArrayList<>();
 
         adapter = new DirstricAdapter(getContext(), data, selects, R.layout.item_list_area);
 //        adapter.setOnAdapterItemClickLisenter((v, postion) -> {
@@ -97,7 +95,6 @@ public class AreaDialog extends DialogFragment implements View.OnClickListener {
             adapter.notifyDataSetChanged();
             L.d("thiz", "setOnItemClickListener");
         });
-
     }
 
     public void setItem(List<DistrictItem> items, List<String> selects) {
@@ -133,7 +130,8 @@ public class AreaDialog extends DialogFragment implements View.OnClickListener {
         lp = window.getAttributes();
         lp.gravity = Gravity.BOTTOM; // 紧贴底部
         lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
-        lp.height = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
+//        lp.height = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
+        lp.height = getActivity().getWindowManager().getDefaultDisplay().getHeight() * 9 / 10;
         // lp.height=getContext().getResources().getDisplayMetrics().heightPixels* 4 / 5;
         window.setAttributes(lp);
         window.setBackgroundDrawableResource(android.R.color.transparent);

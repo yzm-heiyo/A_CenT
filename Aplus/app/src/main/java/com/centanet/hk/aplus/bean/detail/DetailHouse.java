@@ -61,6 +61,8 @@ public class DetailHouse implements Serializable {
     private String PropertyNote;
     private String AllFloor;
     private String ParkingNumber;
+    private String PRN;
+    private String Developer ;
     private String DepartmentPermissions;
     private String PropertySource;
     private String Supply;
@@ -85,6 +87,7 @@ public class DetailHouse implements Serializable {
     private boolean Flag;
     private String ErrorMsg;
     private String RunTime;
+    private String LastFollowTime;
     private boolean UserIsShowTrustor;
     private String SalePricePremiumUnpaid;
     private String BulidingPropertyUsage;
@@ -433,6 +436,30 @@ public class DetailHouse implements Serializable {
 
     public String getBulidingPropertyUsage() {
         return BulidingPropertyUsage;
+    }
+
+    public String getPRN() {
+        return PRN;
+    }
+
+    public String getDeveloper() {
+        return Developer;
+    }
+
+    public String getLastFollowTime() {
+        return LastFollowTime;
+    }
+
+    public void setLastFollowTime(String lastFollowTime) {
+        LastFollowTime = lastFollowTime;
+    }
+
+    public void setDeveloper(String developer) {
+        Developer = developer;
+    }
+
+    public void setPRN(String PRN) {
+        this.PRN = PRN;
     }
 
     public void setBuildingTagInfos(List<String> buildingTagInfos) {

@@ -13,6 +13,6 @@ public interface ITransListView {
 
     void refreshListData(List<Transaction> properties);
     void refreshTransCount(int count);
-    void onFailure();
+    void onFailure(String tip);
 
 }

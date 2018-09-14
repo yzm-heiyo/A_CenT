@@ -47,7 +47,7 @@
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
         android:lineSpacingExtra = "15dp"
-        android:text="Any person Contacting the ventor again will breach the persona data (Privacy) ordinance and on conviction, is personally liable to a maximum fine of HK$500,000 and imprisonment of 3 years"
+        android:text="Any person Contacting the vendor again will breach the personal data (Privacy) ordinance and on conviction, is personally liable to a maximum fine of HK$500,000 and imprisonment of 3 years"
         android:textColor="#000000"
         android:textSize="14dp" />
 

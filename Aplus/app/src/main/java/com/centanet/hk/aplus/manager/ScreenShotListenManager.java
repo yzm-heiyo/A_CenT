@@ -15,21 +15,24 @@ import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
+import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Utils.TextUtil;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 截屏监听管理器 <br/><br/>
- *
+ * <p>
  * <p>
  * 截屏判断依据: 监听媒体数据库的数据改变, 在有数据改变时获取最后
  * 插入数据库的一条图片数据, 如果符合以下规则, 则认为截屏了: <br/>
- *
+ * <p>
  * 1. 时间判断, 图片的生成时间在开始监听之后, 并与当前时间相隔10秒内; <br/>
  * 2. 尺寸判断, 图片的尺寸没有超过屏幕的尺寸; <br/>
  * 3. 路径判断, 图片路径符合包含特定的关键词。<br/>
- *
+ * <p>
  * <p>
  * Demo:
  * <pre> {@code
@@ -58,12 +61,16 @@ public class ScreenShotListenManager {
 
     private static final String TAG = "ScreenShotListenManager";
 
-    /** 读取媒体数据库时需要读取的列 */
-    private static final String[] MEDIA_PROJECTIONS =  {
+    /**
+     * 读取媒体数据库时需要读取的列
+     */
+    private static final String[] MEDIA_PROJECTIONS = {
             MediaStore.Images.ImageColumns.DATA,
             MediaStore.Images.ImageColumns.DATE_TAKEN,
     };
-    /** 读取媒体数据库时需要读取的列, 其中 WIDTH 和 HEIGHT 字段在 API 16 以后才有 */
+    /**
+     * 读取媒体数据库时需要读取的列, 其中 WIDTH 和 HEIGHT 字段在 API 16 以后才有
+     */
     private static final String[] MEDIA_PROJECTIONS_API_16 = {
             MediaStore.Images.ImageColumns.DATA,
             MediaStore.Images.ImageColumns.DATE_TAKEN,
@@ -71,7 +78,9 @@ public class ScreenShotListenManager {
             MediaStore.Images.ImageColumns.HEIGHT,
     };
 
-    /** 截屏依据中的路径判断关键字 */
+    /**
+     * 截屏依据中的路径判断关键字
+     */
     private static final String[] KEYWORDS = {
             "screenshot", "screen_shot", "screen-shot", "screen shot",
             "screencapture", "screen_capture", "screen-capture", "screen capture",
@@ -80,8 +89,15 @@ public class ScreenShotListenManager {
 
     private static Point sScreenRealSize;
 
-    /** 已回调过的路径 */
+    /**
+     * 已回调过的路径
+     */
     private final List<String> sHasCallbackPaths = new ArrayList<String>();
+
+    /**
+     * 已回调过的路径
+     */
+    private String screenShotPath;
 
     private Context mContext;
 
@@ -89,13 +105,19 @@ public class ScreenShotListenManager {
 
     private long mStartListenTime;
 
-    /** 内部存储器内容观察者 */
+    /**
+     * 内部存储器内容观察者
+     */
     private MediaContentObserver mInternalObserver;
 
-    /** 外部存储器内容观察者 */
+    /**
+     * 外部存储器内容观察者
+     */
     private MediaContentObserver mExternalObserver;
 
-    /** 运行在 UI 线程的 Handler, 用于运行监听器回调 */
+    /**
+     * 运行在 UI 线程的 Handler, 用于运行监听器回调
+     */
     private final Handler mUiHandler = new Handler(Looper.getMainLooper());
 
     private ScreenShotListenManager(Context context) {
@@ -250,6 +272,8 @@ public class ScreenShotListenManager {
      * 处理获取到的一行数据
      */
     private void handleMediaRowData(String data, long dateTaken, int width, int height) {
+
+
         if (checkScreenShot(data, dateTaken, width, height)) {
             Log.d(TAG, "ScreenShot: path = " + data + "; size = " + width + " * " + height
                     + "; date = " + dateTaken);
@@ -303,7 +327,6 @@ public class ScreenShotListenManager {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -312,6 +335,17 @@ public class ScreenShotListenManager {
      * 删除一个图片也会发通知, 同时防止删除图片时误将上一张符合截屏规则的图片当做是当前截屏.
      */
     private boolean checkCallback(String imagePath) {
+//
+//        if (TextUtil.isEmply(screenShotPath))
+//            screenShotPath = imagePath;
+//        else if (screenShotPath.equals(imagePath)) {
+//            return true;
+//        }
+//        if(imagePath.equals(""))return true;
+//        imagePath = imagePath.replace("[", "").replace("]", "");
+        L.d("handleMediaRowData", imagePath + "    " + sHasCallbackPaths.toString());
+//        sHasCallbackPaths.add(imagePath);
+
         if (sHasCallbackPaths.contains(imagePath)) {
             return true;
         }

@@ -3,14 +3,19 @@ package com.centanet.hk.aplus.Views.ComplexSearchView;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Utils.TextUtil;
 import com.centanet.hk.aplus.Views.basic.BaseFragment;
 import com.centanet.hk.aplus.Widgets.ProcessBarView;
 import com.centanet.hk.aplus.bean.params.SystemParamItems;
@@ -29,7 +34,7 @@ public class RentFragment extends BaseFragment implements View.OnClickListener {
     private LinearLayout content;
     private ProcessBarView processBarView;
     private EditText priceStartEdit, priceEndEdit;
-    private View price400, price_400_600, price_600_800, price_800_1000, price_1000_2000, price_2000_3000, priceUp;
+    private View price400, price_400_600, price_600_800, price_800_1000, price_1000_2000, price_2000_3000, priceUp, unlimit;
     private View conGreen, showGreen;
     private OnRentChangeLisenter onRentChangeLisenter;
     private RentPrice rentPrice;
@@ -68,6 +73,9 @@ public class RentFragment extends BaseFragment implements View.OnClickListener {
 
     private void initLisenter() {
 
+        priceStartEdit.addTextChangedListener(leftTextWatcher);
+        priceEndEdit.addTextChangedListener(rightTextWatcher);
+
         price400.setOnClickListener(this);
         price_400_600.setOnClickListener(this);
         price_600_800.setOnClickListener(this);
@@ -77,6 +85,46 @@ public class RentFragment extends BaseFragment implements View.OnClickListener {
         priceUp.setOnClickListener(this);
         conGreen.setOnClickListener(this);
         showGreen.setOnClickListener(this);
+        unlimit.setOnClickListener(this);
+
+        priceEndEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b) {
+
+                } else {
+                    isProcessChange = true;
+//                    asdsadasd
+                    String price = priceEndEdit.getText().toString();
+                    if (price != null) {
+                        try {
+                            int priccs = Integer.parseInt(price);
+                            if (priccs > 100) priceEndEdit.setText(null);
+                        } catch (Exception e) {
+
+                        }
+                    }
+                }
+            }
+        });
+
+        priceEndEdit.setOnEditorActionListener((textView, actionId, keyEvent) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getActivity().getWindow().getDecorView().getWindowToken(), 0);
+                isProcessChange = true;
+                String price = priceEndEdit.getText().toString();
+                if (price != null) {
+                    try {
+                        int priccs = Integer.parseInt(price);
+                        if (priccs > 100) priceEndEdit.setText(null);
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+            return false;
+        });
 
         processBarView.setOnProgressChangeListener(changeListener);
 
@@ -91,6 +139,8 @@ public class RentFragment extends BaseFragment implements View.OnClickListener {
         price_2000_3000 = view.findViewById(R.id.rent_view_60000_100000);
         priceUp = view.findViewById(R.id.rent_view_100000up);
 
+        unlimit = view.findViewById(R.id.rent_view_unlimit);
+
         conGreen = view.findViewById(R.id.sale_view_con_greenprice);
         showGreen = view.findViewById(R.id.sale_view_greenprice);
 
@@ -103,6 +153,8 @@ public class RentFragment extends BaseFragment implements View.OnClickListener {
         content = view.findViewById(R.id.rent_ll_content);
 
 //        setPrice(rentPrice.startPrice, rentPrice.endPrice);
+        if (rentPrice.endPrice == null && rentPrice.startPrice == null)
+            unlimit.setSelected(true);
         reCoverView(rentPrice);
     }
 
@@ -136,10 +188,16 @@ public class RentFragment extends BaseFragment implements View.OnClickListener {
 
 
         if (rentPrice.startPrice != null && rentPrice.startPrice.equals("100")) {
-            priceStartEdit.setText("0");
-            priceEndEdit.setText("100 +");
+            setPrice("100", null);
         } else setPrice(rentPrice.startPrice, rentPrice.endPrice);
 
+    }
+
+    private void resetPriceProcess() {
+        processBarView.setOnProgressChangeListener(null);
+        processBarView.setLeftProcess(0);
+        processBarView.setRightProcess(1);
+        processBarView.setOnProgressChangeListener(changeListener);
     }
 
     private void setPrice(String start, String end) {
@@ -159,18 +217,129 @@ public class RentFragment extends BaseFragment implements View.OnClickListener {
         processBarView.setOnProgressChangeListener(changeListener);
     }
 
+    private boolean isProcessChange;
     ProcessBarView.OnProgressChangeListener changeListener = new ProcessBarView.OnProgressChangeListener() {
         @Override
         public void onLeftProgressChange(float progress, int value) {
-            priceStartEdit.setText(value + "");
-            rentPrice.startPrice = value + "";
+
+
+            if (isChangeByEdit) {
+                isChangeByEdit = false;
+                return;
+            }
+
+            isProcessChange = true;
+
+            if (value == 0) {
+                priceStartEdit.setText(null);
+                rentPrice.startPrice = null;
+            } else {
+                priceStartEdit.setText((value + ""));
+                rentPrice.startPrice = value + "";
+            }
+
+//            priceStartEdit.setText(value + "");
+//            rentPrice.startPrice = value + "";
             if (onRentChangeLisenter != null) onRentChangeLisenter.onRentChange(rentPrice);
         }
 
         @Override
         public void onRightProgressChange(float progress, int value) {
-            priceEndEdit.setText(value + "");
-            rentPrice.endPrice = value + "";
+
+
+            if (isChangeByEdit) {
+                isChangeByEdit = false;
+                return;
+            }
+
+            isProcessChange = true;
+
+            if (value == 100) {
+                priceEndEdit.setText(null);
+                rentPrice.endPrice = null;
+            } else {
+                priceEndEdit.setText((value + ""));
+                rentPrice.endPrice = value + "";
+            }
+//            priceEndEdit.setText(value + "");
+//            rentPrice.endPrice = value + "";
+            if (onRentChangeLisenter != null) onRentChangeLisenter.onRentChange(rentPrice);
+        }
+    };
+
+    private TextWatcher leftTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+            resetView();
+            if(isProcessChange){
+                isProcessChange = false;
+                if(TextUtil.isEmply(rentPrice.startPrice)&&TextUtil.isEmply(rentPrice.endPrice))unlimit.setSelected(true);
+                return;
+            }
+
+            isChangeByEdit = true;
+            rentPrice.startPrice = priceStartEdit.getText().toString();
+            if (!TextUtil.isEmply(rentPrice.startPrice)) {
+                processBarView.setLeftValue(Integer.parseInt(rentPrice.startPrice));
+                resetView();
+            } else {
+                processBarView.setLeftValue(0);
+                if(TextUtil.isEmply(rentPrice.startPrice)&&TextUtil.isEmply(rentPrice.endPrice))unlimit.setSelected(true);
+            }
+            if (onRentChangeLisenter != null) onRentChangeLisenter.onRentChange(rentPrice);
+        }
+    };
+
+    private boolean isChangeByEdit;
+    private TextWatcher rightTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+
+            resetView();
+            if(isProcessChange){
+                isProcessChange = false;
+                if(TextUtil.isEmply(rentPrice.startPrice)&&TextUtil.isEmply(rentPrice.endPrice))unlimit.setSelected(true);
+                return;
+            }
+
+            isChangeByEdit = true;
+            rentPrice.endPrice = priceEndEdit.getText().toString();
+
+            if (!TextUtil.isEmply(rentPrice.endPrice)) {
+
+                if (Integer.parseInt(rentPrice.endPrice) > 100) {
+                    rentPrice.endPrice = null;
+//                    priceEndEdit.setText(null);
+                    processBarView.setRightValue(100);
+                } else processBarView.setRightValue(Integer.parseInt(rentPrice.endPrice));
+//                processBarView.setRightValue(Integer.parseInt(rentPrice.endPrice));
+                resetView();
+            } else {
+                processBarView.setRightValue(100);
+                if(TextUtil.isEmply(rentPrice.startPrice)&&TextUtil.isEmply(rentPrice.endPrice))unlimit.setSelected(true);
+            }
+
             if (onRentChangeLisenter != null) onRentChangeLisenter.onRentChange(rentPrice);
         }
     };
@@ -226,10 +395,18 @@ public class RentFragment extends BaseFragment implements View.OnClickListener {
                 rentPrice.endPrice = "100";
                 break;
             case R.id.rent_view_100000up:
-                setPrice("0", "100 +");
+                resetPriceProcess();
+                setPrice("100", null);
                 v.setSelected(true);
                 rentPrice.startPrice = "100";
                 rentPrice.endPrice = "";
+                break;
+            case R.id.rent_view_unlimit:
+                setPrice(null, null);
+                resetPriceProcess();
+                v.setSelected(true);
+                rentPrice.startPrice = null;
+                rentPrice.endPrice = null;
                 break;
         }
         if (onRentChangeLisenter != null) onRentChangeLisenter.onRentChange(rentPrice);

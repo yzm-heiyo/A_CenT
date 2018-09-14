@@ -11,27 +11,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:titlebarShowImage_left="false"
-        app:titlebarText="@string/fragment_mine"></com.centanet.hk.aplus.Widgets.TitleBar>
+        app:titlebarText="@string/fragment_mine" />
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:background="@android:color/white">
 
         <ImageView
             android:id="@+id/mine_img_ico"
             android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_weight="1"
+            android:layout_height="80dp"
             android:layout_marginTop="25dp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
             android:src="@drawable/ico_user" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:layout_marginTop="25dp"
             android:layout_weight="6"
-            android:layout_gravity="center"
             android:orientation="vertical">
 
             <TextView
@@ -73,19 +75,13 @@
 
         </LinearLayout>
 
-
-
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="3dp"
-        android:background="@drawable/shape_line_shade_up_to_down"/>
+        android:background="@drawable/shape_line_shade_up_to_down" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:background="@color/color_translucent" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -96,7 +92,91 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorBackground">
+            android:background="@color/colorBackground"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorBackground"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:background="@color/color_theme_item" />
+
+                <!--<TextView-->
+                <!--android:id="@+id/mine_txt_hotline"-->
+                <!--style="@style/fragment_mine_item_style"-->
+                <!--android:text="@string/service_hotline" />-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/mine_txt_hotline"
+                        style="@style/fragment_mine_item_style"
+                        android:drawableRight="@null"
+                        android:text="@string/service_hotline" />
+
+                    <TextView
+                        android:id="@+id/mine_txt_hotlinenum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="20dp"
+                        android:layout_toLeftOf="@+id/next"
+                        android:singleLine="true"
+                        android:text=""
+                        android:textSize="@dimen/themeSize" />
+
+                    <ImageView
+                        android:id="@+id/next"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="20dp"
+                        android:src="@drawable/btn_arrow_right_gray" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2px"
+                    android:layout_marginLeft="20dp"
+                    android:background="@color/color_light_grey" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        style="@style/fragment_mine_item_style"
+                        android:drawableRight="@null"
+                        android:text="@string/see_address_count" />
+
+
+                    <TextView
+                        android:id="@+id/mine_txt_addresscount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp" />
+
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/color_rim" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:background="@color/color_theme_item" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -110,7 +190,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="1px"
                     android:background="@color/color_rim" />
 
 
@@ -132,7 +212,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="2px"
                     android:layout_marginLeft="20dp"
                     android:background="@color/color_light_grey" />
 
@@ -143,7 +223,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="2px"
                     android:layout_marginLeft="20dp"
                     android:background="@color/color_light_grey" />
 
@@ -166,16 +246,12 @@
                     android:id="@+id/fragment_mine_logout"
                     style="@style/fragment_mine_item_style"
                     android:background="@drawable/layer_button"
+                    android:drawableRight="@null"
                     android:gravity="center"
                     android:text="@string/fragment_mine_logout"
                     android:textColor="@color/colortheme" />
 
             </LinearLayout>
-
-
         </LinearLayout>
-
     </ScrollView>
-
-
 </LinearLayout>

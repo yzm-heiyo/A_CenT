@@ -69,6 +69,7 @@ public class SysItemFragment extends BaseFragment {
         recyclerView = view.findViewById(R.id.sys_recycle);
 
         datas = (List<SystemParamItems>) getArguments().get(ARGUMENT);
+        L.d("House_PropertyTypes",datas.toString());
         selects = (List<String>) getArguments().get(SELECTLIST);
 //        datas = AppSystemParamsManager.getSystemParams(paramsType).getSystemParamItems();
         if (selects == null) selects = new ArrayList<>();

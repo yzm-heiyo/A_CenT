@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/white"
+    android:background="@drawable/selector_white_pink"
     android:orientation="vertical">
 
     <android.support.v4.widget.Space
@@ -16,7 +17,6 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:orientation="horizontal">
-
 
         <ImageView
             android:id="@+id/detail_transact_img_state"
@@ -170,7 +170,7 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
                 android:text=""
-                android:textColor="@color/colortheme" />
+                android:textColor="@color/textcolor_green_red" />
         </LinearLayout>
 
     </LinearLayout>
@@ -187,84 +187,97 @@
         android:layout_marginRight="15dp"
         android:orientation="horizontal">
 
-        <com.centanet.hk.aplus.Widgets.SmallItemView
-            android:id="@+id/detail_transact_stxt_bargain"
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp"
-            app:SmallItemContent=""
-            app:SmallItemContentWeight="2"
-            app:SmallItemTitle="@string/record_transaction_bargain"
-            app:SmallItemTitleWeight="1" />
+            android:layout_weight="1.5">
 
-        <LinearLayout
+            <TextView
+                android:id="@+id/detail_transact_stxt_bargain_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_french_gray"
+                android:textSize="13dp"
+                android:layout_centerVertical="true"
+                android:text="@string/record_transaction_bargain"
+                />
+
+            <TextView
+                android:id="@+id/detail_transact_stxt_bargain"
+                android:layout_width="wrap_content"
+                android:layout_toRightOf="@id/detail_transact_stxt_bargain_title"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/color_black"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:gravity="center_vertical">
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center">
+            <!--<RelativeLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:gravity="center">-->
 
-                <TextView
-                    android:id="@+id/record_transaction_real"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/real" />
+            <TextView
+                android:id="@+id/record_transaction_real"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:textColor="@color/color_french_gray"
+                android:textSize="13dp"
+                android:text="@string/real" />
 
-                <TextView
-                    android:id="@+id/detail_transact_txt_realysize"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="3dp"
-                    android:layout_toLeftOf="@id/record_transaction_real_ruler"
-                    android:layout_toRightOf="@id/record_transaction_real"
-                    android:gravity="center_vertical|right"
-                    android:text=""
-                    android:textColor="@color/color_black" />
+            <TextView
+                android:id="@+id/detail_transact_txt_usesize"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:singleLine="true"
+                android:layout_toRightOf="@+id/record_transaction_real"
+                android:gravity="center_vertical|right"
+                android:text=""
+                android:textColor="@color/color_black" />
 
-                <TextView
-                    android:id="@+id/record_transaction_real_ruler"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:textColor="@color/color_black"
-                    android:gravity="center_vertical"
-                    android:text="@string/ruler" />
-            </RelativeLayout>
+            <!--</RelativeLayout>-->
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical">
+            <!--<RelativeLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:gravity="center_vertical">-->
 
-                <TextView
-                    android:id="@+id/detail_transact_txt_reallyprice"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_toLeftOf="@id/record_transaction_real_price_ruler"
-                    android:gravity="right|center_vertical"
-                    android:singleLine="true"
-                    android:text=""
-                    android:textColor="@color/color_black" />
+            <TextView
+                android:id="@+id/detail_transact_txt_useprice"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/record_transaction_real_price_ruler"
+                android:gravity="right|center_vertical"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/color_black" />
 
-                <TextView
-                    android:id="@+id/record_transaction_real_price_ruler"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
-                    android:text="/呎"
-                    android:textColor="@color/color_black" />
-            </RelativeLayout>
-        </LinearLayout>
+            <TextView
+                android:id="@+id/record_transaction_real_price_ruler"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:singleLine="true"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/color_black"
+                android:gravity="center_vertical"
+                android:text="/呎" />
+            <!--</RelativeLayout>-->
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -276,83 +289,107 @@
         android:orientation="horizontal">
 
         <com.centanet.hk.aplus.Widgets.SmallItemView
-            android:id="@+id/detail_transact_stxt_rentdateto"
+
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             android:paddingBottom="5dp"
             android:paddingTop="5dp"
             app:SmallItemContent=""
             app:SmallItemContentWeight="2"
             app:SmallItemTitle="@string/record_transaction_rentdate_to"
+            android:visibility="gone"
             app:SmallItemTitleWeight="1" />
 
-        <LinearLayout
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5">
+
+            <TextView
+                android:id="@+id/detail_transact_stxt_rentdateto_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_french_gray"
+                android:textSize="13dp"
+                android:layout_centerVertical="true"
+                android:text="@string/record_transaction_rentdate_to"
+                />
+
+            <TextView
+                android:id="@+id/detail_transact_stxt_rentdateto"
+                android:layout_width="wrap_content"
+                android:layout_toRightOf="@id/detail_transact_stxt_rentdateto_title"
+                android:layout_marginLeft="10dp"
+                android:textColor="@color/color_black"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                />
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:gravity="center_vertical">
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center">
+            <!--<RelativeLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:gravity="center">-->
 
-                <TextView
-                    android:id="@+id/record_transaction_build"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/build" />
+            <TextView
+                android:id="@+id/record_transaction_build"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textColor="@color/color_french_gray"
+                android:gravity="center_vertical"
+                android:textSize="13dp"
+                android:text="@string/build" />
 
-                <TextView
-                    android:id="@+id/detail_transact_txt_usesize"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="3dp"
-                    android:layout_toLeftOf="@id/record_transaction_build_ruler"
-                    android:layout_toRightOf="@id/record_transaction_build"
-                    android:gravity="center_vertical|right"
-                    android:text=""
-                    android:textColor="@color/color_black" />
+            <TextView
+                android:id="@+id/detail_transact_txt_realysize"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/record_transaction_build"
+                android:gravity="center_vertical|right"
+                android:text=""
+                android:textColor="@color/color_black" />
 
-                <TextView
-                    android:id="@+id/record_transaction_build_ruler"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:textColor="@color/color_black"
-                    android:gravity="center_vertical"
-                    android:text="@string/ruler" />
-            </RelativeLayout>
+            <!--</RelativeLayout>-->
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_vertical">
+            <!--<RelativeLayout-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:gravity="center_vertical">-->
 
-                <TextView
-                    android:id="@+id/detail_transact_txt_useprice"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_toLeftOf="@id/record_transaction_build_price_ruler"
-                    android:gravity="right|center_vertical"
-                    android:textColor="@color/color_black"
-                    android:singleLine="true"
-                    android:text="" />
+            <TextView
+                android:id="@+id/detail_transact_txt_reallyprice"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@+id/record_transaction_build_price_ruler"
+                android:gravity="right|center_vertical"
+                android:textColor="@color/color_black"
+                android:singleLine="true"
+                android:text="" />
 
-                <TextView
-                    android:id="@+id/record_transaction_build_price_ruler"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:gravity="center_vertical"
-                    android:text="/呎"
-                    android:textColor="@color/color_black" />
-            </RelativeLayout>
-        </LinearLayout>
+            <TextView
+                android:id="@+id/record_transaction_build_price_ruler"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentRight="true"
+                android:gravity="center_vertical"
+                android:text="/呎"
+                android:textColor="@color/color_black"/>
+            <!--</RelativeLayout>-->
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -455,6 +492,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
+        android:layout_marginBottom="1dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:background="@color/color_rim" />

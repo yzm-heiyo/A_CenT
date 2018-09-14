@@ -15,17 +15,17 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_marginLeft="20dp"
-            android:src="@drawable/btn_back_white"/>
+            android:src="@drawable/btn_back_white" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="17dp"
-            android:textStyle="bold"
-            android:textColor="@color/color_white"
-            android:text="@string/filtrate"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"/>
+            android:text="@string/filtrate"
+            android:textColor="@color/color_white"
+            android:textSize="17dp"
+            android:textStyle="bold" />
 
     </RelativeLayout>
 
@@ -33,15 +33,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/titlebar"
         android:layout_above="@id/yes"
+        android:layout_below="@id/titlebar"
         android:orientation="horizontal">
 
         <ScrollView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:scrollbars="none"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:scrollbars="none">
 
             <LinearLayout
                 android:id="@+id/navigation"
@@ -49,133 +49,160 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-
                 <RelativeLayout
-                    android:id="@+id/more_view_statu"
+                    android:id="@+id/more_view_transtype"
                     android:layout_width="wrap_content"
-                    android:background="@drawable/layer_white_grey_bottom"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/more_txt_stacount"
+                    android:layout_alignParentStart="true"
+                    android:background="@drawable/layer_white_grey_bottom">
 
                     <TextView
                         style="@style/fragment_more_title"
-                        android:text="@string/fragment_status"/>
+                        android:text="@string/tran" />
 
                     <TextView
-                        android:id="@+id/more_txt_stacount"
+                        android:id="@+id/more_txt_typecount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/shape_circle_red"
-                        android:layout_marginTop="2dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="25dp"
-                        android:visibility="gone"
+                        android:layout_marginTop="2dp"
+                        android:background="@drawable/shape_circle_red"
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
                         android:text="5"
                         android:textColor="@color/color_white"
-                        android:textSize="10dp" />
+                        android:textSize="10dp"
+                        android:visibility="gone" />
 
-                    <RelativeLayout
-                        android:id="@+id/more_view_transtype"
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/more_view_sale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/layer_white_grey_bottom">
+
+                    <TextView
+                        style="@style/fragment_more_title"
+                        android:text="@string/sale_price" />
+
+                    <TextView
+                        android:id="@+id/more_txt_salecount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_above="@+id/more_txt_stacount"
-                        android:layout_alignParentStart="true"
-                        android:background="@drawable/layer_white_grey_bottom">
-
-                        <TextView
-                            style="@style/fragment_more_title"
-                            android:text="@string/trans_type" />
-
-                        <TextView
-                            android:id="@+id/more_txt_directioncount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginRight="25dp"
-                            android:layout_marginTop="2dp"
-                            android:background="@drawable/shape_circle_red"
-                            android:paddingLeft="4dp"
-                            android:paddingRight="4dp"
-                            android:text="5"
-                            android:textColor="@color/color_white"
-                            android:textSize="10dp"
-                            android:visibility="gone" />
-
-                    </RelativeLayout>
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="25dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@drawable/shape_circle_red"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="5"
+                        android:textColor="@color/color_white"
+                        android:textSize="10dp"
+                        android:visibility="gone" />
                 </RelativeLayout>
 
 
                 <RelativeLayout
                     android:id="@+id/more_view_rent"
                     android:layout_width="wrap_content"
-                    android:background="@drawable/layer_white_grey_bottom"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/layer_white_grey_bottom">
 
                     <TextView
                         style="@style/fragment_more_title"
-                        android:text="@string/rent_price"/>
+                        android:text="@string/rent_price" />
 
                     <TextView
                         android:id="@+id/more_txt_rentcount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/shape_circle_red"
-                        android:layout_marginTop="2dp"
                         android:layout_alignParentRight="true"
-                        android:visibility="gone"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="25dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@drawable/shape_circle_red"
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
                         android:text="5"
                         android:textColor="@color/color_white"
-                        android:textSize="10dp" />
+                        android:textSize="10dp"
+                        android:visibility="gone" />
                 </RelativeLayout>
 
 
                 <RelativeLayout
                     android:id="@+id/more_view_size"
                     android:layout_width="wrap_content"
-                    android:background="@drawable/layer_white_grey_bottom"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/layer_white_grey_bottom">
 
                     <TextView
                         style="@style/fragment_more_title"
-                        android:text="@string/size_price"/>
+                        android:text="@string/size_price" />
 
                     <TextView
                         android:id="@+id/more_txt_sizecount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/shape_circle_red"
-                        android:layout_marginTop="2dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
-                        android:visibility="gone"
                         android:layout_marginRight="25dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@drawable/shape_circle_red"
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
                         android:text="5"
                         android:textColor="@color/color_white"
-                        android:textSize="10dp" />
+                        android:textSize="10dp"
+                        android:visibility="gone" />
                 </RelativeLayout>
 
 
                 <RelativeLayout
                     android:id="@+id/more_view_area"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/layer_white_grey_bottom">
+
+                    <TextView
+                        style="@style/fragment_more_title"
+                        android:text="@string/acreage" />
+
+                    <TextView
+                        android:id="@+id/more_txt_areacpunt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="25dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@drawable/shape_circle_red"
+                        android:paddingLeft="4dp"
+                        android:paddingRight="4dp"
+                        android:text="5"
+                        android:textColor="@color/color_white"
+                        android:textSize="10dp"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/more_view_date"
+                    android:layout_width="wrap_content"
                     android:background="@drawable/layer_white_grey_bottom"
                     android:layout_height="wrap_content">
 
                     <TextView
                         style="@style/fragment_more_title"
-                        android:text="@string/acreage"/>
+                        android:text="@string/date"/>
 
                     <TextView
-                        android:id="@+id/more_txt_areacpunt"
+                        android:id="@+id/more_txt_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/shape_circle_red"
@@ -191,120 +218,114 @@
                         android:textSize="10dp" />
                 </RelativeLayout>
 
-
-
-
-
                 <RelativeLayout
                     android:id="@+id/more_view_interval"
                     android:layout_width="wrap_content"
-                    android:background="@drawable/layer_white_grey_bottom"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/layer_white_grey_bottom">
 
                     <TextView
                         style="@style/fragment_more_title"
-                        android:text="@string/interval"/>
+                        android:text="@string/interval" />
 
                     <TextView
                         android:id="@+id/more_txt_interval"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/shape_circle_red"
-                        android:layout_marginTop="2dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="25dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@drawable/shape_circle_red"
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
-                        android:visibility="gone"
                         android:text="5"
                         android:textColor="@color/color_white"
-                        android:textSize="10dp" />
+                        android:textSize="10dp"
+                        android:visibility="gone" />
                 </RelativeLayout>
 
 
                 <RelativeLayout
                     android:id="@+id/more_view_label"
                     android:layout_width="wrap_content"
-                    android:background="@drawable/layer_white_grey_bottom"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/layer_white_grey_bottom">
 
                     <TextView
                         style="@style/fragment_more_title"
-                        android:text="@string/laber"/>
+                        android:text="@string/laber" />
 
                     <TextView
                         android:id="@+id/more_txt_tagcount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/shape_circle_red"
-                        android:layout_marginTop="2dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="25dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@drawable/shape_circle_red"
                         android:paddingLeft="4dp"
-                        android:visibility="gone"
                         android:paddingRight="4dp"
                         android:text="5"
                         android:textColor="@color/color_white"
-                        android:textSize="10dp" />
+                        android:textSize="10dp"
+                        android:visibility="gone" />
                 </RelativeLayout>
-
-
 
 
                 <RelativeLayout
                     android:id="@+id/more_view_other"
                     android:layout_width="wrap_content"
-                    android:background="@drawable/layer_white_grey_bottom"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/layer_white_grey_bottom">
 
                     <TextView
                         style="@style/fragment_more_title"
-                        android:text="@string/other"/>
+                        android:text="@string/other" />
 
                     <TextView
                         android:id="@+id/more_txt_othercount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/shape_circle_red"
-                        android:layout_marginTop="2dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="25dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@drawable/shape_circle_red"
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
-                        android:visibility="gone"
                         android:text="5"
                         android:textColor="@color/color_white"
-                        android:textSize="10dp" />
+                        android:textSize="10dp"
+                        android:visibility="gone" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/more_view_option"
                     android:layout_width="wrap_content"
-                    android:background="@drawable/layer_white_grey_bottom"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/layer_white_grey_bottom">
 
                     <TextView
                         style="@style/fragment_more_title"
-                        android:text="@string/option"/>
+                        android:text="@string/option" />
 
                     <TextView
                         android:id="@+id/more_txt_optioncount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/shape_circle_red"
-                        android:layout_marginTop="2dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="25dp"
+                        android:layout_marginTop="2dp"
+                        android:background="@drawable/shape_circle_red"
                         android:paddingLeft="4dp"
                         android:paddingRight="4dp"
-                        android:visibility="gone"
                         android:text="5"
                         android:textColor="@color/color_white"
-                        android:textSize="10dp" />
+                        android:textSize="10dp"
+                        android:visibility="gone" />
                 </RelativeLayout>
             </LinearLayout>
         </ScrollView>
@@ -334,7 +355,6 @@
         android:text="@string/confirm"
         android:textColor="@color/colorBackground"
         android:textSize="16dp" />
-
 
 
 </RelativeLayout>

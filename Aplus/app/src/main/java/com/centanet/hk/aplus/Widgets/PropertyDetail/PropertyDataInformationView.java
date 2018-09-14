@@ -55,21 +55,21 @@ public class PropertyDataInformationView extends LinearLayout implements IDataMa
 
     @Override
     public void setData(DetailDataInformation data) {
-
-        String estate = data.getEstate();
-        if (estate != null && estate.length() > 0) {
-            markTxt.setText(estate.substring(estate.indexOf("共") + 1, estate.indexOf("共") + 2));
-            centaPercentTxt.setText(estate.substring(estate.indexOf("佔") + 1, estate.indexOf("佔") + 2));
-            phonePercentTxt.setText(estate.substring(estate.indexOf("話") + 1, estate.indexOf("話") + 2));
-        }
-
-        String dayb = data.getDaybook();
-        L.d("Datainfo", dayb);
-
-        if (dayb != null && dayb.length() > 0) {
-            bargainTxt.setText(dayb.substring(0, dayb.indexOf(" ")));
-            priceTxt.setText(dayb.substring(dayb.indexOf(" ") + 1, dayb.lastIndexOf(";")));
-            ownerTxt.setText(dayb.substring(dayb.lastIndexOf(";") + 1));
-        }
+//
+//        String estate = data.getEstate();
+//        if (estate != null && estate.length() > 0) {
+//            markTxt.setText(estate.substring(estate.indexOf("共") + 1, estate.indexOf("共") + 2));
+//            centaPercentTxt.setText(estate.substring(estate.indexOf("佔") + 1, estate.indexOf("佔") + 2));
+//            phonePercentTxt.setText(estate.substring(estate.indexOf("話") + 1, estate.indexOf("話") + 2));
+//        }
+//
+//        String dayb = data.getDaybook();
+//        L.d("Datainfo", dayb);
+//
+//        if (dayb != null && dayb.length() > 0) {
+//            bargainTxt.setText(dayb.substring(0, dayb.indexOf(" ")));
+//            priceTxt.setText(dayb.substring(dayb.indexOf(" ") + 1, dayb.lastIndexOf(";")));
+//            ownerTxt.setText(dayb.substring(dayb.lastIndexOf(";") + 1));
+//        }
     }
 }

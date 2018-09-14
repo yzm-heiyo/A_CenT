@@ -14,7 +14,7 @@ public class TrustorDetail implements Serializable{
     private String ContactTypeKeyId;      /** 电话类型 从系统参数获取 */
     private String ContactTypeName;       /** 电话类型名称 */
     private String MobileRemark;          /** 备注 */
-    private int DirectSellTyp;            /** 直销类型 0：不反对 1：不可以 2：未知 */
+    private int DirectSellType;            /** 直销类型 0：不反对 1：不可以 2：未知 */
     private boolean IsHidden;             /** 是否隐藏联系方式 */
     private String SetHiddenUserKeyId;    /** 设置隐藏人KeyId */
     private String SetHiddenUserDeptKeyId;/** 设置隐藏部门KeyId */
@@ -53,7 +53,7 @@ public class TrustorDetail implements Serializable{
     }
 
     public void setDirectSellTyp(int directSellTyp) {
-        DirectSellTyp = directSellTyp;
+        DirectSellType = directSellTyp;
     }
 
     public void setHidden(boolean hidden) {
@@ -113,7 +113,7 @@ public class TrustorDetail implements Serializable{
     }
 
     public int getDirectSellTyp() {
-        return DirectSellTyp;
+        return DirectSellType;
     }
 
     public boolean isHidden() {
@@ -153,7 +153,7 @@ public class TrustorDetail implements Serializable{
                 ", ContactTypeKeyId='" + ContactTypeKeyId + '\'' +
                 ", ContactTypeName='" + ContactTypeName + '\'' +
                 ", MobileRemark='" + MobileRemark + '\'' +
-                ", DirectSellTyp=" + DirectSellTyp +
+                ", DirectSellTyp=" + DirectSellType +
                 ", IsHidden=" + IsHidden +
                 ", SetHiddenUserKeyId='" + SetHiddenUserKeyId + '\'' +
                 ", SetHiddenUserDeptKeyId='" + SetHiddenUserDeptKeyId + '\'' +

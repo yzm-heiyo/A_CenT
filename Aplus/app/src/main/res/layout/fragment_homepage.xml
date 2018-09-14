@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pager_sl_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbars="none"
     android:background="@color/color_white">
 
     <LinearLayout
@@ -92,7 +94,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/home_img_history"
-                android:text="@string/search_history"
+                android:text="@string/recent_search"
                 android:textColor="@color/colortheme"
                 android:textStyle="bold" />
 
@@ -113,6 +115,20 @@
                 android:textSize="12dp" />
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/home_txt_searchnorecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:visibility="gone"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/shape_stroke_dotted"
+            android:textColor="@color/color_black"
+            android:text="@string/no_record"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/home_rv_searchhistory"
@@ -193,11 +209,25 @@
                 android:paddingRight="9dp"
                 android:paddingTop="3dp"
                 android:text="@string/clear"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:textColor="@color/color_blue_wathet"
                 android:textSize="12dp" />
 
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/home_txt_usedesignnorecord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:visibility="gone"
+            android:background="@drawable/shape_stroke_dotted"
+            android:textColor="@color/color_black"
+            android:text="@string/no_record"/>
 
         <com.centanet.hk.aplus.Widgets.UserDesignView
             android:id="@+id/uerdesignview"

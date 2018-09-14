@@ -118,7 +118,8 @@ public class FollowRecordFragment extends Fragment implements IDataManager<List<
         for (int i = 0; i < size; i++) {
             PropertyFollow follow = data.get(i);
             View view = inflater.inflate(R.layout.item_follow_item, null, false);
-            ((TextView) view.findViewById(R.id.follow_txt_time)).setText(follow.getFollowTime());
+//            ((TextView) view.findViewById(R.id.follow_txt_time)).setText(follow.getFollowTime());
+            ((TextView) view.findViewById(R.id.follow_txt_time)).setText(follow.getFollowTime().replace("T", " "));
             ((TextView) view.findViewById(R.id.follow_txt_follower)).setText(follow.getFollower());
             ((TextView) view.findViewById(R.id.follow_txt_content)).setText(follow.getFollowContent());
             contentView.addView(view);

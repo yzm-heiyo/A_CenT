@@ -37,12 +37,12 @@ public class PriceRecordFragment extends Fragment implements IDataManager<List<P
     private RadioGroup typeRG;
     private ListView priceListView;
     private RadioButton saleRB, rentRB;
-//    private List<PriceTrust> priceTrusts;
+    //    private List<PriceTrust> priceTrusts;
     private OnItemClickLisenter onItemClickLisenter;
     private String thiz = getClass().getSimpleName();
     private LinearLayout contentView;
     private LayoutInflater inflater;
-    private TextView noDataTxt;
+    private TextView noDataTxt, priceTxt;
     private View title;
     private LinearLayout priceContent;
     private ProgressBar progressBar;
@@ -68,6 +68,7 @@ public class PriceRecordFragment extends Fragment implements IDataManager<List<P
         noDataTxt = view.findViewById(R.id.record_txt_nodata);
         title = view.findViewById(R.id.record_price_title);
         priceContent = view.findViewById(R.id.record_ly_price);
+        priceTxt = view.findViewById(R.id.record_txt_price);
 //        noDataTxt = view.findViewById(R.id)
 //        priceListView = view.findViewById(R.id.record_price_price_list);
     }
@@ -83,8 +84,8 @@ public class PriceRecordFragment extends Fragment implements IDataManager<List<P
         saleRB.setClickable(able);
         saleRB.setChecked(able);
         saleRB.setEnabled(able);
-        saleRB.setBackgroundResource(R.drawable.shape_square_circle_single_left_gray);
-        saleRB.setTextColor(Color.WHITE);
+//        saleRB.setBackgroundResource(R.drawable.shape_square_circle_single_left_gray);
+        saleRB.setTextColor(getResources().getColor(R.color.color_light_grey));
         typeRG.setOnCheckedChangeListener(onCheckedChangeListener);
     }
 
@@ -113,12 +114,13 @@ public class PriceRecordFragment extends Fragment implements IDataManager<List<P
         rentRB.setClickable(able);
         rentRB.setChecked(able);
         rentRB.setEnabled(able);
-        rentRB.setBackgroundResource(R.drawable.shape_square_circle_single_right_gray);
-        rentRB.setTextColor(Color.WHITE);
+//        rentRB.setBackgroundResource(R.drawable.shape_square_circle_single_right_gray);
+        rentRB.setTextColor(getResources().getColor(R.color.color_light_grey));
         typeRG.setOnCheckedChangeListener(onCheckedChangeListener);
     }
 
-    public void resetFragment(){
+    public void resetFragment() {
+        priceTxt.setText(getString(R.string.record_price_sale));
         progressBar.setVisibility(View.VISIBLE);
         contentView.removeAllViews();
         typeRG.setVisibility(View.GONE);
@@ -126,8 +128,8 @@ public class PriceRecordFragment extends Fragment implements IDataManager<List<P
         noDataTxt.setVisibility(View.GONE);
         saleRB.setTextColor(getResources().getColorStateList(R.color.textcolor_red_white));
         rentRB.setTextColor(getResources().getColorStateList(R.color.textcolor_red_white));
-        saleRB.setBackgroundResource(R.drawable.selecter_square_circle_single_left);
-        rentRB.setBackgroundResource(R.drawable.selecter_square_circle_single_right);
+//        saleRB.setBackgroundResource(R.drawable.selecter_square_circle_single_left);
+//        rentRB.setBackgroundResource(R.drawable.selecter_square_circle_single_right);
         rentRB.setClickable(true);
         rentRB.setChecked(false);
         rentRB.setEnabled(true);
@@ -163,7 +165,7 @@ public class PriceRecordFragment extends Fragment implements IDataManager<List<P
     private void addItem(List<PriceTrust> data) {
 //        if (data != null) data.clear();
 //        contentView.removeAllViews();
-        int size = data.size() > 3 ? 3 : data.size();
+        int size = data.size();
         for (int i = 0; i < size; i++) {
             PriceTrust trust = data.get(i);
             View view = inflater.inflate(R.layout.item_list_pricerecord, null, false);
@@ -174,18 +176,56 @@ public class PriceRecordFragment extends Fragment implements IDataManager<List<P
 //            L.d(thiz, "Start: " + price.substring(0, price.indexOf(" ")) + " End: " + price.substring(price.lastIndexOf(" ")));
 //            int startPrice = Integer.parseInt(price.substring(0, price.indexOf(" ")).replace(",", "").trim());
 //            int endPrice = Integer.parseInt(price.substring(price.lastIndexOf(" ")).replace(",", "").trim());
-            int rate = Integer.parseInt(trust.getRate().replace(",", ""));
+            L.d("changerate_", trust.getRate());
+            long rate = 0;
+            if (trust.getRate().indexOf("-") != -1) {
+                rate = -1;
+            } else if (trust.getRate().equals("0")) {
+                rate = 0;
+            } else {
+                rate = 1;
+            }
+
+
+            float changerate = 0;
+            if (trust.getChangeRate() != null) {
+                try {
+                    changerate = Float.parseFloat(trust.getChangeRate().replace(",", ""));
+                } catch (Exception e) {
+
+                }
+            }
+            L.d("changerate", trust.getChangeRate());
             TextView rateTxt = view.findViewById(R.id.item_pricelist_txt_add_reduce);
             if (rate < 0) {
-                rateTxt.setSelected(true);
+//                rateTxt.setSelected(true);
                 saleTxt.setSelected(true);
             }
+
+            if (changerate < 0) {
+                rateTxt.setSelected(true);
+            }
+
             if (rate == 0) {
-                rateTxt.setTextColor(getResources().getColor(R.color.color_black));
+//                rateTxt.setTextColor(getResources().getColor(R.color.color_black));
                 saleTxt.setTextColor(getResources().getColor(R.color.color_black));
             }
+
+            if (changerate == 0) {
+                rateTxt.setTextColor(getResources().getColor(R.color.color_black));
+            }
+
+            if (rate > 0) {
+//                rateTxt.setSelected(false);
+                saleTxt.setSelected(false);
+            }
+
+            if (changerate > 0) {
+                rateTxt.setSelected(false);
+            }
+
             String unit = saleRB.isChecked() ? "萬" : "元";
-            rateTxt.setText(rate + unit + "\n" + "(" + trust.getChangeRate() + "%" + ")");
+            rateTxt.setText(trust.getRate() + unit + "\n" + "(" + trust.getChangeRate() + "%" + ")");
             ((TextView) view.findViewById(R.id.item_pricelist_txt_person)).setText(trust.getCreateUserName());
             contentView.addView(view);
         }
@@ -211,10 +251,13 @@ public class PriceRecordFragment extends Fragment implements IDataManager<List<P
         public void onCheckedChanged(RadioGroup group, int checkedId) {
             switch (checkedId) {
                 case R.id.detail_price_rad_sale:
+                    priceTxt.setText(R.string.record_price_sale);
                     if (onItemClickLisenter != null)
                         onItemClickLisenter.onClick(group.findViewById(checkedId), PROPERTY_PRICE_SALE);
                     break;
                 case R.id.detail_price_rad_rent:
+                    priceTxt.setText(R.string.record_price_rent);
+
                     if (onItemClickLisenter != null)
                         onItemClickLisenter.onClick(group.findViewById(checkedId), PROPERTY_PRICE_RENT);
                     break;

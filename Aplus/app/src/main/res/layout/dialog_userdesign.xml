@@ -50,6 +50,13 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_sort"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    android:visibility="visible"
+                    app:title="@string/fragment_search" />
+
                 <com.centanet.hk.aplus.Widgets.SmartLinBreakView
                     android:id="@+id/userdesign_lb_area"
                     style="@style/OptionDiaog_SmartLinbreak"
@@ -97,6 +104,11 @@
                     android:id="@+id/userdesign_lb_acreage"
                     style="@style/OptionDiaog_SmartLinbreak"
                     app:title="@string/acreage" />
+
+                <com.centanet.hk.aplus.Widgets.SmartLinBreakView
+                    android:id="@+id/userdesign_lb_date"
+                    style="@style/OptionDiaog_SmartLinbreak"
+                    app:title="@string/date" />
 
                 <com.centanet.hk.aplus.Widgets.SmartLinBreakView
                     android:id="@+id/userdesign_lb_ssd"

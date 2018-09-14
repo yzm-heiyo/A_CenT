@@ -9,6 +9,7 @@
     android:paddingRight="10dp"
     android:paddingTop="3dp"
     android:text="天台"
+    android:singleLine="true"
     android:drawableRight="@drawable/ic_close_red"
     android:textColor="@color/color_black"
     android:drawablePadding="5dp"

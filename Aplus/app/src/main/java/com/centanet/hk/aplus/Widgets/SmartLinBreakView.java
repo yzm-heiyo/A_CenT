@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.DensityUtil;
 
 import org.w3c.dom.Text;
 
@@ -27,6 +28,7 @@ public class SmartLinBreakView extends LinearLayout {
     private TextView title;
     private LineBreakLayout breakLayout;
     private OnItemChangeLisenter onItemChangeLisenter;
+    private boolean enableToClick = true;
 
     public SmartLinBreakView(Context context) {
         this(context, null);
@@ -46,10 +48,12 @@ public class SmartLinBreakView extends LinearLayout {
 
     private void initLisenter() {
         breakLayout.setItemOnclickListener((view, contentView1, position) -> {
-            contentView1.removeView(view);
-            if (contentView1.getChildCount() == 0) this.setVisibility(GONE);
-            if (onItemChangeLisenter != null)
-                onItemChangeLisenter.onChangeLisenter(view, contentView1, position);
+            if(enableToClick) {
+                contentView1.removeView(view);
+                if (contentView1.getChildCount() == 0) this.setVisibility(GONE);
+                if (onItemChangeLisenter != null)
+                    onItemChangeLisenter.onChangeLisenter(view, contentView1, position);
+            }
         });
     }
 
@@ -75,6 +79,8 @@ public class SmartLinBreakView extends LinearLayout {
         title = contentView.findViewById(R.id.title);
         breakLayout = contentView.findViewById(R.id.lb);
         breakLayout.setItemContentLayoutID(R.layout.item_dialog_option);
+        breakLayout.setLeftRightSpace(DensityUtil.dip2px(getContext(),20));
+        breakLayout.setRowSpace(DensityUtil.dip2px(getContext(),15));
         this.addView(contentView);
     }
 
@@ -82,10 +88,21 @@ public class SmartLinBreakView extends LinearLayout {
         this.onItemChangeLisenter = onItemChangeLisenter;
     }
 
+    public void enablieToClick(boolean enable){
+        enableToClick = enable;
+        if(!enable)breakLayout.setItemContentLayoutID(R.layout.item_dialog_un_option);
+    }
+    public void setLayoutId(int layout){
+        breakLayout.setItemContentLayoutID(layout);
+    }
+
     public void addItem(String item) {
         breakLayout.addItem(item);
     }
 
+    public void addItem(View v){
+        breakLayout.addItem(v);
+    }
     public void addItem(List<String> items) {
         breakLayout.addItem(items);
     }

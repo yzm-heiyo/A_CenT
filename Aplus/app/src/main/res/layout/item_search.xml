@@ -63,7 +63,7 @@
                 android:id="@+id/item_search_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@id/item_search_acronym_txt"
+                android:layout_toRightOf="@+id/item_search_acronym_txt"
                 android:maxLines="1"
                 android:padding="2dp"
                 android:textColor="@color/color_itemt_result_text"

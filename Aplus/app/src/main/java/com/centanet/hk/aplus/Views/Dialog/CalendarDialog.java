@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.L;
 import com.centanet.hk.aplus.Widgets.CalendarListView;
 
 import java.text.SimpleDateFormat;
@@ -41,18 +42,42 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initView();
         init();
+        initView();
         initLisenter();
+        if(startCl!=null)
+        calendarListView.scrollToMonth(startCl.get(Calendar.MONTH));
+        else calendarListView.scrollToMonth(calendar.get(Calendar.MONTH));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        if(startCl!=null)
+//        calendarListView.scrollToMonth(startCl.get(Calendar.MONTH));
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+//            if(startCl!=null)
+//                calendarListView.scrollToMonth(startCl.get(Calendar.MONTH));
     }
 
     private void init() {
-
         calendar = Calendar.getInstance();
+        L.d("CalendarDialog","CalendarDialog_init");
+        if(startCl!=null){
+            calendar.set(Calendar.YEAR,startCl.get(Calendar.YEAR));
+        }
+
         currentYear = calendar.get(Calendar.YEAR);
     }
 
     private void initLisenter() {
+
+        yearTxt.setOnClickListener(this);
 
         calendarListView.setOnItemClickLisenter((start, end) -> {
 
@@ -63,7 +88,7 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
                 startYearTxt.setText(start.get(Calendar.YEAR) + "");
                 startDateTxt.setText(start.get(Calendar.MONTH) + 1 + "月" + start.get(Calendar.DAY_OF_MONTH) + "日");
             } else {
-                startYearTxt.setText("");
+                startYearTxt.setText(getString(R.string.please_select));
                 startDateTxt.setText("");
             }
 
@@ -72,10 +97,10 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
                 endDateTxt.setText(end.get(Calendar.MONTH) + 1 + "月" + end.get(Calendar.DAY_OF_MONTH) + "日");
 
                 int days = (int) ((start.getTimeInMillis() - end.getTimeInMillis()) / (24L * 60 * 60 * 1000));
-                yesTxt.setText(getString(R.string.dialog_confirm_confirm) + "(共" + Math.abs(days) + "日)");
+                yesTxt.setText(getString(R.string.dialog_confirm_confirm) + " " + "(共" + Math.abs(days) + "日)");
 
             } else {
-                endYearTxt.setText("");
+                endYearTxt.setText(getString(R.string.please_select));
                 endDateTxt.setText("");
                 yesTxt.setText(getString(R.string.dialog_confirm_confirm));
             }
@@ -111,6 +136,7 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
     }
 
     private void initView() {
+
         dialog = new Dialog(getActivity(), R.style.BottomDialog);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCanceledOnTouchOutside(true);
@@ -121,6 +147,7 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
         nextImg = dialog.findViewById(R.id.calendar_img_next);
 
         yearTxt = dialog.findViewById(R.id.calendar_txt_year);
+        yearTxt.setText(calendar.get(Calendar.YEAR)+"");
         yesTxt = dialog.findViewById(R.id.calendar_txt_yes);
 
         startYearTxt = dialog.findViewById(R.id.calendar_txt_start_year);
@@ -129,7 +156,6 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
         endDateTxt = dialog.findViewById(R.id.calendar_txt_end_date);
 
         if (startCl != null) {
-
             startYearTxt.setText(startCl.get(Calendar.YEAR) + "");
             startDateTxt.setText(startCl.get(Calendar.MONTH) + 1 + "月" + startCl.get(Calendar.DAY_OF_MONTH) + "日");
         }
@@ -142,6 +168,7 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
         calendarListView = dialog.findViewById(R.id.calendar_calendarlist);
         calendarListView.setEndCalendar(endCl);
         calendarListView.setStartCalendar(startCl);
+        calendarListView.setCalendar(calendar);
 
         Window window = dialog.getWindow();
         window.setWindowAnimations(R.style.AnimBottom);
@@ -155,6 +182,7 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
     }
 
     public void setStartCl(Calendar startCl) {
+        L.d("CalendarDialog","CalendarDialog_start");
         this.startCl = startCl;
     }
 
@@ -165,9 +193,28 @@ public class CalendarDialog extends DialogFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
-
+            case R.id.calendar_txt_year:
+                openYearDialog();
+                break;
         }
+    }
+
+    private void openYearDialog() {
+
+        RadioWheelViewDialog wheelViewDialog = new RadioWheelViewDialog();
+        wheelViewDialog.setOnDialogClickLisenter((dialog1, years) -> {
+//            Calendar calendar = Calendar.getInstance();
+            dialog1.dismiss();
+            yearTxt.setText(years[0]);
+            L.d("openYearDialog",Integer.parseInt(years[0])+"");
+            currentYear = Integer.parseInt(years[0]);
+            calendar.set(Calendar.YEAR,currentYear);
+            L.d("openYearDialog_can",calendar.get(Calendar.YEAR)+"");
+
+            calendarListView.setCalendar(calendar);
+        });
+        wheelViewDialog.show(getFragmentManager(), "");
+
     }
 
     public void setOnDialogOnclikeLisenter(OnDialogClickLisenter onDialogOnclikeLisenter) {

@@ -48,6 +48,14 @@
         app:SmallItemTitleWeight="1"/>
 
     <com.centanet.hk.aplus.Widgets.SmallItemView
+        android:id="@+id/detail_txt_dev"
+        style="@style/smallitem_style"
+        app:SmallItemContent=""
+        app:SmallItemContentWeight="5"
+        app:SmallItemTitle="@string/development"
+        app:SmallItemTitleWeight="1"/>
+
+    <com.centanet.hk.aplus.Widgets.SmallItemView
         android:id="@+id/detail_txt_landlease"
         style="@style/smallitem_style"
         app:SmallItemContent=""
@@ -67,6 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="設施"
+            android:textColor="@color/color_french_gray"
             android:textSize="@dimen/themeSizesmall" />
 
         <LinearLayout

@@ -22,7 +22,7 @@
     <string name="area">區域</string>
     <string name="fragment_more">更多</string>
 
-    <string name="fragment_mine">我的賬號</string>
+    <string name="fragment_mine">我的帳戶</string>
 
     <string name="fragment_mine_installation">裝置管理</string>
     <string name="fragment_mine_staff">員工管理</string>
@@ -38,6 +38,7 @@
     <string name="opendate">最後跟進日期</string>
 
     <string name="dialog_sort">預設排序</string>
+    <string name="sort">排序</string>
     <string name="dialog_price">售價</string>
     <string name="sale_price">售價</string>
     <string name="dialog_rent">租價</string>
@@ -179,6 +180,7 @@
     <string name="loading">加載中…</string>
     <string name="load_error">网络出错</string>
     <string name="hk_loading">載入中...</string>
+    <string name="try_later">請稍後再試</string>
     <string name="no_more_data">已無更多數據</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -188,10 +190,11 @@
     <string name="detail_follow_add">新增跟進</string>
     <string name="detail_follow">跟進</string>
     <string name="detail_data_information">數據資料</string>
-    <string name="record_price">叫價紀錄</string>
-    <string name="record_transaction">成交紀錄</string>
+    <string name="record_price">叫價記錄</string>
+    <string name="record_transaction">成交記錄</string>
     <string name="record_price_add_reduce">升跌(%)</string>
     <string name="record_price_sale">售價（萬）</string>
+    <string name="record_price_rent">租價（元）</string>
     <string name="date">日期</string>
     <string name="record_price_changer">議價人</string>
     <string name="record_transaction_manager">成交經理人</string>
@@ -202,8 +205,10 @@
     <string name="record_transaction_appointment">臨約日期</string>
     <string name="record_transaction_finish">完成日期</string>
     <string name="record_transaction_official">正約日期</string>
+    <string name="record_transaction_rentdate">租約日期</string>
     <string name="record_transaction_bargain">成交日期</string>
     <string name="record_transaction_create_date">建立日期</string>
+    <string name="date_scope">日期範圍</string>
     <string name="daybook">Daybook</string>
     <string name="real">實</string>
     <string name="build">建</string>
@@ -220,15 +225,16 @@
     <string name="start_date">開始日期</string>
     <string name="end_state">結束日期</string>
     <string name="keywork">關鍵字</string>
+    <string name="please_select">請選擇</string>
     <string name="cancel">取消</string>
     <string name="basicinfo">基本資料</string>
     <string name="transact_30">近30天屋苑成交</string>
     <string name="centa_percent">中原佔</string>
-    <string name="phone_percent">電話佔</string>
+    <string name="phone_percent">有電話</string>
     <string name="owner">業主</string>
     <string name="market_transact">市場成交</string>
     <string name="trans_record">成交記錄</string>
-    <string name="no_data">沒有相關數據</string>
+    <string name="no_data">暫無相關記錄</string>
     <string name="date_interval">日期範圍</string>
 
     <string name="floot_and_unit">樓層及單位</string>
@@ -252,6 +258,7 @@
     <string name="statu_change">狀態變更</string>
     <string name="finish_year">落成年份</string>
     <string name="year">年份</string>
+    <string name="please_select_year">請選擇年份</string>
     <string name="select_date_interval">選擇日期範圍</string>
     <string name="undate">不限日期</string>
 
@@ -302,7 +309,9 @@
 
     <string name="add_to_userdesign">加入至自訂搜尋條件</string>
     <string name="cenvenient_to_see">方便日後於 “首頁” 隨時翻查紀錄</string>
-    
+
+    <string name="development">發展商</string>
+
     <string name="centa_sale">Y (中原售)</string>
     <string name="centa_rent">YT (中原租)</string>
     <string name="other_sale">X (行家售)</string>
@@ -314,5 +323,22 @@
     <string name="corporationTransferre">公司轉讓</string>
     <string name="confirmed">已確認</string>
     <string name="developmentEndCredits">發展商貨尾</string>
+    <string name="buy_people">買方</string>
+    <string name="sale_people">賣方</string>
+    <string name="sale_buy_people">雙方</string>add
+    <string name="add">加入</string>
+    <string name="remove">移除</string>
+
+    <string name="success_to_save">成功保存搜尋條件</string>
+    <string name="select_max_20">最多選擇二十個地址</string>
+    <string name="selected">已選</string>
+
+    <string name="no_record">沒有記錄</string>
+    <string name="service_hotline">服務熱線</string>
+    <string name="see_address_count">查看地址詳情配額</string>
+    <string name="use_info">使用說明</string>
+    <string name="call_count">來電統計</string>
+    <string name="recent_search">最近搜尋</string>
+    <string name="record_history">搜索記錄</string>
 
 </resources>

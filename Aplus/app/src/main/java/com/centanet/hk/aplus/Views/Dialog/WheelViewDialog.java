@@ -57,9 +57,11 @@ public class WheelViewDialog extends DialogFragment implements View.OnClickListe
 
         wheelViewFrom = dialog.findViewById(R.id.wheelviewfrom);
         wheelViewFrom.setCyclic(false);
+        wheelViewFrom.setTextColorCenter(getResources().getColor(R.color.color_black));
 
         wheelViewTo = dialog.findViewById(R.id.wheelviewto);
         wheelViewTo.setCyclic(false);
+        wheelViewTo.setTextColorCenter(getResources().getColor(R.color.color_black));
 
         yes = dialog.findViewById(R.id.yes);
         cancel = dialog.findViewById(R.id.close);
@@ -69,14 +71,17 @@ public class WheelViewDialog extends DialogFragment implements View.OnClickListe
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
 
+        int count = Calendar.getInstance().get(Calendar.YEAR) - 1900;
 
-        for (int i = 0; i < 50; i++) {
+        yearList.add(getString(R.string.dialog_price_unlimit));
+
+        for (int i = 0; i < count + 1; i++) {
             yearList.add((year - i) + "");
         }
 
         if (starYear != null && !starYear.equals("")) {
             years[0] = starYear;
-            if(yearList.indexOf(starYear)!=-1)
+            if (yearList.indexOf(starYear) != -1)
                 wheelViewFrom.setCurrentItem(yearList.indexOf(starYear));
 
         } else
@@ -84,12 +89,10 @@ public class WheelViewDialog extends DialogFragment implements View.OnClickListe
 
         if (endYear != null && !endYear.equals("")) {
             years[1] = endYear;
-            if(yearList.indexOf(endYear)!=-1)
+            if (yearList.indexOf(endYear) != -1)
                 wheelViewTo.setCurrentItem(yearList.indexOf(endYear));
         } else
             years[1] = year + "";
-
-
 
 
         wheelViewFrom.setAdapter(new ArrayWheelAdapter(yearList));

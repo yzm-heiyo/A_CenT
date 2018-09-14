@@ -11,9 +11,18 @@ import java.util.List;
 public class AppNetViewDataManager {
 
     private static List<PropertyFastSearcherTag> tagList;
+    private static List<PropertyFastSearcherTag> tranTagList;
 
     public static void setTagList(List<PropertyFastSearcherTag> tagList) {
         AppNetViewDataManager.tagList = tagList;
+    }
+
+    public static void setTranTagList(List<PropertyFastSearcherTag> tranTagList) {
+        AppNetViewDataManager.tranTagList = tranTagList;
+    }
+
+    public static List<PropertyFastSearcherTag> getTranTagList() {
+        return tranTagList;
     }
 
     public static List<PropertyFastSearcherTag> getTagList() {

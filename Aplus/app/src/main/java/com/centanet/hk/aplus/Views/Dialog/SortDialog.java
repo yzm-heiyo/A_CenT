@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -24,7 +25,7 @@ import java.util.Map;
  * Created by yangzm4 on 2018/2/28.
  */
 
-public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChangeListener {
+public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChangeListener,View.OnClickListener {
 
     public static final String PARAMS_ASCENDING = "Ascending";
     public static final String PARAMS_SORTFIELD = "SortField";
@@ -34,6 +35,8 @@ public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChange
     private RadioGroup sortLeftRG, sortRightRG, txtRG;
     private View sortLayout;
     private int defaultId;
+    private ImageView imageView;
+    private boolean show;
 //    private boolean isFirst = true;
 
     public SortDialog() {
@@ -70,7 +73,19 @@ public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChange
         sortLayout = dialog.findViewById(R.id.dialog_sort_layout);
         sortLeftRG = sortLayout.findViewById(R.id.sort_left_group);
         sortRightRG = sortLayout.findViewById(R.id.sort_right_group);
+        imageView = dialog.findViewById(R.id.close);
+        imageView.setOnClickListener(this);
         txtRG = sortLayout.findViewById(R.id.sort_txt_group);
+
+        if(!show){
+            dialog.findViewById(R.id.sort_txt_green).setVisibility(View.GONE);
+            dialog.findViewById(R.id.sort_rb_green_up).setVisibility(View.GONE);
+            dialog.findViewById(R.id.sort_rb_green_down).setVisibility(View.GONE);
+        }else {
+            dialog.findViewById(R.id.sort_txt_green).setVisibility(View.VISIBLE);
+            dialog.findViewById(R.id.sort_rb_green_up).setVisibility(View.VISIBLE);
+            dialog.findViewById(R.id.sort_rb_green_down).setVisibility(View.VISIBLE);
+        }
 
         checkRadioButton(defaultId);
         checkTxt(defaultId);
@@ -126,9 +141,26 @@ public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChange
                 case R.id.sort_rb_use_down:
                     txtRG.check(R.id.sort_txt_user);
                     break;
+                case R.id.sort_rb_green_up:
+                case R.id.sort_rb_green_down:
+                    txtRG.check(R.id.sort_txt_green);
+                    break;
             }
         }
 
+    }
+
+    public void isShowGreenPrice(boolean show){
+        this.show = show;
+        //        if(!show){
+//            dialog.findViewById(R.id.sort_txt_green).setVisibility(View.GONE);
+//            dialog.findViewById(R.id.sort_rb_green_up).setVisibility(View.GONE);
+//            dialog.findViewById(R.id.sort_rb_green_down).setVisibility(View.GONE);
+//        }else {
+//            dialog.findViewById(R.id.sort_txt_green).setVisibility(View.VISIBLE);
+//            dialog.findViewById(R.id.sort_rb_green_up).setVisibility(View.VISIBLE);
+//            dialog.findViewById(R.id.sort_rb_green_down).setVisibility(View.VISIBLE);
+//        }
     }
 
     private void checkRadioButton(int defaultId) {
@@ -138,6 +170,7 @@ public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChange
                 case R.id.sort_rb_real_up:
                 case R.id.sort_rb_rent_up:
                 case R.id.sort_rb_use_up:
+                case R.id.sort_rb_green_up:
                     L.d("SortDialog", "" + defaultId);
                     sortLeftRG.check(defaultId);
                     return;
@@ -197,6 +230,10 @@ public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChange
                 params.put(PARAMS_ASCENDING, true);
                 params.put(PARAMS_SORTFIELD, "SquareFoot");
                 break;
+            case R.id.sort_rb_green_up:
+                params.put(PARAMS_ASCENDING, true);
+                params.put(PARAMS_SORTFIELD, "SalePricePremiumUnpaid");
+                break;
             case R.id.sort_rb_price_down:
                 params.put(PARAMS_ASCENDING, false);
                 params.put(PARAMS_SORTFIELD, "SalePrice");
@@ -213,13 +250,22 @@ public class SortDialog extends BaseDialog implements RadioGroup.OnCheckedChange
                 params.put(PARAMS_ASCENDING, false);
                 params.put(PARAMS_SORTFIELD, "SquareFoot");
                 break;
+            case R.id.sort_rb_green_down:
+                params.put(PARAMS_ASCENDING, false);
+                params.put(PARAMS_SORTFIELD, "SalePricePremiumUnpaid");
+                break;
         }
         L.d("SortDialog", "" + params.get("Ascending"));
         onDialogClikeLisenter.onClike(dialog, 0, params);
     }
 
+    @Override
+    public void onClick(View view) {
+        dialog.dismiss();
+    }
+
     public interface onDialogOnclikeLisenter extends BaseDialog.onDialogOnclikeLisenter<Map<String, Object>> {
     }
 
-    ;
+
 }

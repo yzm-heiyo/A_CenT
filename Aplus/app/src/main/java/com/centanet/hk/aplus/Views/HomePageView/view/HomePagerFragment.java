@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
 import android.widget.Space;
 import android.widget.TextView;
 
@@ -108,14 +109,9 @@ public class HomePagerFragment extends BaseFragment implements IHomeView {
     private boolean hasLoad;
     private UserDesignView userDesignView;
     private boolean isFirst = true;
+    private TextView noRecodeTxt, noUserDesignTxt;
+    private ScrollView content;
 
-
-//    @Override
-//    protected void isShowFront() {
-//        super.isShowFront();
-//        L.d("isShowFront","");
-
-//    }
 
     @Nullable
     @Override
@@ -131,7 +127,6 @@ public class HomePagerFragment extends BaseFragment implements IHomeView {
     private void init() {
 
         header = ApplicationManager.getApplication().getHeaderDescription();
-
         presenter = new HomePreaenter(this);
 
         L.d("HomePagerFragment", "init");
@@ -141,13 +136,35 @@ public class HomePagerFragment extends BaseFragment implements IHomeView {
     private void initLisenter() {
         L.d("HomePagerFragment", "initLisenter");
         hisClearTxt.setOnClickListener(v -> {
-            DataSupport.deleteAll(PropertyParamHints.class);
+            LitePal.deleteAll(PropertyParamHints.class);
             historys.clear();
             adapter.notifyDataSetChanged();
+            refreshSearchHisState(false);
         });
 
         adapter.setOnItemClickLisenter((v, position) -> {
             L.d("RecycleView", "" + position);
+
+            L.d("HistoryAdapter", "position: " + position);
+            PropertyParamHints s = historys.get(position);
+            List<PropertyParamHints> propertyParamHints = new ArrayList<>();
+            propertyParamHints.add(s);
+            if (PropertyRequestParamsManager.getParams() == null) {
+                PropertyRequestParamsManager.setParams(new PropertyRequestSaveParams());
+            }
+            PropertyRequestParamsManager.getParams().setAddress(propertyParamHints);
+            String add = s.getKeyIdType() + ":" + s.getKeyId();
+            List<String> address = new ArrayList<>();
+            address.add(add);
+            HouseDescription houseDescription = new HouseDescription();
+            houseDescription.setSearcherAddress(address);
+            HouseFragment houseFragment = new HouseFragment();
+            Bundle bundle = new Bundle();
+            bundle.putSerializable("HOUSE_REQUEST", houseDescription);
+            houseFragment.setArguments(bundle);
+//            PropertyRequestParamsManager.setParams(propertySearchHistories.get(position).getManager());
+            turnToFragment(houseFragment, HouseFragment.FRAGMENT_TAG_HOUSELIST);
+
         });
 
         pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -169,10 +186,6 @@ public class HomePagerFragment extends BaseFragment implements IHomeView {
 
         searchTxt.setOnClickListener(v -> {
             L.d("HomePager", "searchTxt OnClick");
-//            FragmentTransaction ft = getParentFragment().getChildFragmentManager().beginTransaction();
-//            ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-//            ft.hide(this);
-//            ft.add(R.id.fragment_content, new SearchFragment(), SearchFragment.FRAGMENT_TAG_SEARCH).commit();
             turnToFragment(new SearchFragment(), SearchFragment.FRAGMENT_TAG_SEARCH);
         });
 
@@ -191,6 +204,7 @@ public class HomePagerFragment extends BaseFragment implements IHomeView {
             houseFragment.setArguments(bundle);
             PropertyRequestParamsManager.setParams(propertySearchHistories.get(position).getManager());
             turnToFragment(houseFragment, HouseFragment.FRAGMENT_TAG_HOUSELIST);
+            refreshUseDesignState(false);
         });
 
         userDesignClearTxt.setOnClickListener(v -> {
@@ -199,7 +213,20 @@ public class HomePagerFragment extends BaseFragment implements IHomeView {
             if (file.exists()) file.delete();
             propertySearchHistories.clear();
             userDesignView.removeAllViews();
+            refreshUseDesignState(false);
         });
+    }
+
+    private void refreshUseDesignState(boolean isDataExist) {
+        userDesignView.setVisibility(isDataExist ? View.VISIBLE : View.GONE);
+//        userDesignClearTxt.setVisibility(isDataExist ? View.VISIBLE : View.GONE);
+        noUserDesignTxt.setVisibility(isDataExist ? View.GONE : View.VISIBLE);
+    }
+
+    private void refreshSearchHisState(boolean isDataExist) {
+        hisClearTxt.setVisibility(isDataExist ? View.VISIBLE : View.GONE);
+        recyclerView.setVisibility(isDataExist ? View.VISIBLE : View.GONE);
+        noRecodeTxt.setVisibility(isDataExist ? View.GONE : View.VISIBLE);
     }
 
 
@@ -217,6 +244,9 @@ public class HomePagerFragment extends BaseFragment implements IHomeView {
         micImg = view.findViewById(R.id.mic);
         userDesignView = view.findViewById(R.id.uerdesignview);
         userDesignClearTxt = view.findViewById(R.id.home_txt_clearuserdesign);
+        noUserDesignTxt = view.findViewById(R.id.home_txt_usedesignnorecord);
+        content = view.findViewById(R.id.pager_sl_content);
+        noRecodeTxt = view.findViewById(R.id.home_txt_searchnorecord);
 
         pager = view.findViewById(R.id.home_vp);
         group = view.findViewById(R.id.home_rg_tags);
@@ -227,9 +257,7 @@ public class HomePagerFragment extends BaseFragment implements IHomeView {
 //        pager.setAdapter(pagerAdapter);
 
         refreshData();
-
         propertySearchHistories = new ArrayList<>();
-
         adapter = new HistoryAdapter(historys);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -237,7 +265,6 @@ public class HomePagerFragment extends BaseFragment implements IHomeView {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         recyclerView.setAdapter(adapter);
-
     }
 
     private List<Fragment> getFragments() {
@@ -248,16 +275,6 @@ public class HomePagerFragment extends BaseFragment implements IHomeView {
         return fragments;
     }
 
-//    @Override
-//    public void setUserVisibleHint(boolean isVisibleToUser) {
-//        super.setUserVisibleHint(isVisibleToUser);
-//        if (isVisibleToUser) {
-//            refreshData();
-//        } else {
-//            //相当于Fragment的onPause
-//
-//        }
-//    }
 
     @Override
     public void onResume() {
@@ -306,6 +323,10 @@ public class HomePagerFragment extends BaseFragment implements IHomeView {
         historys.addAll(LitePal.findAll(PropertyParamHints.class));
         if (adapter != null) adapter.notifyDataSetChanged();
 
+        if (historys.isEmpty()) {
+            refreshSearchHisState(false);
+        } else refreshSearchHisState(true);
+
         if (propertySearchHistories == null) propertySearchHistories = new ArrayList<>();
         if (propertySearchHistories != null) propertySearchHistories.clear();
     }
@@ -320,11 +341,14 @@ public class HomePagerFragment extends BaseFragment implements IHomeView {
                 L.d("HisTory", searchHistories.toString());
                 propertySearchHistories.addAll(searchHistories);
                 getActivity().runOnUiThread(() -> {
+                    if (propertySearchHistories.isEmpty()) {
+                        refreshUseDesignState(false);
+                    } else refreshUseDesignState(true);
                     userDesignView.removeAllViews();
                     userDesignView.addItem(propertySearchHistories);
                 });
             }).start();
-        }
+        } else refreshUseDesignState(false);
     }
 
     @Override
@@ -409,6 +433,10 @@ public class HomePagerFragment extends BaseFragment implements IHomeView {
         L.d("getUseDesign", LitePal.findAll(PropertySearchHistory.class).toString());
     }
 
+    public void scrollToTop() {
+        content.scrollTo(0,0);
+    }
+
     class HistoryAdapter extends BaseRecycleAdapter<PropertyParamHints> {
 
         public OnItemClickLisenter lisenter;
@@ -439,7 +467,10 @@ public class HomePagerFragment extends BaseFragment implements IHomeView {
             }
             holder.getView(R.id.content).setTag(position);
             holder.getView(R.id.content).setOnClickListener(v -> {
-                if (lisenter != null) lisenter.onClick(v, (Integer) v.getTag());
+                if (lisenter != null) {
+                    L.d("HistoryAdapter", "onClick");
+                    lisenter.onClick(v, (Integer) v.getTag());
+                }
             });
             setItemText(holder.getView(R.id.street), title + datas.get(position).getAreaName());
         }

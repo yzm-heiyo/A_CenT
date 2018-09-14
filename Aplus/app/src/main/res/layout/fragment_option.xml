@@ -1,214 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/option_ll_content"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_white"
-    android:orientation="vertical">
+    android:background="@color/color_white">
 
     <LinearLayout
-        android:id="@+id/option_view_carplace"
+        android:id="@+id/option_ll_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <CheckBox
-            style="@style/checkbox"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:clickable="false"
-            android:enabled="false" />
+        <LinearLayout
+            android:id="@+id/option_view_carplace"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <TextView
-            style="@style/fragment_more_status"
-            android:text="@string/car_place" />
+            <CheckBox
+                style="@style/checkbox"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:clickable="false"
+                android:enabled="false" />
+
+            <TextView
+                style="@style/fragment_more_status"
+                android:text="@string/car_place" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/option_view_congreenprice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                style="@style/checkbox"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:clickable="false"
+                android:enabled="false" />
+
+            <TextView
+                style="@style/fragment_more_status"
+                android:text="@string/connect_green_price" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/option_view_greenprice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                style="@style/checkbox"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:clickable="false"
+                android:enabled="false" />
+
+            <TextView
+                style="@style/fragment_more_status"
+                android:text="@string/green_price" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/option_view_exclusive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+
+                style="@style/checkbox"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:clickable="false"
+                android:enabled="false" />
+
+
+            <TextView
+                style="@style/fragment_more_status"
+                android:text="@string/exclusive" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/option_view_key"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <CheckBox
+                style="@style/checkbox"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:clickable="false"
+                android:enabled="false" />
+
+
+            <TextView
+                style="@style/fragment_more_status"
+                android:text="@string/key" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/option_view_hotlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                style="@style/checkbox"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:clickable="false"
+                android:enabled="false" />
+
+            <TextView
+                style="@style/fragment_more_status"
+                android:text="@string/hotlist" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/option_view_nossd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                style="@style/checkbox"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:clickable="false"
+                android:enabled="false" />
+
+
+            <TextView
+                style="@style/fragment_more_status"
+                android:text="@string/no_ssd" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/option_view_powerofattorney"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                style="@style/checkbox"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:clickable="false"
+                android:enabled="false" />
+
+
+            <TextView
+                style="@style/fragment_more_status"
+                android:text="@string/power_of_attorney" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/option_view_pending"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                style="@style/checkbox"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:clickable="false"
+                android:enabled="false" />
+
+            <TextView
+                style="@style/fragment_more_status"
+                android:text="@string/pending" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/option_view_operperty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                style="@style/checkbox"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:clickable="false"
+                android:enabled="false" />
+
+            <TextView
+                style="@style/fragment_more_status"
+                android:text="@string/o_property" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/option_view_unconfirmtran"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                style="@style/checkbox"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:clickable="false"
+                android:enabled="false" />
+
+            <TextView
+                style="@style/fragment_more_status"
+                android:text="@string/unconfirm_tran" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/option_view_congreenprice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
 
-        <CheckBox
-            style="@style/checkbox"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:clickable="false"
-            android:enabled="false" />
-
-        <TextView
-            style="@style/fragment_more_status"
-            android:text="@string/connect_green_price" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/option_view_greenprice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <CheckBox
-            style="@style/checkbox"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:clickable="false"
-            android:enabled="false" />
-
-        <TextView
-            style="@style/fragment_more_status"
-            android:text="@string/green_price" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/option_view_exclusive"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <CheckBox
-
-            style="@style/checkbox"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:clickable="false"
-            android:enabled="false" />
-
-
-        <TextView
-            style="@style/fragment_more_status"
-            android:text="@string/exclusive" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/option_view_key"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-
-        <CheckBox
-            style="@style/checkbox"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:clickable="false"
-            android:enabled="false" />
-
-
-        <TextView
-            style="@style/fragment_more_status"
-            android:text="@string/key" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/option_view_hotlist"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <CheckBox
-            style="@style/checkbox"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:clickable="false"
-            android:enabled="false" />
-
-        <TextView
-            style="@style/fragment_more_status"
-            android:text="@string/hotlist" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/option_view_nossd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <CheckBox
-            style="@style/checkbox"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:clickable="false"
-            android:enabled="false" />
-
-
-        <TextView
-            style="@style/fragment_more_status"
-            android:text="@string/no_ssd" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/option_view_powerofattorney"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <CheckBox
-            style="@style/checkbox"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:clickable="false"
-            android:enabled="false" />
-
-
-        <TextView
-            style="@style/fragment_more_status"
-            android:text="@string/power_of_attorney" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/option_view_pending"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <CheckBox
-            style="@style/checkbox"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:clickable="false"
-            android:enabled="false" />
-
-        <TextView
-            style="@style/fragment_more_status"
-            android:text="@string/pending" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/option_view_operperty"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <CheckBox
-            style="@style/checkbox"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:clickable="false"
-            android:enabled="false" />
-
-        <TextView
-            style="@style/fragment_more_status"
-            android:text="@string/o_property" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/option_view_unconfirmtran"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <CheckBox
-            style="@style/checkbox"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:clickable="false"
-            android:enabled="false" />
-
-        <TextView
-            style="@style/fragment_more_status"
-            android:text="@string/unconfirm_tran" />
-    </LinearLayout>
-
-
-</LinearLayout>
+</ScrollView>

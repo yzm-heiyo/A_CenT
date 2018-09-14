@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.DensityUtil;
 import com.centanet.hk.aplus.Utils.L;
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class LineBreakLayout extends ViewGroup implements View.OnClickListener {
 
     private onItemOnclickListener mOnClickListener;
 
+    private Context context;
+
     private int contentLayoutID;
 
     //自定义属性
@@ -48,6 +51,7 @@ public class LineBreakLayout extends ViewGroup implements View.OnClickListener {
 
     public LineBreakLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        this.context = context;
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.LineBreakLayout);
         LEFT_RIGHT_SPACE = ta.getDimensionPixelSize(R.styleable.LineBreakLayout_leftAndRightSpace1, 10);//默认10
         ROW_SPACE = ta.getDimensionPixelSize(R.styleable.LineBreakLayout_rowSpace1, 10);
@@ -86,7 +90,8 @@ public class LineBreakLayout extends ViewGroup implements View.OnClickListener {
      * @param leftRightSpace
      */
     public void setLeftRightSpace(int leftRightSpace) {
-        LEFT_RIGHT_SPACE = leftRightSpace;
+//        LEFT_RIGHT_SPACE = leftRightSpace;
+        LEFT_RIGHT_SPACE = 20;
     }
 
 
@@ -142,6 +147,11 @@ public class LineBreakLayout extends ViewGroup implements View.OnClickListener {
         }
     }
 
+    public void addItem(View view){
+        view.setOnClickListener(this);
+        this.addView(view);
+    }
+
     /**
      * 添加LabelView的item
      *
@@ -157,6 +167,26 @@ public class LineBreakLayout extends ViewGroup implements View.OnClickListener {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+        L.d("LinBreakLayout_Measure", "Width: " + widthMeasureSpec + " Heigh: " + heightMeasureSpec);
+
+
+        int count = getChildCount();
+
+
+        for (int i = 0; i < count; i++) {
+            View view = getChildAt(i);
+            int width = view.getMeasuredWidth();
+
+            L.d("LinBreakLayout_Measure", "this.getMesure: " + this.getMeasuredWidth());
+            if (width> this.getMeasuredWidth() - DensityUtil.dip2px(context, 50)) {
+
+                ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(this.getMeasuredWidth() - LEFT_RIGHT_SPACE, LayoutParams.WRAP_CONTENT);
+                view.setLayoutParams(layoutParams);
+            }
+
+        }
+
         //为所有的标签childView计算宽和高
         measureChildren(widthMeasureSpec, heightMeasureSpec);
 
@@ -198,6 +228,11 @@ public class LineBreakLayout extends ViewGroup implements View.OnClickListener {
                 int childH = getChildAt(0).getMeasuredHeight();
                 //最终布局的高度=标签高度*行数+行距*(行数-1)
                 height = (childH * row) + ROW_SPACE * (row - 1);
+                L.d("Row_LB", row + "");
+//                if (row != 1)
+//                    height = (childH * (row + 1)) + ROW_SPACE * (row);
+//                else height = childH;
+//                height = (childH * row) + ROW_SPACE * (row + 8);
 
             }
         }

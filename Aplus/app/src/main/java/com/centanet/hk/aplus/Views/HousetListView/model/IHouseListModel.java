@@ -9,7 +9,13 @@ import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 public interface IHouseListModel {
 
     void doPost(String address, AHeaderDescription headers, Object bodys);
+
     void setRespontListener(HouseListModel.OnReceiveListener receiveListener);
+
     void clearFlag();
+
     void setStatusChangeLisenter(HouseListModel.OnHouseStatusChangeLisenter statusChangeLisenter);
+
+    boolean isAbleToScreen();
+    void setAbleToScreen(boolean b);
 }

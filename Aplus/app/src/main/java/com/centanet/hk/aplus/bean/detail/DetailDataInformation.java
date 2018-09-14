@@ -8,30 +8,46 @@ import java.io.Serializable;
 
 public class DetailDataInformation implements Serializable{
 
-    String Estate;
-    String Daybook;
+    private APTransactionAnalysis transactionAnalysis;
+    private APDayBook daybook;
+    private APCentaData centaData;
 
-    public void setEstate(String estate) {
-        Estate = estate;
+    public DetailDataInformation(APTransactionAnalysis transactionAnalysis, APDayBook daybook, APCentaData centaData) {
+        transactionAnalysis = transactionAnalysis;
+        daybook = daybook;
+        centaData = centaData;
     }
 
-    public void setDaybook(String daybook) {
-        Daybook = daybook;
+    public void setTransactionAnalysis(APTransactionAnalysis transactionAnalysis) {
+        transactionAnalysis = transactionAnalysis;
     }
 
-    public String getEstate() {
-        return Estate;
+    public void setDaybook(APDayBook daybook) {
+        daybook = daybook;
     }
 
-    public String getDaybook() {
-        return Daybook;
+    public void setCentaData(APCentaData centaData) {
+        centaData = centaData;
+    }
+
+    public APTransactionAnalysis getTransactionAnalysis() {
+        return transactionAnalysis;
+    }
+
+    public APDayBook getDaybook() {
+        return daybook;
+    }
+
+    public APCentaData getCentaData() {
+        return centaData;
     }
 
     @Override
     public String toString() {
-        return "CentaData{" +
-                "Estate='" + Estate + '\'' +
-                ", Daybook='" + Daybook + '\'' +
+        return "DetailDataInformation{" +
+                "TransactionAnalysis=" + transactionAnalysis +
+                ", Daybook=" + daybook +
+                ", CentaData=" + centaData +
                 '}';
     }
 }

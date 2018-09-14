@@ -17,6 +17,7 @@ public interface IDetailPresent {
     void onDestroy();
 
     void getPropertyDetail(int index);
+    void getPropertyDetailOther(int index);
 
     String getPropertyKey(int index);
 }

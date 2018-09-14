@@ -14,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.MyApplication;
+import com.centanet.hk.aplus.Utils.DialogUtil;
 import com.centanet.hk.aplus.Utils.MD5Util;
+import com.centanet.hk.aplus.Utils.TimeLimitUtil;
 import com.centanet.hk.aplus.Utils.net.GsonUtil;
 import com.centanet.hk.aplus.Views.Dialog.LoadingDialog;
 import com.centanet.hk.aplus.Views.Dialog.SimpleTipsDialog;
@@ -84,6 +86,7 @@ public class DetailActicity extends BasicActivty implements IDetailView, BasicIn
     private int index;
     private String propertyCount;
     private LoadingDialog loadingDialog;
+    private int currentType;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -96,8 +99,7 @@ public class DetailActicity extends BasicActivty implements IDetailView, BasicIn
     }
 
     private void initView() {
-//        titleBar = findViewById(R.id.detail_titlebar_top);
-//        ssdTxt = findViewById(R.id.item_icon_ssd);
+
         addDetailTxt = findViewById(R.id.detail_view_address);
         houseEnNameTxt = findViewById(R.id.detail_txt_en_housename);
         houseChNameTxt = findViewById(R.id.detail_txt_ch_housename);
@@ -115,6 +117,8 @@ public class DetailActicity extends BasicActivty implements IDetailView, BasicIn
                 index = Integer.parseInt(propertyCount);
             infoFragment.resetFragment();
             present.getPropertyDetail(index);
+            keyId = present.getPropertyKey(index);
+            L.d("DetailActicity", index + "");
             loadingDialog.show();
         });
 
@@ -125,20 +129,24 @@ public class DetailActicity extends BasicActivty implements IDetailView, BasicIn
                 index = 0;
             infoFragment.resetFragment();
             present.getPropertyDetail(index);
+            keyId = present.getPropertyKey(index);
+            L.d("DetailActicity", index + "");
             loadingDialog.show();
         });
 
         currentTxt = findViewById(R.id.detail_txt_currentitem);
 
-
         favoImg.setOnClickListener(v -> {
-            FavoriteDescription description = new FavoriteDescription();
-            description.setKeyId(keyId);
-            if (favoImg.isSelected())
-                getFavo(HttpUtil.URL_CANCELFAVO, description, headerDescription);
-            else
-                getFavo(HttpUtil.URL_FAVORITE, description, headerDescription);
+
+//            FavoriteDescription description = new FavoriteDescription();
+//            description.setKeyId(keyId);
+//            if (favoImg.isSelected())
+//                getFavo(HttpUtil.URL_CANCELFAVO, description, headerDescription);
+//            else
+//                getFavo(HttpUtil.URL_FAVORITE, description, headerDescription);
+            showFavoriteDialog(favoImg.isSelected());
         });
+
         addDetailTxt.setOnClickListener(v -> {
             PropertyAddDescription detailsDescription = new PropertyAddDescription();
             detailsDescription.setKeyId(present.getPropertyKey(index));
@@ -146,18 +154,56 @@ public class DetailActicity extends BasicActivty implements IDetailView, BasicIn
         });
     }
 
+    private void showFavoriteDialog(boolean favo) {
+
+        View view = View.inflate(getContext(), R.layout.item_dialog_double, null);
+
+        SimpleTipsDialog dialog = new SimpleTipsDialog(view, 0.72, 0.21, R.id.dialog_content_txt);
+        if (!favo) {
+            dialog.setTipString("加入收藏");
+            dialog.setRightButtonText(getString(R.string.add));
+        } else
+            dialog.setRightButtonText(getString(R.string.remove));
+
+        dialog.setOnItemclickListener((dialog1, type) -> {
+            if (type == SimpleTipsDialog.DIALOG_YES) {
+                FavoriteDescription description = new FavoriteDescription();
+                description.setKeyId(keyId);
+                if (favoImg.isSelected())
+                    getFavo(HttpUtil.URL_CANCELFAVO, description, headerDescription);
+                else
+                    getFavo(HttpUtil.URL_FAVORITE, description, headerDescription);
+            }
+        });
+        //todo dsdadasd
+
+        if (!detailHouseData.isUserIsShowDetailFloor()) {
+            if (!detailHouseData.getUserIsShowAddressDetail()) {
+                dialog.setContentString(detailHouseData.getDetailAddressChNoFoolrInfo());
+            } else {
+                dialog.setContentString(detailHouseData.getDetailAddressChInfo());
+            }
+        } else {
+            dialog.setContentString(detailHouseData.getDetailAddressChInfo());
+        }
+        dialog.show(getSupportFragmentManager(), "");
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
+//        startScreenListen();
     }
 
     private void init() {
         headerDescription = ((MyApplication) getApplicationContext()).getHeaderDescription();
 
-        L.d("basicInfo", headerDescription.toString());
+//        L.d("basicInfo", headerDescription.toString());
 
         keyId = getIntent().getStringExtra("keyId");
+        currentType = getIntent().getIntExtra("current", 0);
+
         present = new DetailPresent(this);
         PropertyAddDescription detailsDescription = new PropertyAddDescription();
         detailsDescription.setKeyId(keyId);
@@ -169,13 +215,14 @@ public class DetailActicity extends BasicActivty implements IDetailView, BasicIn
         //todo 后面可以改成限定
         detaileNextKeyIdDescription.setPageSize(500);
 
-        index = getIntent().getIntExtra("index", 1);
+        index = getIntent().getIntExtra("index", 0);
+//        index = getIntent().getIntExtra("current", 1);
         detaileNextKeyIdDescription.setPageIndex(index / 100 + 1);
-        detaileNextKeyIdDescription.setPropertyType(1);
+        detaileNextKeyIdDescription.setPropertyType(currentType);
         present.doGet(HttpUtil.URL_DETAILE_NEXT_KEYID, headerDescription, detaileNextKeyIdDescription);
 
         propertyCount = getIntent().getStringExtra("propertyCount");
-        currentTxt.setText((index + 1) + "/" + propertyCount);
+        currentTxt.setText((index + 1) + " / " + propertyCount);
 
         startScreenListen();
 
@@ -184,13 +231,28 @@ public class DetailActicity extends BasicActivty implements IDetailView, BasicIn
         infoFragment.setaPresenter(present);
 //        transaction.replace(R.id.detail_fl_content, infoFragment);
 //        transaction.commit();
-        trunToFragment(infoFragment);
+        trunToFragment(infoFragment, "info");
     }
 
-    private void trunToFragment(Fragment fragment) {
+    private Fragment loadInfo() {
+        Fragment fragment = getSupportFragmentManager().findFragmentByTag("info");
+        android.support.v4.app.FragmentTransaction s = getSupportFragmentManager().beginTransaction();
+
+        if (fragment != null) {
+            s.remove(fragment);
+            s.add(R.id.detail_fl_content, fragment, "info");
+        } else {
+            fragment = BasicInfoFragment.newInstance("");
+            s.add(R.id.detail_fl_content, fragment, "info");
+        }
+        s.commit();
+        return fragment;
+    }
+
+    private void trunToFragment(Fragment fragment, String tag) {
 
         android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.detail_fl_content,fragment);
+        transaction.replace(R.id.detail_fl_content, fragment);
         transaction.commit();
 
 //        android.support.v4.app.FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
@@ -214,13 +276,36 @@ public class DetailActicity extends BasicActivty implements IDetailView, BasicIn
     }
 
     private void onScreenShot() {
+//        if (!TimeLimitUtil.isAchieveLimitTime(1000)) return;
         UserBehaviorDescription userBehaviorDescription = new UserBehaviorDescription();
         userBehaviorDescription.setAction(1);
         //todo 截屏监听还要完善
-        userBehaviorDescription.setPage(1);
+        int i = 0;
+        switch (infoFragment.getCurrentItem()) {
+            case 0:
+                i = 1;
+                break;
+            case 1:
+                i = 2;
+                break;
+            case 2:
+                i = 3;
+                break;
+            case 3:
+                i = 8;
+                break;
+            case 4:
+                i = 9;
+                break;
+            case 5:
+                i = 10;
+                break;
+        }
+        userBehaviorDescription.setPage(i);
         userBehaviorDescription.setExtras("{" + "\"PropertyKeyId\"" + ":" + "[" + "\"" + keyId + "\"" + "]}");
         L.d(thiz, "\"HouseShot\"" + "{" + "PropertyKeyId" + ":" + keyId + "}");
         present.doPost(HttpUtil.URL_USER_BEHAVIOR, headerDescription, userBehaviorDescription);
+
 
         //todo other Api
 //        DetailListsDescription description = new DetailListsDescription();
@@ -294,8 +379,12 @@ public class DetailActicity extends BasicActivty implements IDetailView, BasicIn
     @Override
     public void refreshListData(final DetailHouse data) {
         runOnUiThread(() -> {
+
             loadingDialog.dismiss();
-           currentTxt.setText((index + 1) + "/" + propertyCount);
+
+            currentTxt.setText((index + 1) + " / " + propertyCount);
+
+//            infoFragment = (BasicInfoFragment) loadInfo();
 
 //            infoFragment = BasicInfoFragment.newInstance(present.getPropertyKey(index));
             infoFragment.setaPresenter(present);
@@ -311,7 +400,6 @@ public class DetailActicity extends BasicActivty implements IDetailView, BasicIn
 //                //todo 必须先绑定vp 再添加title才不会无法显示title 这是为什么呢？
 //                initFragmentTitles(tabTitles);
             }
-
 
             if (!data.isUserIsShowDetailFloor()) {
                 if (!data.getUserIsShowAddressDetail()) {
@@ -341,6 +429,11 @@ public class DetailActicity extends BasicActivty implements IDetailView, BasicIn
             showHouseTips(data.isODish() ? data.getPropertyProprietors() : null, R.layout.item_dialog_detailtips);
 
         });
+    }
+
+    @Override
+    public void closeLoading() {
+        loadingDialog.dismiss();
     }
 
     @Override
@@ -397,7 +490,6 @@ public class DetailActicity extends BasicActivty implements IDetailView, BasicIn
                 String databack = response.body().string().toString();
                 if (response.isSuccessful())
                     switch (url) {
-
                         case HttpUtil.URL_CANCELFAVO:
                             if (parseFavo(databack))
                                 setFavo(false);
@@ -413,6 +505,12 @@ public class DetailActicity extends BasicActivty implements IDetailView, BasicIn
 
     private void setFavo(boolean favo) {
         runOnUiThread(() -> {
+
+            if (!favo)
+                DialogUtil.getSimpleDialog("已取消收藏").show(getSupportFragmentManager(), "");
+            else
+                DialogUtil.getSimpleDialog(" 成功加入收藏").show(getSupportFragmentManager(), "");
+
             detailHouseData.setFavorite(favo);
             favoImg.setSelected(favo);
             infoFragment.setBasicInfo(detailHouseData);
@@ -453,7 +551,6 @@ public class DetailActicity extends BasicActivty implements IDetailView, BasicIn
         super.onActivityResult(requestCode, resultCode, data);
         switch (resultCode) {
             case 2:
-
                 detailHouseData = (DetailHouse) data.getSerializableExtra("FollowBackData");
                 if (detailHouseData.isUserIsShowDetailFloor()) {
                     addDetailTxt.setVisibility(View.GONE);
@@ -471,5 +568,10 @@ public class DetailActicity extends BasicActivty implements IDetailView, BasicIn
         intent.putExtra("keyId", present.getPropertyKey(index));
         intent.putExtra("DetailData", detailHouseData);
         startActivityForResult(intent, 0);
+    }
+
+    @Override
+    public void getPropertyDetailOther() {
+        present.getPropertyDetailOther(index);
     }
 }

@@ -12,6 +12,7 @@ import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.L;
@@ -31,9 +32,9 @@ public class StatusDialog extends BaseDialog implements View.OnClickListener {
     private Dialog dialog;
     List<String> checkBoxSelecterList;
     private WindowManager.LayoutParams lp;
-    private View status;
+    private View status,close;
     private SmartCheckBoxLayout checkBoxLayout;
-    private Button yes;
+    private TextView yes;
     private onDialogOnclikeLisenter onDialogOnclikeLisenter;
     private List<String> statusList;
 //    private boolean isFirst = true;
@@ -79,7 +80,6 @@ public class StatusDialog extends BaseDialog implements View.OnClickListener {
     }
 
     private void initLayouts() {
-
         status = dialog.findViewById(R.id.dialog_status_layout);
         checkBoxLayout = status.findViewById(R.id.dialog_status_confirm_layout);
         checkBoxLayout.setOnItemClick(new SmartCheckBoxLayout.OnItemClick() {
@@ -93,28 +93,21 @@ public class StatusDialog extends BaseDialog implements View.OnClickListener {
         checkBoxLayout.setSeletList(checkBoxSelecterList);
 
         yes = status.findViewById(R.id.dialog_status_confirm);
+        close = status.findViewById(R.id.close);
         yes.setOnClickListener(this);
+        close.setOnClickListener((v)->{
+            dismiss();
+        });
 
         final Window window = dialog.getWindow();
         window.setWindowAnimations(R.style.AnimBottom);
         lp = window.getAttributes();
         lp.gravity = Gravity.BOTTOM; // 紧贴底部
         lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        lp.height = getActivity().getWindowManager().getDefaultDisplay().getHeight() * 8 / 10;
         window.setAttributes(lp);
-
-//        status.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                if (isFirst) {
-//                    lp.height = status.getHeight();
-//                    L.d("statusHeight", status.getHeight() + "");
-//                    window.setAttributes(lp);
-//                    window.setBackgroundDrawableResource(android.R.color.transparent);
-//                    isFirst = !isFirst;
-//                }
-//            }
-//        });
+        window.setBackgroundDrawableResource(android.R.color.transparent);
 
         if (checkBoxSelecterList == null)
             checkBoxSelecterList = new ArrayList<>();

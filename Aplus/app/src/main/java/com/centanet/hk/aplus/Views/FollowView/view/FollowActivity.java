@@ -1,11 +1,15 @@
 package com.centanet.hk.aplus.Views.FollowView.view;
 
+import android.Manifest;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -23,6 +27,8 @@ import com.centanet.hk.aplus.R;
 import com.centanet.hk.aplus.Utils.DensityUtil;
 import com.centanet.hk.aplus.Utils.DialogUtil;
 import com.centanet.hk.aplus.Utils.L;
+import com.centanet.hk.aplus.Utils.TextUtil;
+import com.centanet.hk.aplus.Utils.TimeLimitUtil;
 import com.centanet.hk.aplus.Utils.net.HttpUtil;
 import com.centanet.hk.aplus.Views.Dialog.CalendarDialog;
 import com.centanet.hk.aplus.Views.Dialog.SimpleTipsDialog;
@@ -38,13 +44,22 @@ import com.centanet.hk.aplus.bean.http.AHeaderDescription;
 import com.centanet.hk.aplus.bean.http.PropertyAddDescription;
 import com.centanet.hk.aplus.bean.http.FavoriteDescription;
 import com.centanet.hk.aplus.bean.http.FollowDescription;
+import com.centanet.hk.aplus.bean.http.UserBehaviorDescription;
 import com.centanet.hk.aplus.manager.ApplicationManager;
+import com.centanet.hk.aplus.manager.ScreenShotListenManager;
 import com.githang.statusbar.StatusBarCompat;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
+
+import static com.centanet.hk.aplus.MyApplication.getContext;
 
 /**
  * Created by yangzm4 on 2018/7/10.
@@ -52,8 +67,9 @@ import java.util.List;
 
 public class FollowActivity extends AppCompatActivity implements IFollowView, View.OnClickListener {
 
+    private static final int WRITE_EXTERNAL_STORAGE_REQUEST_CODE = 123;
     private TextView propertyNameChTxt, propertyNameEnTxt;
-    private TextView startDateTxt, endDateTxt, cancelTxt;
+    private TextView startDateTxt, endDateTxt, confirmTxt;
     private ClearEditText keyWordEdit;
     private View addressView;
     private SmartRefreshLayout refreshLayout;
@@ -63,12 +79,13 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
     private TextView title;
     private String keyId;
     private ImageView statuImg;
-    private ImageView favoImg;
+    private ImageView favoImg, cancelImg;
     //    private boolean isFollowEnd;
     private IFollowPresenter presenter;
     private AHeaderDescription aHeaderDescription;
     private FollowDescription followDescription;
     private String thiz = getClass().getSimpleName();
+    private ScreenShotListenManager screenShotListenManager;
     private ImageView addImg, backImg;
     private DetailHouse houseData;
     private View dateView;
@@ -81,6 +98,14 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
         initView();
         init();
         initLisenter();
+        startScreenListen();
+        refreshLayout.autoRefresh();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        screenShotListenManager.stopListen();
     }
 
     private void initLisenter() {
@@ -105,6 +130,7 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
         favoImg.setOnClickListener(this);
         backImg.setOnClickListener(this);
         addressView.setOnClickListener(this);
+        cancelImg.setOnClickListener(this);
 
 //        keyWordEdit.setOnEditorActionListener((v, actionId, event) -> {
 //            L.d("Edit", "ActionId: " + actionId + " Sys:" + EditorInfo.IME_ACTION_SEND);
@@ -125,8 +151,8 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
 
         keyWordEdit.setOnItemClickLisenter(hasFous -> {
             if (hasFous) {
-                cancelTxt.setVisibility(View.VISIBLE);
-                cancelTxt.setOnClickListener(this);
+                confirmTxt.setVisibility(View.VISIBLE);
+                confirmTxt.setOnClickListener(this);
                 ValueAnimator animator = ValueAnimator.ofFloat(1, 0);
                 animator.addUpdateListener(animation -> {
                     dateView.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, (Float) animation.getAnimatedValue()));
@@ -154,7 +180,7 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
         propertyNameEnTxt = findViewById(R.id.follow_txt_en_housename);
         startDateTxt = findViewById(R.id.follow_txt_start_date);
         endDateTxt = findViewById(R.id.follow_txt_end_date);
-        cancelTxt = findViewById(R.id.follow_txt_cancel);
+        confirmTxt = findViewById(R.id.follow_txt_confirm);
         keyWordEdit = findViewById(R.id.follow_edit_keyword);
         addressView = findViewById(R.id.detail_view_address);
         refreshLayout = findViewById(R.id.follow_smartLayout);
@@ -165,6 +191,7 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
         favoImg = findViewById(R.id.title_img_favo);
         backImg = findViewById(R.id.title_backicon);
         dateView = findViewById(R.id.follow_ll_date);
+        cancelImg = findViewById(R.id.follow_img_cancel);
     }
 
     private void init() {
@@ -188,7 +215,7 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
 
         //初始化跟进数据
         presenter = new FollowPresenter(this);
-        presenter.doFollowRequest(HttpUtil.URL_FOLLOWS, aHeaderDescription, followDescription);
+//        presenter.doFollowRequest(HttpUtil.URL_FOLLOWS, aHeaderDescription, followDescription);
     }
 
     private void initViewData(DetailHouse houseData) {
@@ -277,8 +304,9 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
                 // 点击的是输入框区域，保留点击EditText的事件
                 return false;
             } else {
-                if (v instanceof EditText)
+                if (v instanceof EditText) {
                     v.clearFocus();
+                }
                 return true;
             }
         }
@@ -287,7 +315,7 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
 
     //关闭搜索Txt
     public boolean isShouldHideSearchTxt(View v, MotionEvent event) {
-        if (v != null && (v instanceof TextView) && v.getId() == R.id.follow_txt_cancel) {
+        if (v != null && (v instanceof TextView) && v.getId() == R.id.follow_txt_confirm) {
             int[] leftTop = {0, 0};
             //获取输入框当前的location位置
             v.getLocationInWindow(leftTop);
@@ -328,6 +356,12 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
     @Override
     public void reFreshFavoImg(boolean favo) {
         runOnUiThread(() -> {
+
+            if (!favo)
+                DialogUtil.getSimpleDialog("已取消收藏").show(getSupportFragmentManager(), "");
+            else
+                DialogUtil.getSimpleDialog(" 成功加入收藏").show(getSupportFragmentManager(), "");
+
             favoImg.setSelected(favo);
             houseData.setFavorite(favo);
         });
@@ -371,6 +405,41 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
         Toast.makeText(this, getString(R.string.no_more_data), Toast.LENGTH_SHORT).show();
     }
 
+    private void showFavoriteDialog(boolean favo) {
+
+        View view = View.inflate(getContext(), R.layout.item_dialog_double, null);
+
+        SimpleTipsDialog dialog = new SimpleTipsDialog(view, 0.72, 0.21, R.id.dialog_content_txt);
+        if (!favo) {
+            dialog.setTipString("加入收藏");
+            dialog.setRightButtonText(getString(R.string.add));
+        } else
+            dialog.setRightButtonText(getString(R.string.remove));
+
+        dialog.setOnItemclickListener((dialog1, type) -> {
+            if (type == SimpleTipsDialog.DIALOG_YES) {
+                FavoriteDescription description = new FavoriteDescription();
+                description.setKeyId(keyId);
+                if (favoImg.isSelected())
+                    presenter.doCancelFavoRequest(HttpUtil.URL_CANCELFAVO, aHeaderDescription, description);
+                else
+                    presenter.doFavoRequest(HttpUtil.URL_FAVORITE, aHeaderDescription, description);
+            }
+        });
+        //todo dsdadasd
+
+        if (!houseData.isUserIsShowDetailFloor()) {
+            if (!houseData.getUserIsShowAddressDetail()) {
+                dialog.setContentString(houseData.getDetailAddressChNoFoolrInfo());
+            } else {
+                dialog.setContentString(houseData.getDetailAddressChInfo());
+            }
+        } else {
+            dialog.setContentString(houseData.getDetailAddressChInfo());
+        }
+        dialog.show(getSupportFragmentManager(), "");
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -381,12 +450,13 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
                 startActivityForResult(intent, 0);
                 break;
             case R.id.title_img_favo:
-                FavoriteDescription description = new FavoriteDescription();
-                description.setKeyId(keyId);
-                if (favoImg.isSelected())
-                    presenter.doCancelFavoRequest(HttpUtil.URL_CANCELFAVO, aHeaderDescription, description);
-                else
-                    presenter.doFavoRequest(HttpUtil.URL_FAVORITE, aHeaderDescription, description);
+                showFavoriteDialog(favoImg.isSelected());
+//                FavoriteDescription description = new FavoriteDescription();
+//                description.setKeyId(keyId);
+//                if (favoImg.isSelected())
+//                    presenter.doCancelFavoRequest(HttpUtil.URL_CANCELFAVO, aHeaderDescription, description);
+//                else
+//                    presenter.doFavoRequest(HttpUtil.URL_FAVORITE, aHeaderDescription, description);
                 break;
             case R.id.title_backicon:
 
@@ -402,11 +472,12 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
                 presenter.doAddRequest(HttpUtil.URL_ADDRESS_DETAIL, aHeaderDescription, detailsDescription);
                 break;
 
-            case R.id.follow_txt_cancel:
+            case R.id.follow_txt_confirm:
                 followDescription.setKeyword(keyWordEdit.getText().toString());
                 refreshLayout.autoRefresh();
-                cancelTxt.setOnClickListener(null);
-                cancelTxt.setVisibility(View.INVISIBLE);
+                confirmTxt.setOnClickListener(null);
+                confirmTxt.setVisibility(View.GONE);
+                cancelImg.setVisibility(View.VISIBLE);
                 break;
 
             case R.id.follow_txt_start_date:
@@ -417,25 +488,65 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
                     dialog.dismiss();
                     followDescription.setPageIndex(1);
                     if (start != null) {
-                        startDateTxt.setText(getTime(start));
+                        startDateTxt.setText(getShowDate(start));
                         followDescription.setFollowTimeFrom(getTime(start));
                     } else {
                         followDescription.setFollowTimeFrom(null);
                         startDateTxt.setText(getString(R.string.start_date));
                     }
                     if (end != null) {
-                        endDateTxt.setText(getTime(end));
+                        endDateTxt.setText(getShowDate(end));
                         followDescription.setFollowTimeTo(getTime(end));
                     } else {
                         followDescription.setFollowTimeTo(null);
                         endDateTxt.setText(getString(R.string.end_state));
                     }
+                    isShowCancelTxt(followDescription);
                     refreshLayout.autoRefresh();
                 });
-                calendarDialog.show(getFragmentManager(), "");
+                Calendar startCanlen = Calendar.getInstance();
+                Calendar endCanlen = Calendar.getInstance();
+                if (!TextUtil.isEmply(followDescription.getFollowTimeFrom())) {
+                    String[] year = followDescription.getFollowTimeFrom().split("-");
+                    L.d("getFollowTimeFrom", year[0] + " " + year[1] + " " + year[2]);
+                    startCanlen.set(Calendar.YEAR, Integer.parseInt(year[0]));
+                    startCanlen.set(Calendar.MONTH, Integer.parseInt(year[1]) - 1);
+                    startCanlen.set(Calendar.DAY_OF_MONTH, Integer.parseInt(year[2]));
+                    calendarDialog.setStartCl(startCanlen);
+                }
 
+                if (!TextUtil.isEmply(followDescription.getFollowTimeTo())) {
+                    String[] year = followDescription.getFollowTimeTo().split("-");
+                    L.d("getFollowTimeTo", year[0] + " " + year[1] + " " + year[2]);
+                    endCanlen.set(Calendar.YEAR, Integer.parseInt(year[0]));
+                    endCanlen.set(Calendar.MONTH, Integer.parseInt(year[1]) - 1);
+                    endCanlen.set(Calendar.DAY_OF_MONTH, Integer.parseInt(year[2]));
+                    calendarDialog.setEndCl(endCanlen);
+                }
+
+                calendarDialog.show(getFragmentManager(), "");
+                break;
+            case R.id.follow_img_cancel:
+                cancelImg.setVisibility(View.GONE);
+                followDescription.setKeyword(null);
+                followDescription.setFollowTimeFrom(null);
+                followDescription.setFollowTimeTo(null);
+                keyWordEdit.setText(null);
+                startDateTxt.setText(getString(R.string.start_date));
+                endDateTxt.setText(getString(R.string.end_state));
+                refreshLayout.autoRefresh();
                 break;
         }
+    }
+
+    private void isShowCancelTxt(FollowDescription followDescription) {
+        if (followDescription.getFollowTimeTo() != null || followDescription.getFollowTimeFrom() != null) {
+            cancelImg.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private String getShowDate(Calendar calendar) {
+        return calendar.get(Calendar.YEAR) + "年" + (calendar.get(Calendar.MONTH) + 1) + "月" + calendar.get(Calendar.DAY_OF_MONTH) + "日";
     }
 
     private String getTime(Calendar calendar) {
@@ -454,6 +565,46 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
             System.gc();
         }
     }
+
+    private void startScreenListen() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            //申请WRITE_EXTERNAL_STORAGE权限
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    WRITE_EXTERNAL_STORAGE_REQUEST_CODE);
+        }
+
+        screenShotListenManager = ScreenShotListenManager.newInstance(this);
+        screenShotListenManager.setListener((imagePath) -> onScreenShot());
+        screenShotListenManager.startListen();
+    }
+
+    private void onScreenShot() {
+//        if (!TimeLimitUtil.isAchieveLimitTime(1000)) return;
+        UserBehaviorDescription userBehaviorDescription = new UserBehaviorDescription();
+        userBehaviorDescription.setAction(1);
+        userBehaviorDescription.setPage(2);
+        userBehaviorDescription.setExtras("{" + "\"PropertyKeyId\"" + ":" + "[" + "\"" + keyId + "\"" + "]}");
+        L.d(thiz, "\"HouseShot\"" + "{" + "PropertyKeyId" + ":" + keyId + "}");
+//        presenter.doAddRequest(HttpUtil.URL_USER_BEHAVIOR, headerDescription, userBehaviorDescription);
+        HttpUtil.doPost(HttpUtil.URL_USER_BEHAVIOR, aHeaderDescription, userBehaviorDescription, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+
+            }
+        });
+
+        //todo other Api
+//        DetailListsDescription description = new DetailListsDescription();
+//        description.setKeyId(keyId);
+//        present.doGet(HttpUtil.URL_DETAILS_LIST, ((MyApplication) getContext().getApplicationContext()).getHeaderDescription(), description);
+    }
+
 
     @Override
     public void onBackPressed() {
@@ -507,7 +658,7 @@ public class FollowActivity extends AppCompatActivity implements IFollowView, Vi
             L.d(thiz, "Adapter Position: " + position);
 
             if (datas != null && !datas.isEmpty()) {
-                viewHolder.timeTxt.setText(datas.get(position).getFollowTime());
+                viewHolder.timeTxt.setText(datas.get(position).getFollowTime().replace("T", " "));
                 viewHolder.contentTxt.setText(datas.get(position).getFollowContent());
                 viewHolder.personTxt.setText(datas.get(position).getFollower());
             }

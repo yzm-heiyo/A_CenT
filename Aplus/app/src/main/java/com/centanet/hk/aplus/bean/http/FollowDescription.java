@@ -16,7 +16,7 @@ public class FollowDescription {
     private String FollowDeptKeyId;
     private int PageIndex;
     private String SortField = "";
-    private int PageSize = 5;
+    private int PageSize = 15;
     private boolean Ascending = false;
     private boolean IsMobileRequest = true;
 

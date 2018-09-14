@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
@@ -27,6 +28,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.centanet.hk.aplus.R;
+import com.centanet.hk.aplus.Utils.DensityUtil;
+import com.centanet.hk.aplus.Utils.L;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -51,6 +54,8 @@ public class HorizontalView extends ViewGroup {
     private ValueAnimator animator;
     private boolean isAnimation;
     private int count;
+    private Paint bottomLinePaint;
+    private ValueAnimator bgAnimator;
 
 
     @Retention(RetentionPolicy.SOURCE)
@@ -90,6 +95,10 @@ public class HorizontalView extends ViewGroup {
 
     private OnItemScrollLisenter onItemScrollLisenter;
 
+    private float currentSelect = 0;
+    private float oldSelect = 0;
+    private int index = 0;
+
 
     //    private LinearLayout.LayoutParams layoutParams;
 
@@ -123,6 +132,9 @@ public class HorizontalView extends ViewGroup {
         speedList = new ArrayList<>();
 
         content = this;
+
+        bottomLinePaint = new Paint();
+        bottomLinePaint.setColor(getResources().getColor(R.color.colortheme));
 
         Resources resources = this.getResources();
         DisplayMetrics dm = resources.getDisplayMetrics();
@@ -179,6 +191,10 @@ public class HorizontalView extends ViewGroup {
             textView.setText(dataList.get(i));
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(screenWidth / seeSize, LayoutParams.WRAP_CONTENT);
 //            view.setWidth(screenWidth / seeSize);
+
+//            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(screenWidth / seeSize, LayoutParams.WRAP_CONTENT);
+//            layoutParams.setMargins(0,15,0,0);
+
             view.setLayoutParams(params);
             view.setTag(i);
             this.addView(view);
@@ -220,6 +236,10 @@ public class HorizontalView extends ViewGroup {
      * @param index
      */
     public void selectItem(int index) {
+
+
+        if (isAnimation) bgAnimator.cancel();
+
         if (index >= dataList.size()) throw new IllegalArgumentException("index out of size");
         if (index < 0) throw new IllegalArgumentException("index out of size");
 
@@ -228,7 +248,28 @@ public class HorizontalView extends ViewGroup {
         v.setSelected(true);
         slidToItem(v);
 
+
+        this.index = index;
+//        Paint paint = new Paint();
+//        paint.setColor(getResources().getColor(R.color.colortheme));
+        doAnimation(oldSelect, index, 500, 0);
+//        Rect rect = new Rect(currentSelect * screenWidth / seeSize, 0, (currentSelect + 1) * screenWidth / seeSize, 15);
+//        canvas.drawRect(rect, paint);
+
+        L.d("selectItem", "" + index);
+        //14:59
+//        currentSelect = index;
+//        postInvalidate();
+
+//        Canvas canvas = new Canvas();
+//        if(currentSelect != index)
+//        postInvalidate();
     }
+
+    public int getCurrent() {
+        return (int) oldSelect;
+    }
+
 
     /**
      * 获得指定位置的Item
@@ -256,18 +297,26 @@ public class HorizontalView extends ViewGroup {
         View view = getItemAtIndex(index);
         TextView textView = view.findViewById(R.id.item_txt_other);
         textView.setVisibility(VISIBLE);
-        if(tip == null ||tip.equals("")){
+        if (tip == null || tip.equals("")) {
             textView.setVisibility(GONE);
             return;
         }
 
-        if (tip.equals("7"))
+        if (tip.equals("7")) {
             textView.setBackground(getResources().getDrawable(R.drawable.shape_circle_blue));
-        if (tip.equals("14"))
+            textView.setText(" " + tip + " ");
+        }
+
+        if (tip.equals("14")) {
             textView.setBackground(getResources().getDrawable(R.drawable.shape_circle_orange));
-        if (tip.equals("30"))
-            textView.setBackground(getResources().getDrawable(R.drawable.shape_circle_red));
-        textView.setText(tip);
+            textView.setText(tip);
+        }
+
+        if (tip.equals("30")) {
+            textView.setBackground(getResources().getDrawable(R.drawable.shape_square_circle_red));
+            textView.setText(tip);
+        }
+
     }
 
     /**
@@ -368,7 +417,6 @@ public class HorizontalView extends ViewGroup {
             right += childW;
             //底部位置=本行已经占有的位置+当前标签的宽度
             botom = row * (childH) + childH;
-
             childView.layout(right - childW, botom - childH, right, botom);
 
         }
@@ -417,32 +465,32 @@ public class HorizontalView extends ViewGroup {
 
             }
         });
-        animator.addListener(new Animator.AnimatorListener() {
-
-            @Override
-            public void onAnimationStart(Animator animation) {
-                isAnimation = true;
-            }
-
-            @TargetApi(Build.VERSION_CODES.KITKAT)
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if (onItemScrollLisenter != null) {
-                    onItemScrollLisenter.onScroll(true);
-                }
-                Log.d(TAG, "onAnimationEnd: " + ((MarginLayoutParams) HorizontalView.this.getLayoutParams()).leftMargin);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
+//        animator.addListener(new Animator.AnimatorListener() {
+//
+//            @Override
+//            public void onAnimationStart(Animator animation) {
+//                isAnimation = true;
+//            }
+//
+//            @TargetApi(Build.VERSION_CODES.KITKAT)
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//                if (onItemScrollLisenter != null) {
+//                    onItemScrollLisenter.onScroll(true);
+//                }
+//                Log.d(TAG, "onAnimationEnd: " + ((MarginLayoutParams) HorizontalView.this.getLayoutParams()).leftMargin);
+//            }
+//
+//            @Override
+//            public void onAnimationCancel(Animator animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animator animation) {
+//
+//            }
+//        });
     }
 
 
@@ -547,6 +595,58 @@ public class HorizontalView extends ViewGroup {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
+        L.d("onDraw_ing", currentSelect + "");
+        Rect rect = new Rect((int) (currentSelect * (screenWidth / seeSize)), getHeight() - DensityUtil.dip2px(context,5), (int) ((currentSelect + 1) * (screenWidth / seeSize)), getHeight());
+        canvas.drawRect(rect, bottomLinePaint);
+
+    }
+
+    private void doAnimation(float start, float end, int duration, int t) {
+
+        bgAnimator = ValueAnimator.ofFloat(start, end);
+        bgAnimator.setInterpolator(new DecelerateInterpolator());
+        bgAnimator.setDuration(duration);
+        bgAnimator.addUpdateListener(valueAnimator1 -> {
+            currentSelect = (float) valueAnimator1.getAnimatedValue();
+            oldSelect = (float) valueAnimator1.getAnimatedValue();
+
+            postInvalidate();
+//            int i  = (int) valueAnimator1.getAnimatedValue();
+//            Rect rect = new Rect(i * screenWidth / seeSize, 0, (i + 1) * screenWidth / seeSize, 15);
+//            canvas.drawRect(rect, paint);
+        });
+        bgAnimator.start();
+
+        bgAnimator.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                isAnimation = true;
+            }
+
+            @TargetApi(Build.VERSION_CODES.KITKAT)
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                if (onItemScrollLisenter != null) {
+                    onItemScrollLisenter.onScroll(true);
+                }
+                isAnimation = false;
+                oldSelect = index;
+                Log.d(TAG, "onAnimationEnd: " + ((MarginLayoutParams) HorizontalView.this.getLayoutParams()).leftMargin);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
     }
 
     public interface OnItemClickLisenter {

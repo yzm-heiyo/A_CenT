@@ -9,5 +9,6 @@ import com.centanet.hk.aplus.bean.detail.DetailHouse;
 
 public interface IDetailView {
     void refreshListData(DetailHouse data);
+    void closeLoading();
     void refreshFragment(DetailBriefInfo briefInfo);
 }
